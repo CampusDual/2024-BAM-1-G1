@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Vango"
+rootProject.name = "VanGO"
 include(":app")
+ 

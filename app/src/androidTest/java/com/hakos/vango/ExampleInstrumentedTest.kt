@@ -1,4 +1,4 @@
-package com.grupo1.vango
+package com.hakos.vango
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.grupo1.vango", appContext.packageName)
+        assertEquals("com.hakos.vango", appContext.packageName)
     }
 }
