@@ -1,4 +1,4 @@
-package com.hakos.vango.presentation.home
+package com.hakos.vango
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
