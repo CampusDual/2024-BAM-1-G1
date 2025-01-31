@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--                            FRAGMENT LOGIN:
+
+Crear rectángulo para exterior de los inputs de insertar email y contraseña-->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+<!--    Redondear esquina-->
+    <corners android:radius="16dp"/>
+
+<!--  Añadir borde:  -->
+    <stroke android:width="1dip" android:color="@color/color_secondary_grey"/>
+
+<!--Color de fondo:  <solid android:color="@color/color_main"></solid>-->
+
+
+</shape>
