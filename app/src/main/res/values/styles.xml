@@ -42,7 +42,11 @@
         <item name="android:textColor">@color/color_secondary_grey</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textFontWeight">400</item>
-
     </style>
+
+    <!--    Estilo logo_name -->
+    
+
+    
 
 </resources>
