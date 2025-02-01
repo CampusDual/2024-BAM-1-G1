@@ -3,19 +3,26 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <!--    strings reutilizables  -->
+
+
+    <string name="google_outlook">O conéctate con</string>
+    <string name="asterisks_password">*********</string>
+    <string name="content_desc_google">Descripción icono Google</string>
+    <string name="content_desc_outlook">Descripción icono Outlook</string>
+    <string name="example_input_mail">example@gmail.com</string>
+    <string name="logo_name">VanGo</string>
+
+
     <!--    strings de login   -->
 
-    <string name="login_subtitle">Una nueva aventura está a punto de empezar</string>
+    <string name="login_subtitle">¿Qué aventura nos depara hoy?</string>
     <string name="login_title">Inicia sesión</string>
-    <string name="login_input_mail">example@gmail.com</string>
     <string name="login_title_mail">Email</string>
     <string name="login_title_password">Contraseña</string>
-    <string name="login_input_password">*********</string>
     <string name="login_button">Iniciar</string>
     <string name="login_forgot_password"><u>¿Has olvidado tu contraseña?</u></string>
-    <string name="login_google_outlook">O conéctate con</string>
-    <string name="login_content_desc_google">O conéctate con</string>
-    <string name="login_content_desc_outlook">O conéctate con</string>
     <string name="nologin_register">
         <u>¿No tienes una cuenta?
             <b><font color="#32788C">Regístrate</font></b>
@@ -23,4 +30,31 @@
     </string>
 
 
+    <!--    strings de sing up   -->
+
+    <string name="signup_subtitle">La aventura está a punto de comenzar</string>
+    <string name="signup_title">Regístrate</string>
+    <string name="signup_title_mail">Email</string>
+    <string name="signup_title_password">Elige una contraseña</string>
+    <string name="signup_title_confirm_password">Confirmar contraseña</string>
+    <string name="signup_button">Registrarse</string>
+    <string name="nosignup_register">
+        <u>¿Ya tienes una cuenta?
+            <b><font color="#32788C">Inicia sesión</font></b>
+        </u>
+    </string>
+
+
+
+    <!--    strings de access account   -->
+
+    <string name="access_account_title">Tu aventura \n acaba de empezar</string>
+    <string name="access_account_bt_signup">Regístrate</string>
+    <string name="access_account_bt_login">Inicia sesión</string>
+
 </resources>
+
+
+
+
+
