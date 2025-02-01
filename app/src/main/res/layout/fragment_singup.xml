@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="896dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.98" />
+
+
+
+    <!-- Subtítulo registro -->
+
+    <TextView
+        android:id="@+id/tv_signup_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_subtitle"
+        android:layout_marginTop="48dp"
+        style= "@style/subtitle_16sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_start">
+    </TextView>
+
+    <!-- Título registro -->
+
+    <TextView
+        android:id="@+id/tv_signup_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_title"
+        android:layout_marginTop="6dp"
+        style= "@style/title_30sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signup_subtitle">
+    </TextView>
+
+
+
+    <!-- CONTENEDOR DE EMAIL -->
+    <LinearLayout
+        android:id="@+id/ll_signup_container_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_signup_title">
+
+        <!-- H3 Email -->
+        <TextView
+            android:id="@+id/tv_signup_title_email"
+            style="@style/title_h3_14dp"
+            android:paddingBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_title_mail" />
+
+        <!-- Input Email -->
+        <EditText
+            android:id="@+id/et_signup_input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_rounded_corner"
+            android:hint="@string/example_input_mail"
+            android:inputType="textEmailAddress"
+            android:padding="18dp"
+            android:textColor="@color/color_main"
+            android:textColorHint="@color/color_secondary_grey" />
+    </LinearLayout>
+
+
+
+    <!-- CONTENEDOR ELIGE CONTRASEÑA-->
+    <LinearLayout
+        android:id="@+id/ll_signup_container_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/ll_signup_container_email">
+
+        <!-- H3 Contraseña -->
+        <TextView
+            android:id="@+id/tv_signup_title_password"
+            style="@style/title_h3_14dp"
+            android:paddingBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="@string/signup_title_password" />
+
+        <!-- Input Contraseña 1 -->
+        <EditText
+            android:id="@+id/et_signup_input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_rounded_corner"
+            android:hint="@string/asterisks_password"
+            android:inputType="textPassword"
+            android:padding="18dp"
+            android:textColor="@color/color_main"
+            android:textColorHint="@color/color_secondary_grey" />
+
+    </LinearLayout>
+
+
+
+
+      <!-- CONTENEDOR CONFIRMAR  CONTRASEÑA-->
+
+    <LinearLayout
+        android:id="@+id/ll_signup_container_confirm_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/ll_signup_container_password">
+
+
+        <!-- h3 confirmar contraseña -->
+        <TextView
+            android:id="@+id/tv_signup_title_confirm_password"
+            style="@style/title_h3_14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+
+            android:text="@string/signup_title_confirm_password" />
+
+        <!-- input contraseña 2 -->
+        <EditText
+            android:id="@+id/et_signup_input_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_rounded_corner"
+            android:hint="@string/asterisks_password"
+            android:inputType="textPassword"
+            android:padding="18dp"
+            android:textColor="@color/color_main"
+            android:textColorHint="@color/color_secondary_grey" />
+    </LinearLayout>
+
+
+
+
+    <!-- Creamos botón con materialButton -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_signup_button"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/signup_button"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/ll_signup_container_confirm_password">
+    </com.google.android.material.button.MaterialButton>
+
+    <!-- Bloque de otras formas de inicio sesión -->
+
+
+    <LinearLayout
+        android:id="@+id/ll_container_mail_access"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/bt_signup_button">
+
+
+        <TextView
+            android:id="@+id/tv_title_mail_access"
+            style="@style/subtitle_16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/google_outlook" />
+
+        <LinearLayout
+            android:id="@+id/ll_container_google_outlook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+             <!-- BOTÓN MATERIAL: Google -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_google"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@string/content_desc_google"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="16dp"
+                app:icon="@drawable/icon_google"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+
+            <!-- BOTÓN MATERIAL: Outlook -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_outlook"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/content_desc_outlook"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="12dp"
+                app:icon="@drawable/icon_outlook"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+
+
+         </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- enlace para iniciar sesión -->
+    <TextView
+        android:id="@+id/tv_no_signup_register"
+        style="@style/text_link_underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/nosignup_register"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_end"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

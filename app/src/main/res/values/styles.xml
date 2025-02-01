@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    crear estilo de texto-->
+
+
+    <!--    subtítulo 16sp-->
+    <style name="subtitle_16sp" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_secondary_grey</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <!--    Título 30sp -->
+    <style name="title_30sp" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/color_main</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+
+
+    <!--    Título H3 14dp   -->
+    <style name="title_h3_14dp" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_main</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">700</item>
+
+    </style>
+
+
+    <!--    Estilo botón 16sp bold + añadir drawable-->
+    <style name="button_solid_16dp" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">700</item>
+
+    </style>
+
+    <!--    Estilo enlace subrayado -->
+    <style name="text_link_underlined" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_secondary_grey</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <!--    Estilo logo_name -->
+
+    <style name="logo_name_style" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_main</item>
+        <item name="android:textSize">44sp</item>
+        <item name="android:textFontWeight">700</item>>
+    </style>
+    
+
+</resources>
