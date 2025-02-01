@@ -12,6 +12,7 @@
     <string name="content_desc_google">Descripción icono Google</string>
     <string name="content_desc_outlook">Descripción icono Outlook</string>
     <string name="example_input_mail">example@gmail.com</string>
+    <string name="logo_name">VanGo</string>
 
 
     <!--    strings de login   -->
@@ -45,17 +46,14 @@
 
 
 
+    <!--    strings de access account   -->
 
-
-
-
-
-
-
+    <string name="access_account_title">Tu aventura \n acaba de empezar</string>
+    <string name="access_account_bt_signup">Regístrate</string>
+    <string name="access_account_bt_login">Inicia sesión</string>
 
 </resources>
 
-    <!--    strings de sing up   -->
 
 
 

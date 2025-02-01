@@ -45,8 +45,12 @@
     </style>
 
     <!--    Estilo logo_name -->
-    
 
+    <style name="logo_name_style" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_main</item>
+        <item name="android:textSize">44sp</item>
+        <item name="android:textFontWeight">700</item>>
+    </style>
     
 
 </resources>
