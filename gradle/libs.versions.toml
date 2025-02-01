@@ -22,6 +22,9 @@ hilt = "2.55"
 ksp = "2.1.0-1.0.29"
 hilt-android = "2.53"
 hilt-android-compiler = "2.53"
+legacySupportV4 = "1.0.0"
+lifecycleLivedataKtx = "2.8.7"
+fragmentKtx = "1.8.5"
 
 
 [libraries]
@@ -59,6 +62,9 @@ com-github-bumptech-compiler = { group = "com.github.bumptech.glide", name = "co
 
 # Life-cycle
 androidx-lifecycle-viewmodel-ktx-v270 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
+androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

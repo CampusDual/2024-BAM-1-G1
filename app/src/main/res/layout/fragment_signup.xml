@@ -137,7 +137,7 @@
 
 
 
-      <!-- CONTENEDOR CONFIRMAR  CONTRASEÑA-->
+    <!-- CONTENEDOR CONFIRMAR  CONTRASEÑA-->
 
     <LinearLayout
         android:id="@+id/ll_signup_container_confirm_password"
@@ -224,7 +224,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-             <!-- BOTÓN MATERIAL: Google -->
+            <!-- BOTÓN MATERIAL: Google -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/mb_google"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -263,7 +263,7 @@
                 app:strokeWidth="1dp" />
 
 
-         </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
