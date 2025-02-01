@@ -1,4 +1,4 @@
-package com.hakos.vango
+package com.vango
 
 import org.junit.Test
 
