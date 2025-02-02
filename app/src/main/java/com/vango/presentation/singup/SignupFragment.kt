@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.vango.R
+import com.vango.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {
+    var binding: FragmentSignupBinding? = null
 
     companion object {
         fun newInstance() = SignupFragment()
@@ -18,7 +20,6 @@ class SignupFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // TODO: Use the ViewModel
     }
 
@@ -26,6 +27,7 @@ class SignupFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_signup, container, false)
+        binding = FragmentSignupBinding.inflate(inflater, container, false)
+        return binding!!.root
     }
 }
