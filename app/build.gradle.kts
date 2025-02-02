@@ -52,6 +52,11 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.fragment.ktx)
+
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.6")
+
     implementation(libs.firebase.crashlytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -61,30 +66,25 @@ dependencies {
     implementation(libs.com.squareup.retrofit2.retrofit)
     implementation(libs.com.squareup.retrofit2.converter.gson)
 
-// Gson
+    // Gson
     implementation(libs.gson)
 
-// Logging Interceptor
+    // Logging Interceptor
     implementation(libs.logging.interceptor)
 
-// Glide
+    // Glide
     implementation(libs.com.github.bumptech.glide)
     ksp(libs.com.github.bumptech.compiler)
 
-// Life-cycle
+    // Life-cycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v270)
 
-// Hilt
-
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-
-
-// Room
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-
-
 }
