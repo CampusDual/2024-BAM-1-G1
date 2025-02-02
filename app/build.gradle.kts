@@ -47,20 +47,13 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.fragment.ktx)
 
     // Navigation Component
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.6")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.6")
-
-    implementation(libs.firebase.crashlytics)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
 
     // Retrofit
     implementation(libs.com.squareup.retrofit2.retrofit)
@@ -74,7 +67,6 @@ dependencies {
 
     // Glide
     implementation(libs.com.github.bumptech.glide)
-    ksp(libs.com.github.bumptech.compiler)
 
     // Life-cycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v270)
