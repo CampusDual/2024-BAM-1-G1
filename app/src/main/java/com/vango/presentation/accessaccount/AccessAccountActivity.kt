@@ -9,6 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AccessAccountActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityAccessAccountBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,9 +19,9 @@ class AccessAccountActivity : AppCompatActivity() {
         binding = ActivityAccessAccountBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
+        val navHostFragment = binding.navHostFragment.getFragment<NavHostFragment>()
         val navController = navHostFragment.navController
+
     }
 
     override fun onDestroy() {
