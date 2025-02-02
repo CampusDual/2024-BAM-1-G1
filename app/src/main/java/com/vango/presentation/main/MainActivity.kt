@@ -7,13 +7,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.vango.databinding.ActivityMainBinding
-import com.vango.presentation.login.LoginFragment
+import com.vango.presentation.accessaccount.AccessAccountActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private var binding: ActivityMainBinding? = null
+    private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         observeAuthentication()
         mainViewModel.checkUserAuthentication()
@@ -38,8 +38,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        val intent = Intent(this, LoginFragment::class.java)
+        val intent = Intent(this, AccessAccountActivity::class.java)
         startActivity(intent)
-        finish()
+        finish() // elimina la actividad actual de la lista de actividades
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 }

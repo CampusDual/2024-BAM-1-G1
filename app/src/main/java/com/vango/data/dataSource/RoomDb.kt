@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.vango.data.dataSource.user.local.UserDao
 import com.vango.data.dataSource.user.local.dbo.UserDbo
 
-@Database(entities = [UserDbo::class], version = 1)
+@Database(entities = [UserDbo::class], version = 2, exportSchema = true)
 abstract class RoomDb : RoomDatabase() {
 
     abstract fun userDao(): UserDao

@@ -1,4 +1,4 @@
-package com.vango.domain.usecase.userLogged
+package com.vango.domain.usecase
 
 import com.vango.domain.repository.UserRepository
 import javax.inject.Inject

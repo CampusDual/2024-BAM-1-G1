@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class UserDbo(
     @PrimaryKey val id: Int,
     val token: String,
-    @ColumnInfo(name = "username") // usamos como name pero en al db se llama username
-    val mame: String,
+
+    @ColumnInfo(name = "username")
+    val name: String,
 )

@@ -7,5 +7,4 @@ interface UserRepository {
     suspend fun getUser(): UserDbo?
     suspend fun updateUser(id: Int, token: String, username: String)
     suspend fun deleteUser(user: UserDbo)
-    suspend fun deleteAllUsers()
 }

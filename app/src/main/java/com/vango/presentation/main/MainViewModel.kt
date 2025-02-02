@@ -2,7 +2,7 @@ package com.vango.presentation.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vango.domain.usecase.userLogged.IsUserLoggedInUseCase
+import com.vango.domain.usecase.IsUserLoggedInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
