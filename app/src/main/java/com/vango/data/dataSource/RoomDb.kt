@@ -10,5 +10,8 @@ abstract  class RoomDb: RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
+    companion object {
+        private const val DATABASE_NAME = "vanGo.db"
 
+    }
 }

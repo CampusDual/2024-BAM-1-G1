@@ -1,6 +1,9 @@
 package com.vango.data.dataSource.user.local
 
 import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.vango.data.dataSource.user.local.dbo.UserDbo
 
@@ -19,10 +22,10 @@ interface UserDao {
     @Query("SELECT id FROM user")
     fun getUserId(): Int
 
-    @Query("SELECT COUNT(*) FROM user")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: UserDbo)
 
-    @Query("DELETE FROM user")
+    @Delete
     fun deleteUser(user: UserDbo)
 
 }
