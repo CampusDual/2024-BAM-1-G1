@@ -1,5 +1,6 @@
 package com.vango.data.dataSource.user.local.dbo
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,5 +8,6 @@ import androidx.room.PrimaryKey
 data class UserDbo(
     @PrimaryKey val id: Int,
     val token: String,
-    val username: String,
+    @ColumnInfo(name = "username") // usamos como name pero en al db se llama username
+    val mame: String,
 )

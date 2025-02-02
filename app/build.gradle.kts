@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -50,6 +52,7 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.firebase.crashlytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,7 +69,7 @@ dependencies {
 
 // Glide
     implementation(libs.com.github.bumptech.glide)
-    //ksp(libs.com.github.bumptech.compiler)
+    ksp(libs.com.github.bumptech.compiler)
 
 // Life-cycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v270)

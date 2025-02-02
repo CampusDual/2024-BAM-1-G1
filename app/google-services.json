@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "88476587369",
+    "project_id": "vango01",
+    "storage_bucket": "vango01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88476587369:android:6657d9cc5103f5fcf599f8",
+        "android_client_info": {
+          "package_name": "com.vango"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKHkfvuI8ZdSz4O46fiT0XOfdqRFy_ba8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
