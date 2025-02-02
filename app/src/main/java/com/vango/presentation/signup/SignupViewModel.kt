@@ -1,4 +1,4 @@
-package com.vango.presentation.singup
+package com.vango.presentation.signup
 
 import androidx.lifecycle.ViewModel
 
