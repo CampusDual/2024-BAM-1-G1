@@ -25,6 +25,7 @@ hilt-android-compiler = "2.53"
 legacySupportV4 = "1.0.0"
 lifecycleLivedataKtx = "2.8.7"
 fragmentKtx = "1.8.5"
+navigationFragment = "2.8.6"
 
 
 [libraries]
@@ -65,6 +66,7 @@ androidx-lifecycle-viewmodel-ktx-v270 = { group = "androidx.lifecycle", name = "
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
