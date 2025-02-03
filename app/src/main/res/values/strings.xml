@@ -13,6 +13,7 @@
     <string name="content_desc_outlook">Descripción icono Outlook</string>
     <string name="example_input_mail">example@gmail.com</string>
     <string name="logo_name">VanGo</string>
+    <string name="input_empty"> </string>
 
 
     <!--    strings de login   -->
@@ -50,6 +51,17 @@
     <string name="access_account_title">Tu aventura \n acaba de empezar</string>
     <string name="access_account_bt_signup">Regístrate</string>
     <string name="access_account_bt_login">Inicia sesión</string>
+
+
+    <!--  strings de verify account -->
+
+    <string name="verify_account_subtitle">Por favor, inserte el código que se \n ha enviado a tu email</string>
+    <string name="verify_account_title">Verifica tu cuenta</string>
+    <string name="verify_account_not_received">
+        <u>¿No lo has recibido?
+            <b><font color="#32788C">Reenviar código</font></b>
+        </u>
+    </string>
 
 </resources>
 

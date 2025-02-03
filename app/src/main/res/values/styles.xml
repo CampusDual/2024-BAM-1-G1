@@ -9,6 +9,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/color_secondary_grey</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!--    Título 30sp -->
@@ -16,6 +17,7 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/color_main</item>
         <item name="android:textFontWeight">700</item>
+        <item name="android:gravity">center</item>
     </style>
 
 
@@ -29,7 +31,7 @@
     </style>
 
 
-    <!--    Estilo botón 16sp bold + añadir drawable-->
+    <!--    Estilo botón 16sp bold -->
     <style name="button_solid_16dp" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">16sp</item>
@@ -50,6 +52,23 @@
         <item name="android:textColor">@color/color_main</item>
         <item name="android:textSize">44sp</item>
         <item name="android:textFontWeight">700</item>>
+    </style>
+
+
+    <!--    input de verificación -->
+
+
+    <style name="VerificationCodeEditText">
+        <item name="android:layout_width">60dp</item> <!-- Reducimos el ancho -->
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/input_rounded_corner</item>
+        <item name="android:hint">@string/input_empty</item>
+        <item name="android:inputType">number</item>                                                <!-- #solo un elemento -->
+        <item name="android:maxLength">1</item>                                                     <!-- #solo admite números -->
+        <item name="android:gravity">center</item>
+        <item name="android:padding">12dp</item> <!-- Ajuste de padding para mejor centrado -->
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColorHint">@color/color_secondary_grey</item>
     </style>
     
 

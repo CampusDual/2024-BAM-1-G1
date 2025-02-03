@@ -151,6 +151,8 @@
 
 
         <!-- h3 confirmar contraseña -->
+
+        <!-- input contraseña 2 -->
         <TextView
             android:id="@+id/tv_signup_title_confirm_password"
             style="@style/title_h3_14dp"
@@ -160,7 +162,6 @@
 
             android:text="@string/signup_title_confirm_password" />
 
-        <!-- input contraseña 2 -->
         <EditText
             android:id="@+id/et_signup_input_confirm_password"
             android:layout_width="match_parent"
