@@ -14,6 +14,8 @@
 
     <!--    Título 30sp -->
     <style name="title_30sp" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">0dp</item> <!-- Se adapta con ConstraintLayout -->
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/color_main</item>
         <item name="android:textFontWeight">700</item>

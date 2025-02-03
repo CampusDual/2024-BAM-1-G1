@@ -46,8 +46,6 @@
 
     <TextView
         android:id="@+id/tv_login_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/login_title"
         android:layout_marginTop="6dp"
         style= "@style/title_30sp"
@@ -56,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_login_subtitle">
     </TextView>
 
-    <!-- Aquí metemos un LinearLayout para agrupar "tvTitleH3" y "etEmail" -->
+    <!-- contenedor de email + input -->
     <LinearLayout
         android:id="@+id/ll_login_container_email"
         android:layout_width="0dp"

@@ -1,4 +1,4 @@
-package com.vango.presentation
+package com.vango.presentation.verifyaccount
 
 import androidx.lifecycle.ViewModel
 
