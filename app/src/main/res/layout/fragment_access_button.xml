@@ -1,172 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        app:navGraph="@navigation/nav_graph_access_account"
-    >
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_vertical_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.05" />
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/base_constraint_layout">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_vertical_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.95" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_start"
+        style="@style/base_guideline"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/guideline_percent_start" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="896dp" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_end"
+        style="@style/base_guideline"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/guideline_percent_end" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.98" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_start"
+        style="@style/base_guideline"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/guideline_horizontal_end" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_end"
+        style="@style/base_guideline"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/guideline_percent_bottom" />
+
+
+    <TextView
+        android:id="@+id/tv_access_account_title"
+        style="@style/title_30sp"
+        android:text="@string/access_account_title"
+        android:layout_marginTop="96dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_start">
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_access_count_welcome_logo"
+        style="@style/logo_name_style"
+        android:layout_width="169dp"
+        android:layout_height="156dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/input_rounded_corner"
+        android:backgroundTint="@color/color_secondary_green"
+        android:gravity="center"
+        android:padding="18dp"
+        android:text="@string/logo_name"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.452"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/tv_access_account_title" />
+
+
+    <!-- Creamos botón con materialButton -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_access_account_signup"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:text="@string/access_account_bt_login"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/tv_access_count_welcome_logo">
+    </com.google.android.material.button.MaterialButton>
+
+    <!-- Creamos botón con materialButton -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_access_account_login"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:text="@string/access_account_bt_signup"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/bt_access_account_signup"
+        >
+    </com.google.android.material.button.MaterialButton>
+    <!-- Bloque de otras formas de inicio sesión -->
+
+    <LinearLayout
+        android:id="@+id/ll_container_mail_access"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintTop_toBottomOf="@+id/bt_access_account_login">
 
 
         <TextView
-            android:id="@+id/tv_access_account_title"
-            style="@style/title_30sp"
-            android:text="@string/access_account_title"
-            android:layout_marginTop="96dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
-            app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
-            app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_start">
-        </TextView>
-
-        <TextView
-            android:id="@+id/tv_access_count_welcome_logo"
-            style="@style/logo_name_style"
-            android:layout_width="169dp"
-            android:layout_height="156dp"
-            android:layout_marginTop="48dp"
-            android:background="@drawable/input_rounded_corner"
-            android:backgroundTint="@color/color_secondary_green"
-            android:gravity="center"
-            android:padding="18dp"
-            android:text="@string/logo_name"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.452"
-            app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
-            app:layout_constraintTop_toBottomOf="@+id/tv_access_account_title" />
-
-
-        <!-- Creamos botón con materialButton -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/bt_access_account_signup"
-            style="@style/button_solid_16dp"
-            android:layout_width="0dp"
+            android:id="@+id/tv_title_mail_access"
+            style="@style/subtitle_16sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:backgroundTint="@color/color_main"
-            android:padding="18dp"
-            android:text="@string/access_account_bt_login"
-            app:cornerRadius="16dp"
-            app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
-            app:layout_constraintTop_toBottomOf="@+id/tv_access_count_welcome_logo">
-        </com.google.android.material.button.MaterialButton>
-
-        <!-- Creamos botón con materialButton -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/bt_access_account_login"
-            style="@style/button_solid_16dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/color_main"
-            android:padding="18dp"
-            android:text="@string/access_account_bt_signup"
-            app:cornerRadius="16dp"
-            app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
-            app:layout_constraintTop_toBottomOf="@+id/bt_access_account_signup"
-            >
-        </com.google.android.material.button.MaterialButton>
-        <!-- Bloque de otras formas de inicio sesión -->
+            android:text="@string/google_outlook" />
 
         <LinearLayout
-            android:id="@+id/ll_container_mail_access"
-            android:layout_width="0dp"
+            android:id="@+id/ll_login_container_google_outlook"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
-            app:layout_constraintTop_toBottomOf="@+id/bt_access_account_login">
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-
-            <TextView
-                android:id="@+id/tv_title_mail_access"
-                style="@style/subtitle_16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/google_outlook" />
-
-            <LinearLayout
-                android:id="@+id/ll_login_container_google_outlook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+            <!-- BOTÓN MATERIAL: Google -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_google"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@string/content_desc_google"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="16dp"
+                app:icon="@drawable/icon_google"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
 
-                <!-- BOTÓN MATERIAL: Google -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mb_google"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="65dp"
-                    android:layout_height="69dp"
-                    android:layout_marginEnd="6dp"
-                    android:contentDescription="@string/content_desc_google"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text=""
-                    app:cornerRadius="16dp"
-                    app:icon="@drawable/icon_google"
-                    app:iconGravity="start"
-                    app:iconSize="48dp"
-                    app:iconTint="@null"
-                    app:strokeColor="@color/color_secondary_grey"
-                    app:strokeWidth="1dp" />
+            <!-- BOTÓN MATERIAL: Outlook -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_outlook"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/content_desc_outlook"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="12dp"
+                app:icon="@drawable/icon_outlook"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
 
-                <!-- BOTÓN MATERIAL: Outlook -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mb_outlook"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="65dp"
-                    android:layout_height="69dp"
-                    android:layout_marginStart="6dp"
-                    android:contentDescription="@string/content_desc_outlook"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text=""
-                    app:cornerRadius="12dp"
-                    app:icon="@drawable/icon_outlook"
-                    app:iconGravity="start"
-                    app:iconSize="48dp"
-                    app:iconTint="@null"
-                    app:strokeColor="@color/color_secondary_grey"
-                    app:strokeWidth="1dp" />
-
-            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -66,15 +66,24 @@
 
     <!-- strings de recuperar cuenta -->
 
-    <string name="forgotten_password_subtitle">Por favor, facilítanos tu email  y te n\
-        enviaremos un correo para que n\
+    <string name="forgotten_password_subtitle">Por favor, facilítanos tu email  y te \n
+        enviaremos un correo para que \n
         puedas restrablecer tu contraseña
     </string>
 
     <string name="forgotten_password_bt">Solicitar</string>
+
+
+    <!-- strings verify account -->
+
+    <string name="verify_accepted_title">Solicitud aceptada</string>
+    <string name="verify_accepted_subtitle">En breve recibirás un correo electrónico.
+    \n \n Sigue las intrucciones para obtener una nueva contraseña.</string>
+    <string name="verify_accepted_noemail">
+        <u>¿No has recibido el correo?
+            <b><font color="#32788C">Reenviar correo</font></b>
+        </u>
+    </string>
+
+
 </resources>
-
-
-
-
-

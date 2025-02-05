@@ -1,3 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Margen de pagina  y medidas generales (se usa en todas las páginas) -->
+    <dimen name="layout_match_parent">match_parent</dimen>
+    <dimen name="guideline_percent_start">0.05</dimen>
+    <dimen name="guideline_percent_end">0.95</dimen>
+    <dimen name="guideline_percent_bottom">0.98</dimen>
+    <dimen name="guideline_horizontal_end">896dp</dimen>
+
+
+
+
+
+
+
+
+
+
+
 </resources>

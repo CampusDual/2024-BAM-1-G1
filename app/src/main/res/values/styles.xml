@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    crear estilo de texto-->
+    <!--    BASE DE TODAS LAS PÁGINAS -->
+
+    <!-- Estilo para ConstraintLayout con fondo blanco -->
+    <style name="base_constraint_layout">
+        <item name="android:layout_width">@dimen/layout_match_parent</item>
+        <item name="android:layout_height">@dimen/layout_match_parent</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!-- Estilo base para Guías -->
+    <style name="base_guideline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+
 
 
     <!--    subtítulo 16sp-->
@@ -72,6 +88,6 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textColorHint">@color/color_secondary_grey</item>
     </style>
-    
+
 
 </resources>
