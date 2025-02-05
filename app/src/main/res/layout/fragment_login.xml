@@ -4,64 +4,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/base_constraint_layout">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_vertical_start"
-        style="@style/base_guideline"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="@dimen/guideline_percent_start" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_vertical_end"
-        style="@style/base_guideline"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="@dimen/guideline_percent_end" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_start"
-        style="@style/base_guideline"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/guideline_horizontal_end" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_end"
-        style="@style/base_guideline"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="@dimen/guideline_percent_bottom" />
-
+    <!-- Subtítulo -->
     <TextView
         android:id="@+id/tv_login_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_subtitle"
         android:layout_marginTop="48dp"
-        style= "@style/subtitle_16sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
-        app:layout_constraintTop_toTopOf="@+id/guideline_horizontal_start">
-    </TextView>
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        style="@style/subtitle_16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Título -->
     <TextView
         android:id="@+id/tv_login_title"
         android:text="@string/login_title"
         android:layout_marginTop="6dp"
-        style= "@style/title_30sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
-        app:layout_constraintTop_toBottomOf="@+id/tv_login_subtitle">
-    </TextView>
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        style="@style/title_30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login_subtitle" />
 
-    <!-- contenedor de email + input -->
+    <!-- Contenedor de email -->
     <LinearLayout
         android:id="@+id/ll_login_container_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
-        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_login_title">
 
-        <!-- TextView título del input -->
         <TextView
             android:id="@+id/tv_login_title_email"
             style="@style/title_h3_14dp"
@@ -70,7 +51,6 @@
             android:layout_height="wrap_content"
             android:text="@string/login_title_mail" />
 
-        <!-- EditText (input) -->
         <EditText
             android:id="@+id/et_login_input_email"
             android:layout_width="match_parent"
@@ -83,28 +63,27 @@
             android:textColorHint="@color/color_secondary_grey" />
     </LinearLayout>
 
-    <!-- Hacemos lo mismo para el apartado de password -->
+    <!-- Contenedor de contraseña -->
     <LinearLayout
         android:id="@+id/ll_login_container_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
-        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_login_container_email">
 
-        <!-- TextView título del input -->
         <TextView
             android:id="@+id/tv_login_title_password"
             style="@style/title_h3_14dp"
             android:paddingBottom="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:text="@string/login_title_password" />
 
-        <!-- EditText (input) -->
         <EditText
             android:id="@+id/et_login_input_password"
             android:layout_width="match_parent"
@@ -116,7 +95,6 @@
             android:textColor="@color/color_main"
             android:textColorHint="@color/color_secondary_grey" />
 
-        <!-- TextView olvidaste la contraseña -->
         <TextView
             android:id="@+id/tv_login_forgot_password"
             style="@style/text_link_underlined"
@@ -124,10 +102,9 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/login_forgot_password" />
-
     </LinearLayout>
 
-    <!-- Creamos botón con materialButton -->
+    <!-- Botón de inicio de sesión -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_login_button"
         android:layout_width="0dp"
@@ -137,15 +114,14 @@
         app:cornerRadius="16dp"
         android:padding="18dp"
         style="@style/button_solid_16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/ll_login_container_password"
-        app:layout_constraintStart_toStartOf="@id/guideline_vertical_start"
-        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_end"
-        app:layout_constraintHorizontal_bias="0.0">
-    </com.google.android.material.button.MaterialButton>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_login_container_password" />
 
-    <!-- Bloque de otras formas de inicio sesión -->
-
+    <!-- Bloque de otras formas de inicio de sesión -->
     <LinearLayout
         android:id="@+id/ll_login_container_mail_access"
         android:layout_width="0dp"
@@ -153,11 +129,9 @@
         android:layout_marginTop="48dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bt_login_button">
-
 
         <TextView
             android:id="@+id/tv_title_mail_access"
@@ -174,7 +148,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <!-- BOTÓN MATERIAL: Google -->
+            <!-- Botón Google -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/mb_google"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -193,7 +167,7 @@
                 app:strokeColor="@color/color_secondary_grey"
                 app:strokeWidth="1dp" />
 
-            <!-- BOTÓN MATERIAL: Outlook -->
+            <!-- Botón Outlook -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/mb_outlook"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -211,10 +185,10 @@
                 app:iconTint="@null"
                 app:strokeColor="@color/color_secondary_grey"
                 app:strokeWidth="1dp" />
-
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Enlace para registrarse -->
     <TextView
         android:id="@+id/tv_no_login_register"
         style="@style/text_link_underlined"
@@ -223,9 +197,8 @@
         android:gravity="center"
         android:text="@string/nologin_register"
         android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_end"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_end"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_start" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
