@@ -17,6 +17,12 @@
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityChangePass"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.auth.passwordChanged.ActivityPasswordChanged"
+            android:exported="false" />
+        <activity
             android:name=".presentation.auth.login.ActivityLogin"
             android:exported="false" />
         <activity

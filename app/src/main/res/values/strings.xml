@@ -8,12 +8,14 @@
 
 
     <string name="google_outlook">O conéctate con</string>
+    <string name="confirm_password">Confirmar contraseña</string>
     <string name="asterisks_password">*********</string>
     <string name="content_desc_google">Descripción icono Google</string>
     <string name="content_desc_outlook">Descripción icono Outlook</string>
     <string name="example_input_mail">example@gmail.com</string>
     <string name="logo_name">VanGo</string>
     <string name="input_empty"> </string>
+
 
 
     <!--    strings de login   -->
@@ -37,7 +39,7 @@
     <string name="signup_title">Regístrate</string>
     <string name="signup_title_mail">Email</string>
     <string name="signup_title_password">Elige una contraseña</string>
-    <string name="signup_title_confirm_password">Confirmar contraseña</string>
+
     <string name="signup_button">Registrarse</string>
     <string name="nosignup_register">
         <u>¿Ya tienes una cuenta?
@@ -84,6 +86,29 @@
             <b><font color="#32788C">Reenviar correo</font></b>
         </u>
     </string>
+
+
+    <!-- strings change password -->
+
+    <string name="change_pass_title">Cambia tu \n contraseña</string>
+    <string name="change_pass_subtitle">Estamos preparados para cambiar \n
+        la contraseña</string>
+
+
+    <!-- strings password changed -->
+
+    <string name="password_changed_title">La contraseña \n ha sido cambiada</string>
+    <string name="password_changed_subtitle">¡Genial! La  contraseña ha sido \n
+        cambiada con éxito.</string>
+    <string name="password_changed_noemail">
+        <u>Volver a Inicio de sesión
+        </u>
+    </string>
+
+    <string name="change_pass_new_password">Nueva contraseña</string>
+    <string name="change_pass_button">Cambiar</string>
+
+
 
 
 </resources>
