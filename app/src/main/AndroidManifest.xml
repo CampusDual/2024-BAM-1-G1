@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
-
+        <activity
+            android:name=".presentation.auth.accessAccount.ActivityAccessAccount"
+            android:exported="false" />
         <!-- Main Activity -->
         <activity
             android:name=".presentation.main.MainActivity"
