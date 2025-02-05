@@ -17,10 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
-        <!-- Acccess Account Activity -->
-        <activity
-            android:name=".presentation.accessaccount.AccessAccountActivity"
-            android:exported="true" />
 
         <!-- Main Activity -->
         <activity

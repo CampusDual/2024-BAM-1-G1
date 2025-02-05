@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.vango.presentation.login.LoginFragment"
+        android:name="com.vango.presentation.auth.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
