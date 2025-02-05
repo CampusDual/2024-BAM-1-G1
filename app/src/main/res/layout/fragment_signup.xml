@@ -176,19 +176,57 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/google_outlook" />
+
+
+
+        <LinearLayout
+            android:id="@+id/ll_login_container_google_outlook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Botón Google -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_google"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@string/content_desc_google"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="16dp"
+                app:icon="@drawable/icon_google"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+
+            <!-- Botón Outlook -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_outlook"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/content_desc_outlook"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="12dp"
+                app:icon="@drawable/icon_outlook"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <!-- Enlace para iniciar sesión -->
-    <TextView
-        android:id="@+id/tv_no_signup_register"
-        style="@style/text_link_underlined"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/nosignup_register"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
