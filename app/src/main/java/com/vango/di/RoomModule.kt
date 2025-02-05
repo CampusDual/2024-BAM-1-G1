@@ -18,11 +18,7 @@ object RoomModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): RoomDb {
-        return Room.databaseBuilder(
-            context,
-            RoomDb::class.java,
-            "vanGo.db"
-        ).build()
+        return RoomDb.invoke(context)
     }
 
     @Provides
