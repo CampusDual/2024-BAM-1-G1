@@ -20,10 +20,7 @@
             android:name=".presentation.auth.login.ActivityLogin"
             android:exported="false" />
         <activity
-            android:name=".presentation.accessacount.AccessAccountActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.main.MainActivity"
+            android:name=".presentation.auth.accessAccount.ActivityAccessAccount"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
