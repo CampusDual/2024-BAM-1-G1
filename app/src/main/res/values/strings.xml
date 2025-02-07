@@ -111,6 +111,9 @@
     <!--    onboarding página 1  -->
 
     <string name="onboarding_one_image_description">descripción imagen caravana y mapa</string>
-
+    <string name="onboarding_one_title">Viaja a tu manera</string>
+    <string name="onboarding_one_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje\n\n<b><font color="#73ACB5">¡La carretera te espera con VanGo!</font></b></string>
+    <string name="onboarding_one_subtitle">El mapa es tuyo</string>
+    <string name="onboarding_one_desc">Botón flecha derecha</string>
 
 </resources>

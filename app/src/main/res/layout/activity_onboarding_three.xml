@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/backgroundImage"
-        android:layout_width="395dp"
+        android:layout_width="413dp"
         android:layout_height="652dp"
         android:scaleType="centerCrop"
         android:src="@drawable/image3"
@@ -23,17 +23,67 @@
     <!-- Contenedor inferior -->
 
     <LinearLayout
-        android:id="@+id/bottomContainer"
+        android:id="@+id/ll_container_onboarding_one"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="360dp"
         android:background="@drawable/onboarding_tv_rounded"
         android:orientation="vertical"
-        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
+        <TextView
+            android:id="@+id/tv_onboarding_one_subtitle"
+            style="@style/subtitle_onb_18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/onboarding_one_subtitle">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_onboarding_one_title"
+            style="@style/title_onboarding_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/onboarding_one_title">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_onboarding_one_body"
+            style="@style/text_body"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/onboarding_one_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            >
+        </TextView>
+
     </LinearLayout>
+
+    <!-- Botón redondo con icono ">" -->
+
+    <ImageView
+        android:id="@+id/iv_arrow_right"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="end"
+        android:contentDescription="@string/onboarding_one_desc"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintHorizontal_bias="01"
+        android:src="@drawable/ic_arrow_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/ll_container_onboarding_one"
+
+
+        app:layout_constraintStart_toStartOf="parent">
+
+    </ImageView>
 </androidx.constraintlayout.widget.ConstraintLayout>
