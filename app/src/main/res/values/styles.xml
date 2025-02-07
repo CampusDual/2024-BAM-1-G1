@@ -3,12 +3,7 @@
 
     <!--    BASE DE TODAS LAS PÁGINAS -->
 
-    <!-- Estilo para ConstraintLayout con fondo blanco -->
-    <style name="base_constraint_layout">
-        <item name="android:layout_width">@dimen/layout_match_parent</item>
-        <item name="android:layout_height">@dimen/layout_match_parent</item>
-        <item name="android:background">@color/white</item>
-    </style>
+
 
     <!-- Estilo base para Guías -->
     <style name="base_guideline">
@@ -35,7 +30,8 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/color_main</item>
         <item name="android:textFontWeight">700</item>
-        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+
     </style>
 
 

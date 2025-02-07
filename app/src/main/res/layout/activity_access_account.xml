@@ -1,11 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.auth.accessAccount.ActivityAccessAccount">
+    android:layout_height="match_parent">
 
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tv_access_account_title"
+        style="@style/title_30sp"
+        android:text="@string/access_account_title"
+        android:layout_marginTop="96dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Logo -->
+    <TextView
+        android:id="@+id/tv_access_count_welcome_logo"
+        style="@style/logo_name_style"
+        android:layout_width="169dp"
+        android:layout_height="156dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/input_rounded_corner"
+        android:backgroundTint="@color/color_secondary_green"
+        android:gravity="center"
+        android:padding="18dp"
+        android:text="@string/logo_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_access_account_title" />
+
+    <!-- Botón: Iniciar sesión -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_access_account_signup"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:text="@string/access_account_bt_login"
+        app:cornerRadius="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_access_count_welcome_logo" />
+
+    <!-- Botón: Registrarse -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_access_account_login"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:text="@string/access_account_bt_signup"
+        app:cornerRadius="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_access_account_signup" />
+
+    <!-- Bloque de otras formas de inicio de sesión -->
+    <LinearLayout
+        android:id="@+id/ll_container_mail_access"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_access_account_login">
+
+        <TextView
+            android:id="@+id/tv_title_mail_access"
+            style="@style/subtitle_16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/google_outlook" />
+
+        <LinearLayout
+            android:id="@+id/ll_login_container_google_outlook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Botón Google -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_google"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@string/content_desc_google"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="16dp"
+                app:icon="@drawable/icon_google"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+
+            <!-- Botón Outlook -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_outlook"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/content_desc_outlook"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="12dp"
+                app:icon="@drawable/icon_outlook"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

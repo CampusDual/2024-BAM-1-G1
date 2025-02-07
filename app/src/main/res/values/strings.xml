@@ -80,7 +80,7 @@
 
     <string name="verify_accepted_title">Solicitud aceptada</string>
     <string name="verify_accepted_subtitle">En breve recibirás un correo electrónico.
-    \n \n Sigue las intrucciones para obtener una nueva contraseña.</string>
+    \n\nSigue las intrucciones para obtener una nueva contraseña.</string>
     <string name="verify_accepted_noemail">
         <u>¿No has recibido el correo?
             <b><font color="#32788C">Reenviar correo</font></b>
@@ -90,14 +90,14 @@
 
     <!-- strings change password -->
 
-    <string name="change_pass_title">Cambia tu \n contraseña</string>
+    <string name="change_pass_title">Cambia tu \ncontraseña</string>
     <string name="change_pass_subtitle">Estamos preparados para cambiar \n
         la contraseña</string>
 
 
     <!-- strings password changed -->
 
-    <string name="password_changed_title">La contraseña \n ha sido cambiada</string>
+    <string name="password_changed_title">La contraseña \nha sido cambiada</string>
     <string name="password_changed_subtitle">¡Genial! La  contraseña ha sido \n
         cambiada con éxito.</string>
     <string name="password_changed_noemail">
@@ -108,7 +108,9 @@
     <string name="change_pass_new_password">Nueva contraseña</string>
     <string name="change_pass_button">Cambiar</string>
 
+    <!--    onboarding página 1  -->
 
+    <string name="onboarding_one_image_description">descripción imagen caravana y mapa</string>
 
 
 </resources>
