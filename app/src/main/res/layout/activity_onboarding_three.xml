@@ -10,7 +10,7 @@
     <!-- Contenedor inferior -->
 
     <ImageView
-        android:id="@+id/backgroundImage"
+        android:id="@+id/backgroundImageThree"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
@@ -22,7 +22,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
-        android:id="@+id/ll_container_onboarding_one"
+        android:id="@+id/ll_container_onboarding_three"
         android:layout_width="match_parent"
         android:layout_height="360dp"
         android:background="@drawable/onboarding_tv_rounded"
@@ -33,28 +33,28 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/tv_onboarding_one_subtitle"
+            android:id="@+id/tv_onboarding_three_subtitle"
             style="@style/subtitle_onb_18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="@string/onboarding_one_subtitle">
+            android:text="@string/onboarding_three_subtitle">
 
         </TextView>
 
         <TextView
-            android:id="@+id/tv_onboarding_one_title"
-            style="@style/title_onboarding_one"
+            android:id="@+id/tv_onboarding_three_title"
+            style="@style/title_onboarding_three"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/onboarding_one_title">
+            android:text="@string/onboarding_three_title">
 
         </TextView>
 
         <TextView
-            android:id="@+id/tv_onboarding_one_body"
+            android:id="@+id/tv_onboarding_three_body"
             style="@style/text_body"
             android:layout_marginHorizontal="20dp"
             android:text="@string/onboarding_one_body"
@@ -84,6 +84,5 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp">
     </com.google.android.material.button.MaterialButton>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

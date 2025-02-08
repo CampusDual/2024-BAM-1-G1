@@ -15,6 +15,7 @@
         android:layout_height="765dp"
         android:scaleType="centerCrop"
         android:src="@drawable/image2"
+        android:contentDescription="@string/onboarding_two_image_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -25,7 +26,7 @@
     <!-- Contenedor inferior -->
 
     <LinearLayout
-        android:id="@+id/ll_container_onboarding_one"
+        android:id="@+id/ll_container_onboarding_two"
         android:layout_width="match_parent"
         android:layout_height="360dp"
         android:background="@drawable/onboarding_tv_rounded"
@@ -36,23 +37,23 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/tv_onboarding_one_subtitle"
+            android:id="@+id/tv_onboarding_two_subtitle"
             style="@style/subtitle_onb_18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="@string/onboarding_one_subtitle">
+            android:text="@string/onboarding_two_subtitle">
 
         </TextView>
 
         <TextView
-            android:id="@+id/tv_onboarding_one_title"
-            style="@style/title_onboarding_one"
+            android:id="@+id/tv_onboarding_two_title"
+            style="@style/title_onboarding_two"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/onboarding_one_title">
+            android:text="@string/onboarding_two_title">
 
         </TextView>
 
@@ -60,7 +61,7 @@
             android:id="@+id/tv_onboarding_one_body"
             style="@style/text_body"
             android:layout_marginHorizontal="20dp"
-            android:text="@string/onboarding_one_body"
+            android:text="@string/onboarding_two_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -76,13 +77,13 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="end"
-        android:contentDescription="@string/onboarding_one_desc"
+        android:contentDescription="@string/btn_arrow_right_desc"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="30dp"
         app:layout_constraintHorizontal_bias="01"
         android:src="@drawable/ic_arrow_right"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/ll_container_onboarding_one"
+        app:layout_constraintEnd_toEndOf="@id/ll_container_onboarding_two"
         app:layout_constraintStart_toStartOf="parent">
     </ImageView>
 

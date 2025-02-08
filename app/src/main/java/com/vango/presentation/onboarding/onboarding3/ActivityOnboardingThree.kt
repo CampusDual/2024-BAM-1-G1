@@ -19,8 +19,6 @@ class ActivityOnboardingThree : AppCompatActivity() {
             val intent = Intent(this, ActivityAccessAccount::class.java)
             startActivity(intent)
         }
-
     }
-
 }
 

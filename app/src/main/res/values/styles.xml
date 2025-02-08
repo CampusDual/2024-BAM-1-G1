@@ -49,6 +49,16 @@
         <item name="android:textColor">@color/color_secondary_blue</item>
     </style>
 
+    <!-- Onboarding 2 -->
+    <style name="title_onboarding_two" parent="title_onboarding">
+        <item name="android:textColor">@color/color_secondary_orange</item>
+    </style>
+
+    <!-- Onboarding 3 -->
+    <style name="title_onboarding_three" parent="title_onboarding">
+        <item name="android:textColor">@color/color_secondary_wine</item>
+    </style>
+
 
     <!--    subtítulo 16sp-->
     <style name="subtitle_onb_18sp" parent="TextAppearance.AppCompat">
@@ -58,15 +68,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <!-- Onboarding 2 -->
-    <style name="title_onboarding_two" parent="title_onboarding">
-        <item name="android:textColor">@color/color_secondary_orange</item>
-    </style>
-
-    <!-- Onboarding 1 -->
-    <style name="title_onboarding_three" parent="title_onboarding">
-        <item name="android:textColor">@color/color_secondary_wine</item>
-    </style>
 
     <!-- Cuerpo de texto -->
 

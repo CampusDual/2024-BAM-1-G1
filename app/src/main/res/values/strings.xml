@@ -2,11 +2,7 @@
     <string name="app_name">VanGO</string>
     <!-- TODO: Remove or change this placeholder text -->
 
-
-
-    <!--    strings reutilizables  -->
-
-
+    <!--    Strings reutilizables  -->
     <string name="google_outlook">O conéctate con</string>
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="asterisks_password">*********</string>
@@ -15,48 +11,70 @@
     <string name="example_input_mail">example@gmail.com</string>
     <string name="logo_name">VanGo</string>
     <string name="input_empty"> </string>
+    <string name="btn_arrow_right_desc">Botón flecha derecha</string>
+    <string name="reusable_email">Email</string>
+    <string name="reusable_password">Contraseña</string>
+    <string name="reusable_register">Regístrate</string>
+    <string name="reusable_login">Inicia sesión</string>
+    <string name="reusable_new_password">Nueva contraseña</string>
 
+    <!--    Onboarding página 1  -->
+    <!-- Strings reutilizables usados: btn_arrow_right_desc -->
+    <string name="onboarding_one_image_description">descripción imagen caravana y mapa</string>
+    <string name="onboarding_one_title">Viaja a tu manera</string>
+    <string name="onboarding_one_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje\n\n<b><font color="#73ACB5">¡La carretera te espera con VanGo!</font></b></string>
+    <string name="onboarding_one_subtitle">🗺️ El mapa es tuyo</string>
 
+    <!--    Onboarding página 2  -->
+    <!-- Strings reutilizables usados: btn_arrow_right_desc -->
+    <string name="onboarding_two_image_description">descripción imagen múltiples iconos de búsqueda</string>
+    <string name="onboarding_two_title">Viaja tranquilo</string>
+    <string name="onboarding_two_body">Elige lo que más usas y encuéntralo fácilmente. Con "Buscar cerca de mí", siempre sabrás lo que tienes alrededor.\n\n<b><font color="#FBBB73">Con VanGo siempre estás cerca</font></b></string>
+    <string name="onboarding_two_subtitle">🔎 Encuéntralo todo</string>
 
-    <!--    strings de login   -->
+    <!--    Onboarding página 3  -->
+    <!-- Strings reutilizables usados: ninguno -->
+    <string name="onboarding_three_image_description">descripción imagen personas viendo atardecer con vistas</string>
+    <string name="onboarding_three_title">Viaja a tu manera</string>
+    <string name="onboarding_three_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje\n\n<b><font color="#73ACB5">¡La carretera te espera con VanGo!</font></b></string>
+    <string name="onboarding_three_subtitle">🗺️ El mapa es tuyo</string>
+    <string name="onboarding_three_button">Empezamos</string>
 
+    <!--    Access Account   -->
+    <!-- Strings reutilizables usados: reusable_register, reusable_login -->
+    <string name="access_account_title">Tu aventura \n acaba de empezar</string>
+    <string name="access_account_bt_signup">@string/reusable_register</string>
+    <string name="access_account_bt_login">@string/reusable_login</string>
+
+    <!--    Login   -->
+    <!-- Strings reutilizables usados: google_outlook, content_desc_google, content_desc_outlook, reusable_email, reusable_password, reusable_login -->
     <string name="login_subtitle">¿Qué aventura nos depara hoy?</string>
-    <string name="login_title">Inicia sesión</string>
-    <string name="login_title_mail">Email</string>
-    <string name="login_title_password">Contraseña</string>
-    <string name="login_button">Iniciar</string>
+    <string name="login_title">@string/reusable_login</string>
+    <string name="login_title_mail">@string/reusable_email</string>
+    <string name="login_title_password">@string/reusable_password</string>
+    <string name="login_button">@string/reusable_login</string>
     <string name="login_forgot_password"><u>¿Has olvidado tu contraseña?</u></string>
     <string name="nologin_register">
         <u>¿No tienes una cuenta?
-            <b><font color="#32788C">Regístrate</font></b>
+            <b><font color="#32788C">@string/reusable_register</font></b>
         </u>
     </string>
 
-
-    <!--    strings de sing up   -->
-
+    <!--    Sign Up   -->
+    <!-- Strings reutilizables usados: google_outlook, content_desc_google, content_desc_outlook, reusable_email, reusable_password, reusable_register, reusable_login -->
     <string name="signup_subtitle">La aventura está a punto de comenzar</string>
-    <string name="signup_title">Regístrate</string>
-    <string name="signup_title_mail">Email</string>
+    <string name="signup_title">@string/reusable_register</string>
+    <string name="signup_title_mail">@string/reusable_email</string>
     <string name="signup_title_password">Elige una contraseña</string>
-
     <string name="signup_button">Registrarse</string>
     <string name="nosignup_register">
         <u>¿Ya tienes una cuenta?
-            <b><font color="#32788C">Inicia sesión</font></b>
+            <b><font color="#32788C">@string/reusable_login</font></b>
         </u>
     </string>
 
-
-    <!--    strings de access account   -->
-
-    <string name="access_account_title">Tu aventura \n acaba de empezar</string>
-    <string name="access_account_bt_signup">Regístrate</string>
-    <string name="access_account_bt_login">Inicia sesión</string>
-
-
-    <!--  strings de verify account -->
-
+    <!--    Verify Account   -->
+    <!-- Strings reutilizables usados: ninguno -->
     <string name="verify_account_subtitle">Por favor, inserte el código que se \n ha enviado a tu email</string>
     <string name="verify_account_title">Verifica tu cuenta</string>
     <string name="verify_account_not_received">
@@ -65,38 +83,35 @@
         </u>
     </string>
 
-
-    <!-- strings de recuperar cuenta -->
-
+    <!--    Recuperar cuenta   -->
+    <!-- Strings reutilizables usados: ninguno -->
     <string name="forgotten_password_subtitle">Por favor, facilítanos tu email  y te \n
         enviaremos un correo para que \n
-        puedas restrablecer tu contraseña
+        puedas restablecer tu contraseña
     </string>
-
     <string name="forgotten_password_bt">Solicitar</string>
 
-
-    <!-- strings verify account -->
-
+    <!--    Verify Account - Solicitud aceptada   -->
+    <!-- Strings reutilizables usados: ninguno -->
     <string name="verify_accepted_title">Solicitud aceptada</string>
     <string name="verify_accepted_subtitle">En breve recibirás un correo electrónico.
-    \n\nSigue las intrucciones para obtener una nueva contraseña.</string>
+    \n\nSigue las instrucciones para obtener una nueva contraseña.</string>
     <string name="verify_accepted_noemail">
         <u>¿No has recibido el correo?
             <b><font color="#32788C">Reenviar correo</font></b>
         </u>
     </string>
 
-
-    <!-- strings change password -->
-
+    <!--    Cambiar contraseña   -->
+    <!-- Strings reutilizables usados: reusable_new_password -->
     <string name="change_pass_title">Cambia tu \ncontraseña</string>
     <string name="change_pass_subtitle">Estamos preparados para cambiar \n
         la contraseña</string>
+    <string name="change_pass_new_password">@string/reusable_new_password</string>
+    <string name="change_pass_button">Cambiar</string>
 
-
-    <!-- strings password changed -->
-
+    <!--    Contraseña cambiada   -->
+    <!-- Strings reutilizables usados: ninguno -->
     <string name="password_changed_title">La contraseña \nha sido cambiada</string>
     <string name="password_changed_subtitle">¡Genial! La  contraseña ha sido \n
         cambiada con éxito.</string>
@@ -104,21 +119,5 @@
         <u>Volver a Inicio de sesión
         </u>
     </string>
-
-    <string name="change_pass_new_password">Nueva contraseña</string>
-    <string name="change_pass_button">Cambiar</string>
-
-    <!--    onboarding página 1  -->
-
-    <string name="onboarding_one_image_description">descripción imagen caravana y mapa</string>
-    <string name="onboarding_one_title">Viaja a tu manera</string>
-    <string name="onboarding_one_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje\n\n<b><font color="#73ACB5">¡La carretera te espera con VanGo!</font></b></string>
-    <string name="onboarding_one_subtitle">El mapa es tuyo</string>
-    <string name="onboarding_one_desc">Botón flecha derecha</string>
-
-
-    <!--    onboarding página 1  -->
-
-    <string name="onboarding_three_button">Empezamos</string>
 
 </resources>

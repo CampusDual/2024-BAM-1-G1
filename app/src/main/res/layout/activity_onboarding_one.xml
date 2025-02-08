@@ -75,7 +75,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="end"
-        android:contentDescription="@string/onboarding_one_desc"
+        android:contentDescription="@string/btn_arrow_right_desc"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="30dp"
         app:layout_constraintHorizontal_bias="01"
