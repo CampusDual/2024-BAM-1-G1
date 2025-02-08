@@ -2,22 +2,27 @@ package com.vango.presentation.onboarding.onboarding3
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.vango.R
+import com.vango.databinding.ActivityOnboardingThreeBinding
 import com.vango.presentation.auth.accessAccount.ActivityAccessAccount
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ActivityOnboardingThree : AppCompatActivity() {
+    var binding: ActivityOnboardingThreeBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_onboarding_three)
-        val btnNext = findViewById<Button>(R.id.btn_onboarding_button)
+        binding = ActivityOnboardingThreeBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
-        btnNext.setOnClickListener{
+        val btnNext = binding?.btnOnboardingButton
+        btnNext?.setOnClickListener{
             val intent = Intent(this, ActivityAccessAccount::class.java)
             startActivity(intent)
+            // clear back stack
+            finishAffinity()
         }
     }
 }

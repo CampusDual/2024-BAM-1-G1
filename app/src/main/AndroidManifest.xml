@@ -17,32 +17,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.auth.login.ActivityLogin"
+            android:exported="false" />
 
+        <activity
+            android:name=".presentation.auth.signup.ActivitySignup"
+            android:exported="false" />
         <activity
             android:name=".presentation.auth.accessAccount.ActivityAccessAccount"
             android:exported="false" />
-
         <activity
             android:name=".presentation.onboarding.onboarding3.ActivityOnboardingThree"
             android:exported="false" />
         <activity
             android:name=".presentation.onboarding.onboarding2.ActivityOnboardingTwo"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".presentation.onboarding.onboarding1.ActivityOnboardingOne"-->
-<!--            android:exported="false" />-->
         <activity
-            android:name=".ActivityChangePass"
+            android:name=".presentation.auth.changePass.ActivityChangePass"
             android:exported="false" />
         <activity
             android:name=".presentation.auth.passwordChanged.ActivityPasswordChanged"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".presentation.auth.login.ActivityLogin"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".presentation.accessacount.AccessAccountActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".presentation.onboarding.onboarding1.ActivityOnboardingOne"
             android:exported="true">
