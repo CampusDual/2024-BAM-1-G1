@@ -5,6 +5,197 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
     tools:context=".presentation.auth.login.ActivityLogin">
 
+
+    <!-- Subtítulo -->
+    <TextView
+        android:id="@+id/tv_login_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_subtitle"
+        android:layout_marginTop="96dp"
+        style="@style/subtitle_16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tv_login_title"
+        android:text="@string/login_title"
+        android:layout_marginTop="6dp"
+        style="@style/title_30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login_subtitle" />
+
+    <!-- Contenedor de email -->
+    <LinearLayout
+        android:id="@+id/ll_login_container_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_login_title">
+
+        <TextView
+            android:id="@+id/tv_login_title_email"
+            style="@style/title_h3_14dp"
+            android:paddingBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_title_mail" />
+
+        <EditText
+            android:id="@+id/et_login_input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_rounded_corner"
+            android:hint="@string/example_input_mail"
+            android:inputType="textEmailAddress"
+            android:padding="18dp"
+            android:textColor="@color/color_main"
+            android:textColorHint="@color/color_secondary_grey" />
+    </LinearLayout>
+
+    <!-- Contenedor de contraseña -->
+    <LinearLayout
+        android:id="@+id/ll_login_container_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_login_container_email">
+
+        <TextView
+            android:id="@+id/tv_login_title_password"
+            style="@style/title_h3_14dp"
+            android:paddingBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_title_password" />
+
+        <EditText
+            android:id="@+id/et_login_input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_rounded_corner"
+            android:hint="@string/asterisks_password"
+            android:inputType="textPassword"
+            android:padding="18dp"
+            android:textColor="@color/color_main"
+            android:textColorHint="@color/color_secondary_grey" />
+
+        <TextView
+            android:id="@+id/tv_login_forgot_password"
+            style="@style/text_link_underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/login_forgot_password" />
+    </LinearLayout>
+
+    <!-- Botón de inicio de sesión -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_login_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/login_button"
+        android:backgroundTint="@color/color_main"
+        app:cornerRadius="16dp"
+        android:padding="18dp"
+        style="@style/button_solid_16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_login_container_password" />
+
+    <!-- Bloque de otras formas de inicio de sesión -->
+    <LinearLayout
+        android:id="@+id/ll_login_container_mail_access"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_login_button">
+
+        <TextView
+            android:id="@+id/tv_title_mail_access"
+            style="@style/subtitle_16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/google_outlook" />
+
+        <LinearLayout
+            android:id="@+id/ll_login_container_google_outlook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Botón Google -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_google"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@string/content_desc_google"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="16dp"
+                app:icon="@drawable/icon_google"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+
+            <!-- Botón Outlook -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_outlook"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="65dp"
+                android:layout_height="69dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/content_desc_outlook"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=""
+                app:cornerRadius="12dp"
+                app:icon="@drawable/icon_outlook"
+                app:iconGravity="start"
+                app:iconSize="48dp"
+                app:iconTint="@null"
+                app:strokeColor="@color/color_secondary_grey"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Enlace para registrarse -->
+    <TextView
+        android:id="@+id/tv_no_login_register"
+        style="@style/text_link_underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/nologin_register"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+

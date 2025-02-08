@@ -7,20 +7,19 @@
 
     <!-- Imagen de fondo -->
 
+    <!-- Contenedor inferior -->
+
     <ImageView
         android:id="@+id/backgroundImage"
-        android:layout_width="413dp"
-        android:layout_height="652dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:src="@drawable/image3"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-
-    <!-- Contenedor inferior -->
 
     <LinearLayout
         android:id="@+id/ll_container_onboarding_one"
@@ -67,23 +66,24 @@
 
     </LinearLayout>
 
-    <!-- Botón redondo con icono ">" -->
+     <!-- Botón de inicio de sesión -->
 
-    <ImageView
-        android:id="@+id/iv_arrow_right"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="end"
-        android:contentDescription="@string/onboarding_one_desc"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintHorizontal_bias="01"
-        android:src="@drawable/ic_arrow_right"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_onboarding_button"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:text="@string/onboarding_three_button"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/ll_container_onboarding_one"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+    </com.google.android.material.button.MaterialButton>
 
 
-        app:layout_constraintStart_toStartOf="parent">
-
-    </ImageView>
 </androidx.constraintlayout.widget.ConstraintLayout>
