@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signup_subtitle"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="96dp"
         style="@style/subtitle_16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -227,6 +227,19 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Enlace para login -->
+    <TextView
+        android:id="@+id/tv_no_login_register"
+        style="@style/text_link_underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/nosignup_register"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,7 +56,7 @@
     <string name="login_forgot_password"><u>¿Has olvidado tu contraseña?</u></string>
     <string name="nologin_register">
         <u>¿No tienes una cuenta?
-            <b><font color="#32788C">@string/reusable_register</font></b>
+            <b><font color="#32788C">Regístrate</font></b>
         </u>
     </string>
 
@@ -69,7 +69,7 @@
     <string name="signup_button">Registrarse</string>
     <string name="nosignup_register">
         <u>¿Ya tienes una cuenta?
-            <b><font color="#32788C">@string/reusable_login</font></b>
+            <b><font color="#32788C">Inicia sesión</font></b>
         </u>
     </string>
 
