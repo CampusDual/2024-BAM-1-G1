@@ -12,7 +12,7 @@
         android:id="@+id/tv_access_account_title"
         style="@style/title_30sp"
         android:text="@string/access_account_title"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="60dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
