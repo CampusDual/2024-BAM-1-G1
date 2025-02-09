@@ -19,9 +19,9 @@ class ActivitySignup : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding!!.root)
+        setContentView(binding?.root)
 
-        val linkLogin = binding!!.tvNoLoginRegister
+        val linkLogin = binding?.tvNoSignupRegister
         linkLogin?.setOnClickListener {
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
