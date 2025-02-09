@@ -1,5 +1,6 @@
 package com.vango.presentation.auth.login
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.vango.R
 import com.vango.databinding.ActivityLoginBinding
+import com.vango.presentation.auth.signup.ActivitySignup
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,6 +20,13 @@ class ActivityLogin : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+
+        val linkSignup = binding?.tvNoLoginRegister
+        linkSignup?.setOnClickListener{
+            val intent = Intent(this, ActivitySignup::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 }

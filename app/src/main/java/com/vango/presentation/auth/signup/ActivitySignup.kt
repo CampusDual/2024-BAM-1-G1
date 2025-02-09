@@ -23,7 +23,6 @@ class ActivitySignup : AppCompatActivity() {
 
         val linkLogin = binding!!.tvNoLoginRegister
         linkLogin?.setOnClickListener {
-            Log.e("signup", "click login")
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
             finish()
