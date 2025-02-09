@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Imagen de fondo -->
+
+    <!-- Contenedor inferior -->
+
+    <ImageView
+        android:id="@+id/backgroundImageThree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/ll_container_onboarding_three"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:background="@drawable/onboarding_tv_rounded"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tv_onboarding_three_subtitle"
+            style="@style/subtitle_onb_18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/onboarding_three_subtitle">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_onboarding_three_title"
+            style="@style/title_onboarding_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/onboarding_three_title">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_onboarding_three_body"
+            style="@style/text_body"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/onboarding_one_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            >
+        </TextView>
+
+    </LinearLayout>
+
+     <!-- Botón de inicio de sesión -->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_onboarding_button"
+        style="@style/button_solid_16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/color_main"
+        android:padding="18dp"
+        android:text="@string/onboarding_three_button"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+    </com.google.android.material.button.MaterialButton>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#161515</color>
     <color name="white">#FFFFFFFF</color>
     <color name="color_secondary_grey">#8E8888</color>
     <color name="color_main">#32788C</color>
     <color name="color_secondary_green">#C1ECE3</color>
+    <color name="color_secondary_blue">#73ACB5</color>
+    <color name="color_secondary_orange">#FBBB73</color>
+    <color name="color_secondary_wine">#B56974</color>
 
 </resources>

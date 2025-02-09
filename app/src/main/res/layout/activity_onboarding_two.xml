@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_onboarding"
+    tools:context=".presentation.onboarding.onboarding2.ActivityOnboardingTwo">
+
+    <!-- Imagen de fondo -->
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="765dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image2"
+        android:contentDescription="@string/onboarding_two_image_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <!-- Contenedor inferior -->
+
+    <LinearLayout
+        android:id="@+id/ll_container_onboarding_two"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:background="@drawable/onboarding_tv_rounded"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tv_onboarding_two_subtitle"
+            style="@style/subtitle_onb_18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/onboarding_two_subtitle">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_onboarding_two_title"
+            style="@style/title_onboarding_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/onboarding_two_title">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_onboarding_one_body"
+            style="@style/text_body"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/onboarding_two_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            >
+        </TextView>
+
+    </LinearLayout>
+
+    <!-- Botón redondo con icono ">" -->
+
+    <ImageView
+        android:id="@+id/iv_arrow_right"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="end"
+        android:contentDescription="@string/btn_arrow_right_desc"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintHorizontal_bias="01"
+        android:src="@drawable/ic_arrow_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/ll_container_onboarding_two"
+        app:layout_constraintStart_toStartOf="parent">
+    </ImageView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

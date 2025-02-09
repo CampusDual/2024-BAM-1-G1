@@ -3,12 +3,7 @@
 
     <!--    BASE DE TODAS LAS PÁGINAS -->
 
-    <!-- Estilo para ConstraintLayout con fondo blanco -->
-    <style name="base_constraint_layout">
-        <item name="android:layout_width">@dimen/layout_match_parent</item>
-        <item name="android:layout_height">@dimen/layout_match_parent</item>
-        <item name="android:background">@color/white</item>
-    </style>
+
 
     <!-- Estilo base para Guías -->
     <style name="base_guideline">
@@ -22,7 +17,7 @@
 
     <!--    subtítulo 16sp-->
     <style name="subtitle_16sp" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/color_secondary_grey</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:gravity">center</item>
@@ -36,9 +31,52 @@
         <item name="android:textColor">@color/color_main</item>
         <item name="android:textFontWeight">700</item>
         <item name="android:gravity">center</item>
+
+    </style>
+
+    <!--    Título onboarding  black 35sp -->
+    <style name="title_onboarding" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">0dp</item> <!-- Se adapta con ConstraintLayout -->
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:textFontWeight">900</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+    <!-- Onboarding 1 -->
+    <style name="title_onboarding_one" parent="title_onboarding">
+        <item name="android:textColor">@color/color_secondary_blue</item>
+    </style>
+
+    <!-- Onboarding 2 -->
+    <style name="title_onboarding_two" parent="title_onboarding">
+        <item name="android:textColor">@color/color_secondary_orange</item>
+    </style>
+
+    <!-- Onboarding 3 -->
+    <style name="title_onboarding_three" parent="title_onboarding">
+        <item name="android:textColor">@color/color_secondary_wine</item>
     </style>
 
 
+    <!--    subtítulo 16sp-->
+    <style name="subtitle_onb_18sp" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/color_secondary_grey</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+    <!-- Cuerpo de texto -->
+
+    <style name="text_body" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:gravity">center</item>
+    </style>
 
     <!--    Título H3 14dp   -->
     <style name="title_h3_14dp" parent="TextAppearance.AppCompat">

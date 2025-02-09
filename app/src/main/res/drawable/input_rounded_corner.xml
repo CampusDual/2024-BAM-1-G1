@@ -11,7 +11,7 @@ Crear rectángulo para exterior de los inputs de insertar email y contraseña-->
     <corners android:radius="16dp"/>
 
 <!--  Añadir borde:  -->
-    <stroke android:width="1dip" android:color="@color/color_background_secondary_gray"/>
+    <stroke android:width="1dip" android:color="@color/color_secondary_grey"/>
 
 <!--Color de fondo:  <solid android:color="@color/color_main"></solid>-->
 
