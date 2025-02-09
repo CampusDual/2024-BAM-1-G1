@@ -2,6 +2,8 @@ package com.vango.presentation.auth.accessAccount
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.vango.databinding.ActivityAccessAccountBinding
@@ -29,6 +31,8 @@ class ActivityAccessAccount : AppCompatActivity() {
             val intent = Intent(this, ActivitySignup::class.java)
             startActivity(intent)
         }
+
+
 
     }
 }

@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.monitor)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.firebase.crashlytics)
     ksp(libs.hilt.android.compiler)
 
     // Room
