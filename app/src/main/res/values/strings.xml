@@ -11,6 +11,12 @@
     <string name="example_input_mail">example@gmail.com</string>
     <string name="logo_name">VanGo</string>
     <string name="input_empty"> </string>
+    <string name="terms"> He leido y acepto los </string>
+    <string name="terms_url">
+            <u><b><font color="#32788C">términos y condiciones de uso</font></b>
+        </u>
+
+    </string>
     <string name="btn_arrow_right_desc">Botón flecha derecha</string>
     <string name="reusable_email">Email</string>
     <string name="reusable_password">Contraseña</string>

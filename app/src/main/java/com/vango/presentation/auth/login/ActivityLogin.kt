@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.vango.R
+
 import com.vango.databinding.ActivityLoginBinding
 import com.vango.presentation.auth.signup.ActivitySignup
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,7 +15,7 @@ class ActivityLogin : AppCompatActivity() {
     var viewModel: ActivityLoginViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 

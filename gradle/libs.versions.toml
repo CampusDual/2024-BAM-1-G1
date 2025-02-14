@@ -33,6 +33,7 @@ monitor = "1.7.2"
 junitKtx = "1.2.1"
 firebaseFunctions = "21.1.0"
 firebaseAuth = "23.2.0"
+firebaseFirestoreKtx = "25.1.2"
 
 
 [libraries]
@@ -83,6 +84,7 @@ androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "m
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 firebase-functions = { group = "com.google.firebase", name = "firebase-functions", version.ref = "firebaseFunctions" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.functions)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore.ktx)
     ksp(libs.hilt.android.compiler)
 
     // Room
