@@ -1,4 +1,6 @@
 package com.vango.domain.respository
 
-class AuthRepository {
+interface AuthRepository {
+    suspend fun login(email: String, password: String): Boolean
+
 }
