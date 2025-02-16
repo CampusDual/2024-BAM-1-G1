@@ -63,16 +63,25 @@
             android:layout_height="wrap_content"
             android:text="@string/signup_title_mail" />
 
-        <EditText
-            android:id="@+id/et_signup_input_email"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_signup_input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_rounded_corner"
-            android:hint="@string/example_input_mail"
-            android:inputType="textEmailAddress"
-            android:padding="18dp"
-            android:textColor="@color/color_main"
-            android:textColorHint="@color/color_secondary_grey" />
+            android:hint="@string/signup_title_mail"
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_signup_input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:padding="18dp"
+                android:textColor="@color/color_main"
+                android:textColorHint="@color/color_secondary_grey" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
     </LinearLayout>
 
     <!-- CONTENEDOR ELIGE CONTRASEÑA-->
@@ -188,7 +197,7 @@
             style="@style/text_link_underlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight=""
+            android:paddingRight="2dp"
             android:text="@string/terms"/>
 
         <TextView

@@ -77,14 +77,19 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.monitor)
     implementation(libs.androidx.junit.ktx)
+    ksp(libs.hilt.android.compiler)
+
+    // firebase
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.functions)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore.ktx)
-    ksp(libs.hilt.android.compiler)
+
 
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    implementation ("com.google.android.material:material:1.9.0")
 }
