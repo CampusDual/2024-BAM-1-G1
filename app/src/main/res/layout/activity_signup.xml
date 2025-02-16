@@ -177,7 +177,7 @@
 
         <CheckBox
             android:id="@+id/cb_terms"
-            android:layout_width="16dp"
+            android:layout_width="21dp"
             android:layout_height="wrap_content"
             android:button="@drawable/checkbox_custom"
             android:buttonTint="@color/color_secondary_grey"
@@ -185,25 +185,20 @@
 
         <TextView
             android:id="@+id/tv_terms"
-            style="@style/text_link_underlined"
+            style="@style/text_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight=""
             android:text="@string/terms"/>
 
         <TextView
             android:id="@+id/tv_terms_url"
-            style="@style/text_link_underlined"
+            style="@style/text_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:text="@string/terms_url"/>
 
     </LinearLayout>
-
-
-
-
 
     <!-- Bloque de otras formas de inicio sesión -->
     <LinearLayout
