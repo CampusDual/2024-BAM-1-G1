@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.vango.R
 import com.vango.databinding.ActivitySignupBinding
@@ -17,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ActivitySignup : AppCompatActivity() {
     var binding: ActivitySignupBinding? = null
-    private var viewModel: ActivitySignupViewModel? = null
+    var viewModel: ActivitySignupViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,26 +30,35 @@ class ActivitySignup : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        initObserver()
-        initListener()
+
+        initListeners()
+        initObservers()
+
+
     }
 
-    private fun initObserver() {
+    private fun initObservers() {
         viewModel?.errorEmail?.observe(this) { hasError ->
             binding?.tilSignupInputEmail?.error = "Email invalido"
-
             binding?.tilSignupInputEmail?.isErrorEnabled = hasError
+
+        }
+
+        viewModel?.errorPassword?.observe(this) { hasError ->
+            binding?.tilSignupInputPassword?.error = "Contraseña invalida"
+            binding?.tilSignupInputPassword?.isErrorEnabled = hasError
+        }
+    }
+
+    private fun initListeners() {
+        with(binding) {
+            this?.tilSignupInputEmail?.editText?.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    viewModel?.setEmail(this?.tilSignupInputEmail?.editText?.text.toString())
+                }
+            }
+
         }
 
     }
-
-    private fun initListener() {
-        with(binding) {
-            this?.etSignupInputEmail?.doOnTextChanged{
-                    text, start, before, count ->
-                viewModel?.setEmail(text.toString())
-            }
-        }
-
-
-    }    }
+}
