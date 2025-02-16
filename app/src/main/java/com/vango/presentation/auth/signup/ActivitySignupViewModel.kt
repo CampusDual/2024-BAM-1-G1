@@ -11,13 +11,26 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
     private val _email: MutableLiveData<String> = MutableLiveData()
     val email: MutableLiveData<String> = _email
 
+    private val _password: MutableLiveData<String> = MutableLiveData()
+    val password: MutableLiveData<String> = _password
+
     private val _errorEmail: MutableLiveData<Boolean> = MutableLiveData()
     val errorEmail: MutableLiveData<Boolean> = _errorEmail
+
+    private val _errorPassword: MutableLiveData<Boolean> = MutableLiveData()
+    val errorPassword: MutableLiveData<Boolean> = _errorPassword
+
 
     fun setEmail(email: String) {
         _email.value = email
         _errorEmail.value = !authUseCase.validEmail(email)
     }
+
+    fun setPassword(password: String) {
+        _password.value = password
+        _errorPassword.value = !authUseCase.validPassword(password)
+    }
+
 
 
 }

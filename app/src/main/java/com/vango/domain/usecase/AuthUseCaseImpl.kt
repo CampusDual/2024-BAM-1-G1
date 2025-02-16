@@ -11,15 +11,19 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
     }
 
     override fun validEmail(email: String): Boolean {
-        if (email.isNullOrEmpty()) {
-            return false
-        }
+        if (email.isNullOrEmpty()) return false
 
-        if (email.matches("[a-zA-Z0-9._-]+@[a-z._-]+\\.+[a-z]+".toRegex())) {
-            return true
-        }
+        if (email.matches("[a-zA-Z0-9._-]+@[a-z._-]+\\.+[a-z]+".toRegex())) return true
 
         return false
+    }
+
+    override fun validPassword(password: String): Boolean {
+        if (password.isNullOrEmpty()) return false
+        if (password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[#%^*+=_¿¡?=.*\\[/:()&@?!]).{6,}$".toRegex())) return true
+        return false
+
+
     }
 
 }
