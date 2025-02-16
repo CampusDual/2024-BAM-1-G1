@@ -134,11 +134,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_font"
+                android:hint="@string/asterisks_password"
                 android:inputType="textPassword"
                 android:padding="22dp"
                 android:textColor="@color/black"
-                android:textColorHint="@color/color_secondary_grey"
-                android:hint="@string/asterisks_password"/> <!-- Mueve el hint dentro del campo -->
+                android:textColorHint="@color/color_secondary_grey" /> <!-- Mueve el hint dentro del campo -->
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

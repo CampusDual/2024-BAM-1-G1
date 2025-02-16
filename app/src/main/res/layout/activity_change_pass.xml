@@ -64,21 +64,37 @@
         <TextView
             android:id="@+id/tv_change_pass_title_password"
             style="@style/title_h3_14dp"
-            android:paddingBottom="12dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/change_pass_new_password" />
 
-        <EditText
-            android:id="@+id/et_change_pass_input_password"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_change_pass_password_input_new_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_rounded_corner"
-            android:hint="@string/asterisks_password"
-            android:inputType="textPassword"
-            android:padding="18dp"
-            android:textColor="@color/color_main"
-            android:textColorHint="@color/color_secondary_grey" />
+            android:paddingTop="6dp"
+            app:errorEnabled="true"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeColor="@color/color_main"
+            app:hintEnabled="false"> <!-- Evita que el hint flotante aparezca en rojo -->
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_change_pass_password_input_new_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:padding="22dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_secondary_grey"
+                android:fontFamily="@font/inter_font"
+                android:hint="@string/asterisks_password"/>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <!-- CONTENEDOR CONFIRMAR CONTRASEÑA-->
@@ -89,7 +105,7 @@
         android:orientation="vertical"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_change_pass_password">
@@ -99,19 +115,35 @@
             style="@style/title_h3_14dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dp"
             android:text="@string/confirm_password" />
 
-        <EditText
-            android:id="@+id/et_change_pass_input_confirm_password"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_change_pass_input_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_rounded_corner"
-            android:hint="@string/asterisks_password"
-            android:inputType="textPassword"
-            android:padding="18dp"
-            android:textColor="@color/color_main"
-            android:textColorHint="@color/color_secondary_grey" />
+            android:paddingTop="6dp"
+            app:errorEnabled="true"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeColor="@color/color_main"
+            app:hintEnabled="false"> <!-- Evita que el hint flotante aparezca en rojo -->
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_change_pass_input_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_font"
+                android:hint="@string/asterisks_password"
+                android:inputType="textPassword"
+                android:padding="22dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_secondary_grey" /> <!-- Mueve el hint dentro del campo -->
+        </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 
 
@@ -123,7 +155,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/color_main"
         android:padding="18dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="6dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="@string/change_pass_button"
