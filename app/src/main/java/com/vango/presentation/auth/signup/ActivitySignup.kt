@@ -38,22 +38,21 @@ class ActivitySignup : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel?.errorEmail?.observe(this) { hasError ->
-            binding?.tilSignupInputEmail?.error = "Email invalido"
+        viewModel?.errorEmail?.observe(this) { (hasError, errorMessage) ->
+            binding?.tilSignupInputEmail?.error = errorMessage
             binding?.tilSignupInputEmail?.isErrorEnabled = hasError
 
         }
 
-        viewModel?.errorPassword?.observe(this) { hasError ->
-            binding?.tilSignupInputPassword?.error = "Contraseña invalida"
+        viewModel?.errorPassword?.observe(this) { (hasError, errorMessage) ->
+            binding?.tilSignupInputPassword?.error = errorMessage
             binding?.tilSignupInputPassword?.isErrorEnabled = hasError
         }
 
-        viewModel?.errorConfirmPassword?.observe(this) { hasError ->
-            binding?.tilSignupInputConfirmPassword?.error = "Contraseña invalida"
+        viewModel?.errorConfirmPassword?.observe(this) { (hasError, errorMessage) ->
+            binding?.tilSignupInputConfirmPassword?.error = errorMessage
             binding?.tilSignupInputConfirmPassword?.isErrorEnabled = hasError
         }
-
 
     }
 

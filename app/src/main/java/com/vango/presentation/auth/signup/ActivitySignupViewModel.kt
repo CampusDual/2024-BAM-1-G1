@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vango.domain.usecase.AuthUseCase
+import com.vango.domain.utils.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -18,32 +19,46 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
     private val _confirmPassword: MutableLiveData<String> = MutableLiveData()
     val confirmPassword: MutableLiveData<String> = _confirmPassword
 
-    private val _errorEmail: MutableLiveData<Boolean> = MutableLiveData()
-    val errorEmail: MutableLiveData<Boolean> = _errorEmail
+    private val _errorEmail: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    val errorEmail: MutableLiveData<Pair<Boolean, String>> = _errorEmail
 
-    private val _errorPassword: MutableLiveData<Boolean> = MutableLiveData()
-    val errorPassword: MutableLiveData<Boolean> = _errorPassword
+    private val _errorPassword: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    val errorPassword: MutableLiveData<Pair<Boolean, String>> = _errorPassword
 
-    private val _errorConfirmPassword: MutableLiveData<Boolean> = MutableLiveData()
-    val errorConfirmPassword: MutableLiveData<Boolean> = _errorConfirmPassword
+    private val _errorConfirmPassword: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    val errorConfirmPassword: MutableLiveData<Pair<Boolean, String>> = _errorConfirmPassword
+
 
 
     fun setEmail(email: String) {
         _email.value = email
-        _errorEmail.value = !authUseCase.validEmail(email)
+        val (hasError, errorMessage) = authUseCase.validEmail(email)
+        _errorEmail.value = Pair(!hasError, errorMessage)
     }
 
     fun setPassword(password: String) {
         _password.value = password
-        _errorPassword.value = !authUseCase.validPassword(password)
+        val (hasError, errorMessage) = authUseCase.validPassword(password)
+        _errorPassword.value = Pair(!hasError, errorMessage)
     }
+
 
     fun setConfirmPassword(confirmPassword: String) {
         _confirmPassword.value = confirmPassword
         Log.d("ActivitySignupViewModel", "setConfirmPassword: $confirmPassword")
-        _errorConfirmPassword.value = _password.value?.let { authUseCase.validConfirmPassword(it, confirmPassword) }
+
+        val passwordValue = _password.value
+        if (passwordValue != null) {
+            val (hasError, errorMessage) = authUseCase.validConfirmPassword(passwordValue, confirmPassword)
+            _errorConfirmPassword.value = Pair(!hasError, errorMessage)
+        }
+
         Log.d("ActivitySignupViewModel", "setConfirmPassword: ${_errorConfirmPassword.value}")
     }
+
+
+
+
 
 
 
