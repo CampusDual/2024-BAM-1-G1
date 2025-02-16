@@ -23,7 +23,11 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
         if (password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[#%^*+=_¿¡?=.*\\[/:()&@?!]).{6,}$".toRegex())) return true
         return false
 
+    }
 
+    override fun validConfirmPassword(password: String, confirmPassword: String): Boolean {
+        if (!validPassword(confirmPassword) && password != confirmPassword) return true
+        return false
     }
 
 }

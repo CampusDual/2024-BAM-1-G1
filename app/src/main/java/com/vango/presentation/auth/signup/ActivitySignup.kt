@@ -48,6 +48,13 @@ class ActivitySignup : AppCompatActivity() {
             binding?.tilSignupInputPassword?.error = "Contraseña invalida"
             binding?.tilSignupInputPassword?.isErrorEnabled = hasError
         }
+
+        viewModel?.errorConfirmPassword?.observe(this) { hasError ->
+            binding?.tilSignupInputConfirmPassword?.error = "Contraseña invalida"
+            binding?.tilSignupInputConfirmPassword?.isErrorEnabled = hasError
+        }
+
+
     }
 
     private fun initListeners() {
@@ -55,6 +62,18 @@ class ActivitySignup : AppCompatActivity() {
             this?.tilSignupInputEmail?.editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     viewModel?.setEmail(this?.tilSignupInputEmail?.editText?.text.toString())
+                }
+            }
+
+            this?.tilSignupInputPassword?.editText?.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    viewModel?.setPassword(this?.tilSignupInputPassword?.editText?.text.toString())
+                }
+            }
+
+            this?.tilSignupInputConfirmPassword?.editText?.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    viewModel?.setConfirmPassword(this?.tilSignupInputConfirmPassword?.editText?.text.toString())
                 }
             }
 
