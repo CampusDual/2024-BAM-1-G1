@@ -192,9 +192,6 @@
 
     <!-- Botón de registro -->
 
-
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_signup_button"
         style="@style/button_solid_16dp"
