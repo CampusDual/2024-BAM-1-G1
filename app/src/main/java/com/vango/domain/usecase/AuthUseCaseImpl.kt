@@ -2,6 +2,7 @@ package com.vango.domain.usecase
 
 import android.util.Log
 import com.vango.domain.respository.AuthRepository
+
 import javax.inject.Inject
 
 class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthRepository) :

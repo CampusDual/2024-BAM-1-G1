@@ -1,5 +1,6 @@
 package com.vango.presentation.auth.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,19 +29,31 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
     fun setPassword(text:String){
         password = text
     }
+//  TODO: revisar esto cuando tengamos ActivityHome
+//  TODO: revisar authUseCase.validEmail y .validPassword
 
     fun login(){
-        val isEmailValid = authUseCase.validEmail(email)
-        val isPasswordValid = authUseCase.validPassword(password)
-        if (isEmailValid.first && isPasswordValid.first){
-            viewModelScope.launch {
-                _isLoginSuccess.value = authUseCase.login(email,password)
-            }
-        }
+//        val isEmailValid = authUseCase.validEmail(email)
+//        val isPasswordValid = authUseCase.validPassword(password)
 
-        else {
-//            TODO: isLoginFormValid.value
+        Log.d("AuthDebug", "Intentando login con email: $email y password: $password")
+
+
+//        if (isEmailValid.first && isPasswordValid.first){
+        viewModelScope.launch {
+            val result = authUseCase.login(email, password)
+            Log.d("AuthDebug", "Resultado del login: $result")
+            _isLoginSuccess.value = result
+
+
         }
+//        }
+
+//        else {
+//            Log.e("AuthDebug", "Email o password no válidos")
+//
+////            TODO: isLoginFormValid.value
+//        }
 
 
     }

@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-
+import androidx.lifecycle.ViewModelProvider
 import com.vango.databinding.ActivityLoginBinding
 import com.vango.presentation.auth.signup.ActivitySignup
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,12 +17,11 @@ class ActivityLogin : AppCompatActivity() {
     var viewModel: ActivityLoginViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+        enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        initListeners()
-        initObservers()
+        viewModel = ViewModelProvider(this)[ActivityLoginViewModel::class]
 
         val linkSignup = binding?.tvNoLoginRegister
         linkSignup?.setOnClickListener{
@@ -30,6 +29,9 @@ class ActivityLogin : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        initListeners()
+        initObservers()
 
     }
 
