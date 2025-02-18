@@ -75,8 +75,11 @@ class ActivitySignup : AppCompatActivity() {
                     viewModel?.setConfirmPassword(this?.tilSignupInputConfirmPassword?.editText?.text.toString())
                 }
             }
+            this?.btSignupButton?.setOnClickListener {
+                viewModel?.signUp()
+            }
+
 
         }
-
     }
 }

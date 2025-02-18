@@ -32,4 +32,12 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
         return Pair(true, "")
     }
 
+    override fun signUp(email: String, password: String, confirmPassword: String): Boolean {
+        if (validEmail(email).first && validPassword(password).first && validConfirmPassword(password, confirmPassword).first) {
+            return authRepository.signUp(email, password)
+        } else {
+            return false
+        }
+    }
+
 }

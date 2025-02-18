@@ -56,6 +56,16 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
         Log.d("ActivitySignupViewModel", "setConfirmPassword: ${_errorConfirmPassword.value}")
     }
 
+    fun signUp() {
+        val emailValue = _email.value
+        val passwordValue = _password.value
+        val confirmPasswordValue = _confirmPassword.value
+        if (emailValue != null && passwordValue != null && confirmPasswordValue != null) {
+            val register = authUseCase.signUp(emailValue, passwordValue, confirmPasswordValue)
+        }
+
+    }
+
 
 
 
