@@ -11,7 +11,7 @@
     <string name="example_input_mail">example@gmail.com</string>
     <string name="logo_name">VanGo</string>
     <string name="input_empty"> </string>
-    <string name="terms">Al registrarte aceptas  </string>
+    <string name="terms">Al registrarte aceptas los </string>
     <string name="terms_url">
             <u><b><font color="#32788C">términos y condiciones de uso</font></b>
         </u>
