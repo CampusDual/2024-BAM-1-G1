@@ -3,9 +3,11 @@ package com.vango.presentation.auth.signup
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.vango.domain.usecase.AuthUseCase
 import com.vango.domain.utils.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,6 +56,19 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
         }
 
         Log.d("ActivitySignupViewModel", "setConfirmPassword: ${_errorConfirmPassword.value}")
+    }
+
+    fun signUp() {
+        val emailValue = _email.value
+        val passwordValue = _password.value
+        val confirmPasswordValue = _confirmPassword.value
+        if (emailValue != null && passwordValue != null && confirmPasswordValue != null) {
+            viewModelScope.launch {
+                val result = authUseCase.signUp(emailValue, passwordValue, confirmPasswordValue)
+
+            }
+        }
+
     }
 
 

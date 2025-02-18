@@ -1,5 +1,6 @@
 import com.vango.data.dataSource.remote.auth.AuthRemoteDataSource
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoRequest
+import com.vango.data.dataSource.remote.auth.dto.UserDto
 import com.vango.domain.respository.AuthRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,5 +16,12 @@ class AuthRepositoryImpl @Inject constructor(private val authRemoteDataSource:Au
         }
 
         return false
+    }
+
+    override suspend fun signUp(email: String, password: String): Boolean {
+        val dto = UserDto("",email, password)
+        val responseDto: Pair<Boolean, String> = authRemoteDataSource.signUp(dto)
+        return responseDto.first
+
     }
 }
