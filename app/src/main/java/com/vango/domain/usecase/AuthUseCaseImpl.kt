@@ -21,9 +21,9 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
     }
 
     override fun validPassword(password: String): Pair<Boolean, String> {
-        if (password.isNullOrEmpty()) return Pair(false, "Contraseña vacia")
+        if (password.isNullOrEmpty()) return Pair(false, "Contraseña vacía")
         if (password.length < 6) return Pair(false, "Contraseña muy corta")
-        if (!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[#%^*+=_¿¡?=.*\\[/:()&@?!]).{6,}$".toRegex())) return Pair(false, "Deve contener mayusculas minusculas y caracteres especiales")
+        if (!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[#%^*+=_¿¡?=.*\\[/:()&@?!]).{6,}$".toRegex())) return Pair(false, "Debe* contener mayúsculas minúsculas y caracteres especiales")
         return Pair(true, "")
 
     }
@@ -31,6 +31,14 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
     override fun validConfirmPassword(password: String, confirmPassword: String): Pair<Boolean, String> {
         if (password != confirmPassword) return Pair(false, "Contraseñas no coinciden")
         return Pair(true, "")
+    }
+
+    override suspend fun signUp(email: String, password: String, confirmPassword: String): Boolean {
+        if (validEmail(email).first && validPassword(password).first && validConfirmPassword(password, confirmPassword).first) {
+            return authRepository.signUp(email, password)
+        } else {
+            return false
+        }
     }
 
 }
