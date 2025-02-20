@@ -12,7 +12,13 @@
     </style>
 
 
-
+    <!--    h3 16sp-->
+    <style name="h3_16sp" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_secondary_grey</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 
     <!--    subtítulo 16sp-->
@@ -101,6 +107,14 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
+
+    <!--    Estilo enlace términos -->
+    <style name="text_terms" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_secondary_grey</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
 
     <!--    Estilo logo_name -->
 

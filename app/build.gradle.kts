@@ -77,10 +77,20 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.monitor)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.firebase.auth.ktx)
     ksp(libs.hilt.android.compiler)
+
+    // Firebase
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.functions)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore.ktx)
+
 
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    implementation (libs.material.v190)
 }
