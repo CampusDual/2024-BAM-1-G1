@@ -7,13 +7,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.vango.data.dataSource.remote.auth.GoogleSignInClient
 import com.vango.databinding.ActivityLoginBinding
 import com.vango.presentation.auth.signup.ActivitySignup
+import com.vango.presentation.home.ActivityHome
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ActivityLogin : AppCompatActivity() {
     var binding: ActivityLoginBinding? = null
+
+    private val googleSignInClient by lazy {
+        GoogleSignInClient(this)
+    }
     var viewModel: ActivityLoginViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +36,20 @@ class ActivityLogin : AppCompatActivity() {
             val intent = Intent(this, ActivitySignup::class.java)
             startActivity(intent)
             finish()
+        }
+
+        val btnGoogle = binding?.mbGoogle
+        btnGoogle?.setOnClickListener{
+            lifecycleScope.launch {
+                val success = googleSignInClient.signIn()
+                if (success){
+                    val intent = Intent(this@ActivityLogin, ActivityHome::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }
+            }
+
         }
 
         initListeners()

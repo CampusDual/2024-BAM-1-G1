@@ -8,14 +8,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.vango.R
+import com.vango.data.dataSource.remote.auth.GoogleSignInClient
 import com.vango.databinding.ActivitySignupBinding
 import com.vango.presentation.auth.login.ActivityLogin
+import com.vango.presentation.home.ActivityHome
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ActivitySignup : AppCompatActivity() {
     var binding: ActivitySignupBinding? = null
+
+    private val googleSignInClient by lazy {
+        GoogleSignInClient(this)
+    }
+
     var viewModel: ActivitySignupViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +33,26 @@ class ActivitySignup : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ActivitySignupViewModel::class.java]
         setContentView(binding?.root)
 
+
         val linkLogin = binding?.tvNoSignupRegister
         linkLogin?.setOnClickListener {
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
             finish()
+        }
+
+        val btnGoogle = binding?.mbGoogle
+        btnGoogle?.setOnClickListener{
+            lifecycleScope.launch {
+                val success = googleSignInClient.signIn()
+                if (success){
+                    val intent = Intent(this@ActivitySignup, ActivityHome::class.java)
+                    startActivity(intent)
+                    finish()
+
+                }
+            }
+
         }
 
         initListeners()
