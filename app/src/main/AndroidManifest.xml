@@ -18,9 +18,11 @@
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.home.ActivityHome"
+            android:exported="false" />
+        <activity
             android:name=".presentation.auth.login.ActivityLogin"
             android:exported="false" />
-
         <activity
             android:name=".presentation.auth.signup.ActivitySignup"
             android:exported="false" />

@@ -23,6 +23,7 @@
     <string name="reusable_register">Regístrate</string>
     <string name="reusable_login">Inicia sesión</string>
     <string name="reusable_new_password">Nueva contraseña</string>
+    <string name="web_client_id">88476587369-7kmv6c46bg3h1os1g7aksqe4gpflsr38.apps.googleusercontent.com</string>
 
     <!--    Onboarding página 1  -->
     <!-- Strings reutilizables usados: btn_arrow_right_desc -->
