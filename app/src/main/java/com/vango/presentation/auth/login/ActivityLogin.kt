@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.vango.data.dataSource.remote.auth.GoogleSignInClient
 import com.vango.databinding.ActivityLoginBinding
+import com.vango.presentation.auth.changePass.ActivityChangePass
 import com.vango.presentation.auth.signup.ActivitySignup
 import com.vango.presentation.home.ActivityHome
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,20 @@ class ActivityLogin : AppCompatActivity() {
             finish()
         }
 
+        val btnLogin = binding?.btLoginButton
+        btnLogin?.setOnClickListener{
+            val intent = Intent(this, ActivityHome::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        val linkForgotPass = binding?.tvLoginForgotPassword
+        linkForgotPass?.setOnClickListener{
+            val intent = Intent(this, ActivityChangePass::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         val btnGoogle = binding?.mbGoogle
         btnGoogle?.setOnClickListener{
             lifecycleScope.launch {
@@ -61,10 +76,15 @@ class ActivityLogin : AppCompatActivity() {
         viewModel?.isLoginSuccess?.observe(this){
             isSuccess ->
             if (isSuccess){
-                Toast.makeText(this,"Has iniciado sesión con éxito",Toast.LENGTH_LONG)
+                startActivity(Intent(this,ActivityHome::class.java))
+                startActivity(intent)
+                finish()
 
             }
         }
+
+
+
     }
 
     private fun initListeners(){
