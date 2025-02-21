@@ -10,7 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.vango.data.dataSource.remote.auth.GoogleSignInClient
 import com.vango.databinding.ActivityLoginBinding
+import com.vango.domain.entities.AppError
 import com.vango.presentation.auth.changePass.ActivityChangePass
+import com.vango.presentation.auth.forgottenPassword.ActivityForgottenPassword
 import com.vango.presentation.auth.signup.ActivitySignup
 import com.vango.presentation.home.ActivityHome
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +26,7 @@ class ActivityLogin : AppCompatActivity() {
         GoogleSignInClient(this)
     }
     var viewModel: ActivityLoginViewModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,25 +35,53 @@ class ActivityLogin : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[ActivityLoginViewModel::class]
 
-        val linkSignup = binding?.tvNoLoginRegister
-        linkSignup?.setOnClickListener{
-            val intent = Intent(this, ActivitySignup::class.java)
-            startActivity(intent)
-            finish()
+        initListeners()
+        initObservers()
+
+    }
+
+    private fun initObservers(){
+        viewModel?.isLoginSuccess?.observe(this){
+                isSuccess ->
+            if (isSuccess){
+                val intentActivityHome = Intent(this, ActivityHome::class.java)
+                intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intentActivityHome)
+                finish()
+            }
         }
 
-        val btnLogin = binding?.btLoginButton
-        btnLogin?.setOnClickListener{
-            val intent = Intent(this, ActivityHome::class.java)
-            startActivity(intent)
-            finish()
+        viewModel?.error?.observe(this) { exception ->
+            val message = when (exception) {
+                is AppError.DetailedError -> exception.body
+                else -> "Ha ocurrido un error inesperado, esta vez no es de back"
+            }
+
+
+            Toast.makeText(
+                this@ActivityLogin,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+
+
         }
 
-        val linkForgotPass = binding?.tvLoginForgotPassword
-        linkForgotPass?.setOnClickListener{
-            val intent = Intent(this, ActivityChangePass::class.java)
-            startActivity(intent)
-            finish()
+    }
+
+    private fun initListeners(){
+        binding?.etLoginInputEmail?.doOnTextChanged{
+                text,start,before,count ->
+            viewModel?.setEmail(text.toString())
+        }
+
+        binding?.etLoginInputPassword?.doOnTextChanged{
+                text,start,before,count ->
+            viewModel?.setPassword(text.toString())
+        }
+
+        binding?.btLoginButton?.setOnClickListener{
+            viewModel?.login()
         }
 
         val btnGoogle = binding?.mbGoogle
@@ -67,42 +98,18 @@ class ActivityLogin : AppCompatActivity() {
 
         }
 
-        initListeners()
-        initObservers()
-
-    }
-
-    private fun initObservers(){
-        viewModel?.isLoginSuccess?.observe(this){
-            isSuccess ->
-            if (isSuccess){
-                startActivity(Intent(this,ActivityHome::class.java))
-                startActivity(intent)
-                finish()
-
-            }
+        val linkSignup = binding?.tvNoLoginRegister
+        linkSignup?.setOnClickListener{
+            val intent = Intent(this, ActivitySignup::class.java)
+            startActivity(intent)
+            finish()
         }
 
-
-
-    }
-
-    private fun initListeners(){
-        binding?.etLoginInputEmail?.doOnTextChanged{
-            text,start,before,count ->
-            viewModel?.setEmail(text.toString())
-        }
-
-        binding?.etLoginInputPassword?.doOnTextChanged{
-            text,start,before,count ->
-            viewModel?.setPassword(text.toString())
-        }
-
-        binding?.btLoginButton?.setOnClickListener{
-            viewModel?.login()
+        val linkForgotPass = binding?.tvLoginForgotPassword
+        linkForgotPass?.setOnClickListener{
+            val intent = Intent(this, ActivityForgottenPassword::class.java)
+            startActivity(intent)
         }
     }
 
-
-    //TODO("esto es un test")
 }

@@ -83,7 +83,7 @@
     <!--    Verify Account   -->
     <!-- Strings reutilizables usados: ninguno -->
     <string name="verify_account_subtitle">Por favor, inserte el código que se \n ha enviado a tu email</string>
-    <string name="verify_account_title">Verifica tu cuenta</string>
+    <string name="verify_account_title">Recupera tu cuenta</string>
     <string name="verify_account_not_received">
         <u>¿No lo has recibido?
             <b><font color="#32788C">Reenviar código</font></b>

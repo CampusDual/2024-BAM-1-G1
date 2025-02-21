@@ -9,4 +9,5 @@ interface AuthRemoteDataSource {
     suspend fun signUp(dto: UserDto): Pair<Boolean, String>
     suspend fun getUser(): List<String>
     fun logout()
+    suspend fun recoverPassword(email: String): Boolean
 }
