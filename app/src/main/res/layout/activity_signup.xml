@@ -133,6 +133,8 @@
                 app:boxStrokeWidth="1dp"
                 app:boxStrokeColor="@color/color_main"
                 app:hintEnabled="false"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/color_main"
                 tools:errorEnabled="false"> <!-- Evita que el hint flotante aparezca en rojo -->
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -181,6 +183,8 @@
                 app:boxStrokeWidth="1dp"
                 app:boxStrokeColor="@color/color_main"
                 app:hintEnabled="false"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/color_main"
                 tools:errorEnabled="false"
                 > <!-- Evita que el hint flotante aparezca en rojo -->
 

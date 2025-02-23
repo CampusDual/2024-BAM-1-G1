@@ -1,6 +1,7 @@
 package com.vango.domain.usecase
 
 import android.util.Log
+import com.vango.data.dataSource.remote.auth.dto.AuthDtoResponse
 import com.vango.domain.respository.AuthRepository
 
 import javax.inject.Inject
@@ -8,8 +9,12 @@ import javax.inject.Inject
 class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthRepository) :
     AuthUseCase {
 
-    override suspend fun login(email: String, password: String): Boolean {
-        return authRepository.login(email, password)
+    override suspend fun logIn(email: String, password: String): Result<AuthDtoResponse> {
+        return authRepository.logIn(email, password)
+    }
+
+    override  suspend fun recoverPassword (email: String) : Result<Boolean>{
+        return authRepository.recoverPassword(email)
     }
 
     override fun validEmail(email: String): Pair<Boolean, String> {

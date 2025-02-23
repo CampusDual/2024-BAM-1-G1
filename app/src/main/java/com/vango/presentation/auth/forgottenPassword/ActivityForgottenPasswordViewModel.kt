@@ -1,4 +1,5 @@
-package com.vango.presentation.auth.login
+package com.vango.presentation.auth.forgottenPassword
+
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -12,12 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUseCase) : ViewModel()  {
-    private var _isLoginSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val isLoginSuccess:LiveData<Boolean> = _isLoginSuccess
+class ActivityForgottenPasswordViewModel @Inject constructor(private val authUseCase: AuthUseCase) : ViewModel()  {
+    private var _isResetPasswordSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    val isResetPasswordSuccess:LiveData<Boolean> = _isResetPasswordSuccess
 
     private var email:String = ""
-    private var password:String = ""
 
     private var _error: MutableLiveData<String> = MutableLiveData()
     val error: LiveData<String> = _error
@@ -30,19 +30,14 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
 
     }
 
-    fun setPassword(text:String){
-        password = text
 
-    }
-
-
-    fun login(){
+    fun resetPassword(){
 
         viewModelScope.launch {
 
-            authUseCase.logIn(email, password)
-                .onSuccess { user ->
-                    _success.postValue("Inicio de sesión exitoso")
+            authUseCase.recoverPassword(email)
+                .onSuccess {
+                    _isResetPasswordSuccess.postValue(it)
                 }
                 .onFailure { error ->
                     _error.postValue(error.localizedMessage)

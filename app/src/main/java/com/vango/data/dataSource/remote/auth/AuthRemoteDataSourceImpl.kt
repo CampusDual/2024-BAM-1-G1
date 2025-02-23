@@ -6,8 +6,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoRequest
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoResponse
 import com.vango.data.dataSource.remote.auth.dto.UserDto
+import com.vango.domain.entities.AppError
+import com.vango.utils.mappers.FirebaseAuthErrorMapper
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
@@ -16,20 +19,44 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
 ):AuthRemoteDataSource{
 
-    override suspend fun login (authDto: AuthDtoRequest): AuthDtoResponse{
-        return suspendCoroutine { result  ->
-            auth.signInWithEmailAndPassword(authDto.email,authDto.password)
-                .addOnCompleteListener{ authResult ->
-                    result.resume(AuthDtoResponse(authResult.result.user?.uid))
-
+    override suspend fun logIn(userLoginDto: AuthDtoRequest): Result<AuthDtoResponse> {
+        return suspendCoroutine { continuation ->
+            auth.signInWithEmailAndPassword(userLoginDto.email, userLoginDto.password)
+                .addOnSuccessListener { authResult ->
+                    val userId = authResult.user?.uid
+                    if (userId != null) {
+                        continuation.resume(Result.success(AuthDtoResponse(userId)))
+                    } else {
+                        continuation.resume(Result.failure(AppError.DetailedError("El usuario es nulo.")))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(Result.failure(FirebaseAuthErrorMapper.map(exception)))
                 }
         }
     }
 
+
+    override suspend fun recoverPassword(email: String): Result<Boolean> {
+        return suspendCoroutine { continuation ->
+            auth.sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+                    continuation.resumeWith(runCatching { Result.success(true) })
+                }
+                .addOnFailureListener { exception ->
+                    val mappedError = FirebaseAuthErrorMapper.map(exception)
+                    continuation.resumeWith(runCatching { Result.failure(mappedError) })
+                }
+        }
+    }
+
+
+
+
     override suspend fun signUp(dto: UserDto): Pair<Boolean, String> {
-        val uuid = CreateAuthUser(dto.email, dto.password)
+        val uuid = createAuthUser(dto.email, dto.password)
         return if (uuid.isNotEmpty()) {
-            Pair(CreateDataBaseUser(uuid, dto), uuid)
+            Pair(createDataBaseUser(uuid, dto), uuid)
         } else {
             Pair(false, "Error al crear el usuario")
         }
@@ -43,7 +70,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     }
 
 
-    private suspend fun CreateAuthUser(mail: String, password: String): String {
+    private suspend fun createAuthUser(mail: String, password: String): String {
 
         return suspendCoroutine { result ->
             auth.createUserWithEmailAndPassword(mail, password).addOnCompleteListener { task ->
@@ -56,7 +83,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    private suspend fun CreateDataBaseUser(uuid: String, dto: UserDto): Boolean {
+    private suspend fun createDataBaseUser(uuid: String, dto: UserDto): Boolean {
         firestore.collection("users").document(uuid)
         return suspendCoroutine { result ->
             firestore.collection("users").document().set(dto)
