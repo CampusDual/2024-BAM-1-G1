@@ -54,13 +54,12 @@
             android:id="@+id/til_login_input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dp"
-            app:errorEnabled="true"
             app:boxBackgroundMode="outline"
             app:boxCornerRadiusTopStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusBottomEnd="16dp"
+            android:layout_marginTop="6dp"
             app:boxStrokeWidth="1dp"
             app:boxStrokeColor="@color/color_main"
             app:hintEnabled="false"> <!-- Desactiva el hint flotante -->
@@ -83,7 +82,7 @@
         android:id="@+id/ll_login_container_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="24dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,16 +99,18 @@
             android:id="@+id/til_signup_input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="6dp"
-            app:errorEnabled="true"
             app:boxBackgroundMode="outline"
             app:boxCornerRadiusTopStart="16dp"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusBottomStart="16dp"
             app:boxCornerRadiusBottomEnd="16dp"
             app:boxStrokeWidth="1dp"
+            android:layout_marginTop="6dp"
             app:boxStrokeColor="@color/color_main"
-            app:hintEnabled="false">
+            app:hintEnabled="false"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/color_main"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_login_input_password"
@@ -129,6 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:layout_marginTop="6dp"
             android:text="@string/login_forgot_password" />
     </LinearLayout>
 

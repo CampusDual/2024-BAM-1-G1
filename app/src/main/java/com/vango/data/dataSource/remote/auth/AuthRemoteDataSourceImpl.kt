@@ -6,6 +6,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoRequest
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoResponse
 import com.vango.data.dataSource.remote.auth.dto.UserDto
+import com.vango.domain.entities.AppError
+import com.vango.utils.mappers.FirebaseAuthErrorMapper
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -17,42 +19,39 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
 ):AuthRemoteDataSource{
 
-    override suspend fun login(authDto: AuthDtoRequest): AuthDtoResponse {
-        return suspendCoroutine { result ->
-            auth.signInWithEmailAndPassword(authDto.email, authDto.password)
+    override suspend fun logIn(userLoginDto: AuthDtoRequest): Result<AuthDtoResponse> {
+        return suspendCoroutine { continuation ->
+            auth.signInWithEmailAndPassword(userLoginDto.email, userLoginDto.password)
                 .addOnSuccessListener { authResult ->
-                    result.resume(AuthDtoResponse(authResult?.user?.uid))
+                    val userId = authResult.user?.uid
+                    if (userId != null) {
+                        continuation.resume(Result.success(AuthDtoResponse(userId)))
+                    } else {
+                        continuation.resume(Result.failure(AppError.DetailedError("El usuario es nulo.")))
+                    }
                 }
                 .addOnFailureListener { exception ->
-                    result.resumeWithException(exception)
+                    continuation.resume(Result.failure(FirebaseAuthErrorMapper.map(exception)))
                 }
-
         }
     }
 
-    override suspend fun recoverPassword(email: String): Boolean {
-        return suspendCoroutine { result ->
+
+    override suspend fun recoverPassword(email: String): Result<Boolean> {
+        return suspendCoroutine { continuation ->
             auth.sendPasswordResetEmail(email)
-                .addOnSuccessListener { authResult ->
-                    result.resume(true)
+                .addOnSuccessListener {
+                    continuation.resumeWith(runCatching { Result.success(true) })
                 }
                 .addOnFailureListener { exception ->
-                    result.resumeWithException(exception)
+                    val mappedError = FirebaseAuthErrorMapper.map(exception)
+                    continuation.resumeWith(runCatching { Result.failure(mappedError) })
                 }
         }
     }
 
-//    override suspend fun changePass(newPassword : String): Boolean {
-//        return suspendCoroutine { result ->
-//            auth.confirmPasswordReset(newPassword,)
-//                .addOnSuccessListener { authResult ->
-//                    result.resume(true)
-//                }
-//                .addOnFailureListener { exception ->
-//                    result.resumeWithException(exception)
-//                }
-//        }
-//    }
+
+
 
     override suspend fun signUp(dto: UserDto): Pair<Boolean, String> {
         val uuid = createAuthUser(dto.email, dto.password)

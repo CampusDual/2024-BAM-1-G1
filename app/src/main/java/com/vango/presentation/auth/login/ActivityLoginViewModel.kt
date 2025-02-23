@@ -19,8 +19,11 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
     private var email:String = ""
     private var password:String = ""
 
-    private var _error: MutableLiveData<AppError> = MutableLiveData()
-    val error: LiveData<AppError> = _error
+    private var _error: MutableLiveData<String> = MutableLiveData()
+    val error: LiveData<String> = _error
+
+    private var _success: MutableLiveData<String> = MutableLiveData()
+    val success: LiveData<String> = _success
 
     fun setEmail(text:String){
         email = text
@@ -36,15 +39,14 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
     fun login(){
 
         viewModelScope.launch {
-            try {
-                val result = authUseCase.login(email, password)
-                Log.d("LoginViewModel", "Login result: $result, email: $email, password: $password")
-                _isLoginSuccess.value = result
-            }
-            catch (e: AppError){
-                _error.value = e
-                _isLoginSuccess.value = false
-            }
+
+            authUseCase.logIn(email, password)
+                .onSuccess { user ->
+                    _success.postValue("Inicio de sesión exitoso")
+                }
+                .onFailure { error ->
+                    _error.postValue(error.localizedMessage)
+                }
         }
     }
 }

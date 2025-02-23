@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.vango.data.dataSource.remote.auth.GoogleSignInClient
 import com.vango.databinding.ActivityLoginBinding
 import com.vango.domain.entities.AppError
+import com.vango.domain.entities.AppError.UnknownError.message
 import com.vango.presentation.auth.changePass.ActivityChangePass
 import com.vango.presentation.auth.forgottenPassword.ActivityForgottenPassword
 import com.vango.presentation.auth.signup.ActivitySignup
@@ -51,21 +52,15 @@ class ActivityLogin : AppCompatActivity() {
             }
         }
 
-        viewModel?.error?.observe(this) { exception ->
-            val message = when (exception) {
-                is AppError.DetailedError -> exception.body
-                else -> "Ha ocurrido un error inesperado, esta vez no es de back"
-            }
-
-
-            Toast.makeText(
-                this@ActivityLogin,
-                message,
-                Toast.LENGTH_LONG
-            ).show()
-
-
+        viewModel?.error?.observe(this) { message ->
+            Toast.makeText(this@ActivityLogin, message, Toast.LENGTH_LONG).show()
         }
+
+        viewModel?.success?.observe(this) { message ->
+            Toast.makeText(this@ActivityLogin, message, Toast.LENGTH_LONG).show()
+        }
+
+
 
     }
 
