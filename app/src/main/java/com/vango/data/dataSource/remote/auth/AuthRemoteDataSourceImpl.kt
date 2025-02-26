@@ -1,8 +1,10 @@
 package com.vango.data.dataSource.remote.auth
 
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoRequest
 import com.vango.data.dataSource.remote.auth.dto.AuthDtoResponse
 import com.vango.data.dataSource.remote.auth.dto.UserDto
@@ -55,7 +57,10 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun signUp(dto: UserDto): Pair<Boolean, String> {
         val uuid = createAuthUser(dto.email, dto.password)
-        return if (uuid.isNotEmpty()) {
+
+        return if (uuid.isNotBlank()) {
+            dto.uuid = uuid
+
             Pair(createDataBaseUser(uuid, dto), uuid)
         } else {
             Pair(false, "Error al crear el usuario")
@@ -63,6 +68,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     }
 
     override fun logout() {
+
     }
 
     override suspend fun getUser(): List<String> {
@@ -74,6 +80,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
         return suspendCoroutine { result ->
             auth.createUserWithEmailAndPassword(mail, password).addOnCompleteListener { task ->
+                Log.d("createAuthUser", "createAuthUser: ${task.isSuccessful}")
                 if (task.isSuccessful) {
                     result.resume(task.result.user?.uid ?: "")
                 }
@@ -84,9 +91,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     }
 
     private suspend fun createDataBaseUser(uuid: String, dto: UserDto): Boolean {
-        firestore.collection("users").document(uuid)
         return suspendCoroutine { result ->
-            firestore.collection("users").document().set(dto)
+            firestore.collection("users").document(uuid).set(dto)
                 .addOnSuccessListener {
                     result.resume(true)
                 }.addOnFailureListener {

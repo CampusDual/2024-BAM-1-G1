@@ -4,7 +4,7 @@ import com.google.firebase.firestore.Exclude
 
 data class UserDto(
     @Exclude
-    val uuid: String?,
+    var uuid: String?,
     val email: String,
     val password: String,
 )

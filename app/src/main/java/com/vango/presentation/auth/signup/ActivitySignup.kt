@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.vango.R
@@ -94,10 +95,9 @@ class ActivitySignup : AppCompatActivity() {
                 }
             }
 
-            this?.tilSignupInputConfirmPassword?.editText?.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    viewModel?.setConfirmPassword(this?.tilSignupInputConfirmPassword?.editText?.text.toString())
-                }
+            this?.tilSignupInputConfirmPassword?.editText?.doOnTextChanged { text, _, _, _ ->
+                viewModel?.setConfirmPassword(text.toString())
+
             }
             this?.btSignupButton?.setOnClickListener {
                 viewModel?.signUp()
