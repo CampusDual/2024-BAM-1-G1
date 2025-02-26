@@ -126,5 +126,6 @@
         <u>Volver a Inicio de sesión
         </u>
     </string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
