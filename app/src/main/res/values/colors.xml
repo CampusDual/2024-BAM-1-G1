@@ -8,5 +8,7 @@
     <color name="color_secondary_blue">#73ACB5</color>
     <color name="color_secondary_orange">#FBBB73</color>
     <color name="color_secondary_wine">#B56974</color>
+    <color name="activated_color">#32788C</color>
+    <color name="deactivated_color">#8E8888</color>
 
 </resources>

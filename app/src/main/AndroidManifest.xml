@@ -18,7 +18,7 @@
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.auth.profile.Activityprofile"
+            android:name=".presentation.auth.profile.ActivityProfile"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
