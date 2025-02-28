@@ -127,5 +127,6 @@
         </u>
     </string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="next_button">next_button</string>
 
 </resources>

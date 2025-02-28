@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+
     <FrameLayout
         android:id="@+id/fl_container_image"
         android:layout_width="0dp"
@@ -14,6 +16,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         >
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_clear_button"
+            android:contentDescription="@string/next_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/baseline_clear_24"
+            app:tint="@color/white" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
@@ -96,17 +110,18 @@
                     android:text="@string/onboarding_one_body">
                 </TextView>
 
-                <com.google.android.material.button.MaterialButton
+                <ImageButton
                     android:id="@+id/bt_onb_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_arrow_right"
-
+                    android:layout_width="53dp"
+                    android:layout_height="53dp"
+                    android:layout_marginTop="24"
                     android:backgroundTint="@color/color_main"
-                    android:layout_marginTop="24dp"
-                    app:cornerRadius="16dp"
-                    android:padding="18dp"
-                    style="@style/button_solid_16dp" />
+                    android:contentDescription="@string/next_button"
+                    android:src="@drawable/baseline_arrow_forward_ios_24"
+                    android:background="@drawable/rounded_next_button"
+                    android:scaleType="centerInside"
+                    android:padding="12dp"
+                    app:tint="@color/white" />
 
 
             </LinearLayout>
