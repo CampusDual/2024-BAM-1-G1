@@ -17,5 +17,5 @@ interface AuthRemoteDataSource {
     suspend fun recoverPassword(email: String): Result<Boolean>
     suspend fun signUp(authSignUpUserRequestDto: AuthSignUpUserRequestDto): Response<AuthSignUpUserResponseDto>
     suspend fun verifyUserEmail(verifyUserEmailRequestDto: AuthVerifyUserEmailUpUserRequestDto): Response<AuthVerifyUserEmailUpUserResponseDto>
-    suspend fun logInWhitToken(userLoginWhitTokenDto: AuthWhitTokenRequestDto): Result<AuthWhitTokenResponseDto>
+    suspend fun logInWhitToken(userLoginWhitTokenDto: AuthWhitTokenRequestDto): Response<AuthWhitTokenResponseDto>
 }

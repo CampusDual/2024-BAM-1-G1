@@ -20,7 +20,7 @@ class AuthRepositoryImpl @Inject constructor(private val authRemoteDataSource:Au
         return authRemoteDataSource.logIn(credentials)
     }
 
-    override suspend fun logInWhitToken(token: String): Result<AuthWhitTokenResponseDto> {
+    override suspend fun logInWhitToken(token: String): Response<AuthWhitTokenResponseDto> {
         val credentials = AuthWhitTokenRequestDto(token)
         return authRemoteDataSource.logInWhitToken(credentials)
     }

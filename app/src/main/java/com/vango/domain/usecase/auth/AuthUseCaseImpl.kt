@@ -33,7 +33,6 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
             "Debe* contener mayúsculas minúsculas y caracteres especiales"
         )
         return Pair(true, "")
-
     }
 
     override fun validConfirmPassword(
@@ -71,7 +70,7 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
 
         val finalResult: Result<Boolean> = if (result.isSuccessful) {
             val token = result.body()?.token
-            val login = authRepository.loginWhitToken(token.toString())
+            val login = authRepository.logInWhitToken(token.toString())
 
             if (login.isSuccessful) {
                 Result.success(true)

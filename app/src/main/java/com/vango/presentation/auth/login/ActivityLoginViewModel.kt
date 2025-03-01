@@ -41,9 +41,11 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
             authUseCase.logIn(email, password)
                 .onSuccess { user ->
                     _success.postValue("Inicio de sesión exitoso")
+                    _isLoginSuccess.postValue(true)
                 }
                 .onFailure { error ->
                     _error.postValue(error.localizedMessage)
+                    _isLoginSuccess.postValue(false)
                 }
         }
     }
