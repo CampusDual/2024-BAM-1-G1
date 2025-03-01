@@ -130,7 +130,7 @@
 
     <!-- Profile -->
     <!-- Strings reutilizables usados: ninguno -->
-    <string name="profile_title">Perfil</string>
+    <string name="profile_title">Configura tu Perfil</string>
     <string name="profile_subtitle">Algunos datos y ajustes basicos</string>
     <string name="profile_title_nick">Apodo</string>
     <string name="profile_input_nick">¿Como te llamaremos?</string>
