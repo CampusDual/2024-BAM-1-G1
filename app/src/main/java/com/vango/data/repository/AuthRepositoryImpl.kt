@@ -6,6 +6,8 @@ import com.vango.shared.dtos.auth.AuthSignUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthSignUpUserResponseDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserResponseDto
+import com.vango.shared.dtos.auth.AuthWhitTokenRequestDto
+import com.vango.shared.dtos.auth.AuthWhitTokenResponseDto
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,6 +18,11 @@ class AuthRepositoryImpl @Inject constructor(private val authRemoteDataSource:Au
     override suspend fun logIn(email: String, password: String): Result<AuthDtoResponseDto> {
         val credentials = AuthDtoRequestDto(email, password)
         return authRemoteDataSource.logIn(credentials)
+    }
+
+    override suspend fun logInWhitToken(token: String): Result<AuthWhitTokenResponseDto> {
+        val credentials = AuthWhitTokenRequestDto(token)
+        return authRemoteDataSource.logInWhitToken(credentials)
     }
 
     override  suspend fun recoverPassword (email: String): Result<Boolean>{

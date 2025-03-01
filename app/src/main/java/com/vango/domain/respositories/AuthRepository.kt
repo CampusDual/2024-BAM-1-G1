@@ -5,6 +5,7 @@ import com.vango.shared.dtos.auth.AuthSignUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthSignUpUserResponseDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserResponseDto
+import com.vango.shared.dtos.auth.AuthWhitTokenResponseDto
 import retrofit2.Response
 
 interface AuthRepository {
@@ -15,4 +16,5 @@ interface AuthRepository {
     suspend fun signUp(userRequestDto: AuthSignUpUserRequestDto): Response<AuthSignUpUserResponseDto>
     fun logout()
     suspend fun verifyUserEmail(verifyUserEmailRequestDto: AuthVerifyUserEmailUpUserRequestDto): Response<AuthVerifyUserEmailUpUserResponseDto>
+    suspend fun logInWhitToken(token: String): Result<AuthWhitTokenResponseDto>
 }
