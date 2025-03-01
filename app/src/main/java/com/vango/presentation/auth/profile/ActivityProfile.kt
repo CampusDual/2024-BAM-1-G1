@@ -1,50 +1,56 @@
 package com.vango.presentation.auth.profile
-
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
 import com.vango.R
-import android.widget.Button
 import com.vango.databinding.ActivityProfileBinding
 
 class ActivityProfile : AppCompatActivity() {
 
-    // Variables para rastrear el estado de los botones
+    private lateinit var binding : ActivityProfileBinding
+    private lateinit var viewModel: ActivityProfileViewModel
 
-    private lateinit var binding: ActivityProfileBinding
-    private val buttonStates = BooleanArray(4) { false } // Inicialmente todos desactivados
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_profile)
         binding = ActivityProfileBinding.inflate(layoutInflater)
-        // Configurar listeners para cada botón
+        setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[ActivityProfileViewModel::class.java]
         setupButton(binding.bOptionA, 0)
         setupButton(binding.bOptionB, 1)
         setupButton(binding.bOptionC, 2)
         setupButton(binding.bOptionD, 3)
 
+        updateButtonAppearance(binding.bOptionA, 0)
+        updateButtonAppearance(binding.bOptionB, 1)
+        updateButtonAppearance(binding.bOptionC, 2)
+        updateButtonAppearance(binding.bOptionD, 3)
+
+
     }
 
-    // Método para configurar el listener de un botón
-    private fun setupButton(button: Button, index: Int) {
-        button.setOnClickListener {
-            // Cambiar el estado del botón
-            buttonStates[index] = !buttonStates[index]
 
-            // Actualizar la apariencia del botón según su estado
-            if (buttonStates[index]) {
-                button.setBackgroundColor(Color.GREEN) // Activado
-                button.setTextColor(Color.WHITE) // Texto blanco para contraste
-                button.text = "Opción ${index + 1} activada"
-            } else {
-                button.setBackgroundColor(Color.RED) // Activado
-                button.setTextColor(Color.WHITE) // Texto blanco para contraste
-                button.text = "Opción ${index + 1} desactivada"
-            }
+    private fun setupButton(button: MaterialButton, index: Int) {
+        button.setOnClickListener {
+            viewModel.toggleButtonState(index)
+            updateButtonAppearance(button, index)
         }
     }
 
+
+    private fun updateButtonAppearance(button: MaterialButton, index: Int) {
+        val isActivated = viewModel.getButtonState(index)
+        if (isActivated) {
+            button.backgroundTintList = ContextCompat.getColorStateList(this, R.color.activated_color) // Activado
+            button.setTextColor(Color.WHITE)
+        } else {
+            button.backgroundTintList = ContextCompat.getColorStateList(this, R.color.deactivated_color) // Desactivado
+            button.setTextColor(Color.WHITE)
+        }
+    }
 
 }

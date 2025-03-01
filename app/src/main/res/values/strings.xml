@@ -131,13 +131,12 @@
     <!-- Profile -->
     <!-- Strings reutilizables usados: ninguno -->
     <string name="profile_title">Configura tu Perfil</string>
-    <string name="profile_subtitle">Algunos datos y ajustes basicos</string>
     <string name="profile_title_nick">Apodo</string>
     <string name="profile_input_nick">¿Como te llamaremos?</string>
     <string name="profile_title_age">Edad</string>
     <string name="profile_input_age">¿Que edad tienes?</string>
-    <string name="profile_title_city">Ciudad</string>
-    <string name="profile_input_city">¿Donde vives?</string>
+    <string name="profile_title_province">Provincia</string>
+    <string name="profile_input_province">¿Donde vives?</string>
     <string name="profile_title_country">País</string>
     <string name="profile_input_country">País</string>
     <string name="profile_button">Guardar</string>
