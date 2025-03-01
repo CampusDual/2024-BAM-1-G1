@@ -2,8 +2,7 @@ package com.vango.di
 
 import AuthRepositoryImpl
 import com.vango.data.dataSource.remote.auth.AuthRemoteDataSource
-import com.vango.domain.respository.AuthRepository
-import dagger.Binds
+import com.vango.domain.respositories.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.vango.utils.mappers
+package com.vango.shared.mappers
 
 import com.google.firebase.auth.FirebaseAuthEmailException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

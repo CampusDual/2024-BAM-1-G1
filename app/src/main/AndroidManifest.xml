@@ -18,15 +18,12 @@
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.home.ActivityHome"
             android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.VanGO" />
         <activity
             android:name=".presentation.auth.forgottenPassword.ActivityForgottenPassword"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.home.ActivityHome"
             android:exported="false" />
         <activity
             android:name=".presentation.auth.login.ActivityLogin"
@@ -48,6 +45,9 @@
             android:exported="false" />
         <activity
             android:name=".presentation.auth.passwordChanged.ActivityPasswordChanged"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
             android:name=".presentation.onboarding.onboarding1.ActivityOnboardingOne"

@@ -8,25 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.vango.data.dataSource.remote.auth.GoogleSignInClient
+import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivityLoginBinding
-import com.vango.domain.entities.AppError
-import com.vango.domain.entities.AppError.UnknownError.message
-import com.vango.presentation.auth.changePass.ActivityChangePass
 import com.vango.presentation.auth.forgottenPassword.ActivityForgottenPassword
 import com.vango.presentation.auth.signup.ActivitySignup
 import com.vango.presentation.home.ActivityHome
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityLogin : AppCompatActivity() {
-    var binding: ActivityLoginBinding? = null
+    private var binding: ActivityLoginBinding? = null
+    private var viewModel: ActivityLoginViewModel? = null
 
-    private val googleSignInClient by lazy {
-        GoogleSignInClient(this)
-    }
-    var viewModel: ActivityLoginViewModel? = null
+    @Inject
+    lateinit var authRemoteGoogleClient: AuthRemoteGoogleClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +31,15 @@ class ActivityLogin : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        viewModel = ViewModelProvider(this)[ActivityLoginViewModel::class]
+        viewModel = ViewModelProvider(this)[ActivityLoginViewModel::class.java]
 
         initListeners()
         initObservers()
-
     }
 
-    private fun initObservers(){
-        viewModel?.isLoginSuccess?.observe(this){
-                isSuccess ->
-            if (isSuccess){
+    private fun initObservers() {
+        viewModel?.isLoginSuccess?.observe(this) { isSuccess ->
+            if (isSuccess) {
                 val intentActivityHome = Intent(this, ActivityHome::class.java)
                 intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)
@@ -59,52 +54,52 @@ class ActivityLogin : AppCompatActivity() {
         viewModel?.success?.observe(this) { message ->
             Toast.makeText(this@ActivityLogin, message, Toast.LENGTH_LONG).show()
         }
-
-
-
     }
 
-    private fun initListeners(){
-        binding?.etLoginInputEmail?.doOnTextChanged{
-                text,start,before,count ->
+    private fun initListeners() {
+        binding?.etLoginInputEmail?.doOnTextChanged { text, _, _, _ ->
             viewModel?.setEmail(text.toString())
         }
 
-        binding?.etLoginInputPassword?.doOnTextChanged{
-                text,start,before,count ->
+        binding?.etLoginInputPassword?.doOnTextChanged { text, _, _, _ ->
             viewModel?.setPassword(text.toString())
         }
 
-        binding?.btLoginButton?.setOnClickListener{
+        binding?.btLoginButton?.setOnClickListener {
             viewModel?.login()
         }
 
         val btnGoogle = binding?.mbGoogle
-        btnGoogle?.setOnClickListener{
+        btnGoogle?.setOnClickListener {
             lifecycleScope.launch {
-                val success = googleSignInClient.signIn()
-                if (success){
+                val success = authRemoteGoogleClient.signIn(this@ActivityLogin)
+                if (success) {
                     val intent = Intent(this@ActivityLogin, ActivityHome::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
-
+                } else {
+                    Toast.makeText(this@ActivityLogin, "Error al iniciar sesión con Google", Toast.LENGTH_LONG).show()
                 }
             }
-
         }
 
         val linkSignup = binding?.tvNoLoginRegister
-        linkSignup?.setOnClickListener{
+        linkSignup?.setOnClickListener {
             val intent = Intent(this, ActivitySignup::class.java)
             startActivity(intent)
             finish()
         }
 
         val linkForgotPass = binding?.tvLoginForgotPassword
-        linkForgotPass?.setOnClickListener{
+        linkForgotPass?.setOnClickListener {
             val intent = Intent(this, ActivityForgottenPassword::class.java)
             startActivity(intent)
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
 }

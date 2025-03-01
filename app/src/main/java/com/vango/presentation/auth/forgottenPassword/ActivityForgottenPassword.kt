@@ -7,23 +7,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.vango.data.dataSource.remote.auth.GoogleSignInClient
+import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivityForgottenPasswordBinding
-import com.vango.databinding.ActivityLoginBinding
 import com.vango.presentation.auth.changePass.ActivityChangePass
-import com.vango.presentation.auth.signup.ActivitySignup
-import com.vango.presentation.home.ActivityHome
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ActivityForgottenPassword : AppCompatActivity() {
     var binding: ActivityForgottenPasswordBinding? = null
-
-    private val googleSignInClient by lazy {
-        GoogleSignInClient(this)
-    }
     var viewModel: ActivityForgottenPasswordViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

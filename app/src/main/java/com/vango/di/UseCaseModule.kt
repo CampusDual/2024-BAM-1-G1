@@ -1,8 +1,11 @@
 package com.vango.di
 
-import com.vango.domain.respository.AuthRepository
-import com.vango.domain.usecase.AuthUseCase
-import com.vango.domain.usecase.AuthUseCaseImpl
+import com.vango.domain.respositories.AuthRepository
+import com.vango.domain.respositories.UserRepository
+import com.vango.domain.usecase.auth.AuthUseCase
+import com.vango.domain.usecase.auth.AuthUseCaseImpl
+import com.vango.domain.usecase.user.UserUseCase
+import com.vango.domain.usecase.user.UserUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +18,11 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideAuthUseCase(repo: AuthRepository): AuthUseCase {
-        return AuthUseCaseImpl(repo)
+    fun provideAuthUseCase(repository: AuthRepository): AuthUseCase {
+        return AuthUseCaseImpl(
+            repository
+
+        )
     }
 
 }

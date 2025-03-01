@@ -22,13 +22,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    viewBinding {
+        enable = true
+    }
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://5qkl79zj-7220.uks1.devtunnels.ms/\"")
+
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"https://5qkl79zj-7220.uks1.devtunnels.ms/\"")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

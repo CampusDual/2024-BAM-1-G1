@@ -1,4 +1,4 @@
-package com.vango.data.dataSource.remote.auth.dto
+package com.vango.shared.dtos
 
 data class AuthDtoResponse(val uuid: String?) {
 

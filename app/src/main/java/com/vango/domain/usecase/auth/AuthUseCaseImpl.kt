@@ -1,8 +1,9 @@
-package com.vango.domain.usecase
+package com.vango.domain.usecase.auth
 
-import android.util.Log
-import com.vango.data.dataSource.remote.auth.dto.AuthDtoResponse
-import com.vango.domain.respository.AuthRepository
+import com.vango.shared.dtos.AuthDtoResponse
+import com.vango.domain.respositories.AuthRepository
+import com.vango.domain.respositories.UserRepository
+import com.vango.shared.dtos.user.CreateUserRequestDto
 
 import javax.inject.Inject
 
@@ -38,11 +39,14 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
         return Pair(true, "")
     }
 
-    override suspend fun signUp(email: String, password: String, confirmPassword: String): Boolean {
-        if (validEmail(email).first && validPassword(password).first && validConfirmPassword(password, confirmPassword).first) {
-            return authRepository.signUp(email, password)
+    override suspend fun signUp(email: String, password: String, typeLogIn: Int): Result<String?> {
+        val createUserRequestDto = CreateUserRequestDto(email, password, typeLogIn)
+        val result = authRepository.signUp(createUserRequestDto)
+
+        return if (result.isSuccessful) {
+            Result.success(result.body()?.firebaseId)
         } else {
-            return false
+            Result.failure(Exception("Error al crear usuario: ${result.code()} - ${result.errorBody()?.string()}"))
         }
     }
 
