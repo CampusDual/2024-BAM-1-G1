@@ -1,6 +1,6 @@
-package com.vango.shared.dtos.user
+package com.vango.shared.dtos.auth
 
-data class CreateUserResponseDto(
+data class AuthSignUpUserResponseDto(
     val firebaseId: String?,
     val name: String?,
     val lastName: String?,

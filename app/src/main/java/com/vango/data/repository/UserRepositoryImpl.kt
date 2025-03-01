@@ -2,8 +2,8 @@ package com.vango.data.repository
 
 import com.vango.data.dataSource.remote.user.UserRemoteDataSourceImpl
 import com.vango.domain.respositories.UserRepository
-import com.vango.shared.dtos.user.CreateUserRequestDto
-import com.vango.shared.dtos.user.CreateUserResponseDto
+import com.vango.shared.dtos.auth.AuthSignUpUserRequestDto
+import com.vango.shared.dtos.auth.AuthSignUpUserResponseDto
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository
 {
 
-    override suspend fun createUser(userRequestDto: CreateUserRequestDto): Response<CreateUserResponseDto>
+    override suspend fun createUser(userRequestDto: AuthSignUpUserRequestDto): Response<AuthSignUpUserResponseDto>
     {
         return userRemoteDataSourceImpl.createUser(userRequestDto)
     }

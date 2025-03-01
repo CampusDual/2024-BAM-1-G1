@@ -1,6 +1,6 @@
-package com.vango.shared.dtos.user
+package com.vango.shared.dtos.auth
 
-data class CreateUserRequestDto(
+data class AuthSignUpUserRequestDto(
     val email: String,
     val password: String,
     val typeLogIn: Int

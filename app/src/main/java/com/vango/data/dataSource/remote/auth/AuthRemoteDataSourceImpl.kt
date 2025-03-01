@@ -1,16 +1,17 @@
 package com.vango.data.dataSource.remote.auth
 
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.vango.data.dataSource.remote.api.UserApi
-import com.vango.shared.dtos.AuthDtoRequest
-import com.vango.shared.dtos.AuthDtoResponse
-import com.vango.shared.dtos.UserDto
+import com.vango.shared.dtos.auth.AuthDtoRequestDto
+import com.vango.shared.dtos.auth.AuthDtoResponseDto
 import com.vango.domain.entities.AppError
-import com.vango.shared.dtos.user.CreateUserRequestDto
-import com.vango.shared.dtos.user.CreateUserResponseDto
+import com.vango.shared.dtos.auth.AuthSignUpUserRequestDto
+import com.vango.shared.dtos.auth.AuthSignUpUserResponseDto
+import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserRequestDto
+import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserResponseDto
+import com.vango.shared.dtos.auth.AuthWhitTokenRequestDto
+import com.vango.shared.dtos.auth.AuthWhitTokenResponseDto
 import com.vango.shared.mappers.FirebaseAuthErrorMapper
 import retrofit2.Response
 import javax.inject.Inject
@@ -23,13 +24,13 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private val userApi: UserApi,
 ):AuthRemoteDataSource{
 
-    override suspend fun logIn(userLoginDto: AuthDtoRequest): Result<AuthDtoResponse> {
+    override suspend fun logIn(userLoginDto: AuthDtoRequestDto): Result<AuthDtoResponseDto> {
         return suspendCoroutine { continuation ->
             auth.signInWithEmailAndPassword(userLoginDto.email, userLoginDto.password)
                 .addOnSuccessListener { authResult ->
                     val userId = authResult.user?.uid
                     if (userId != null) {
-                        continuation.resume(Result.success(AuthDtoResponse(userId)))
+                        continuation.resume(Result.success(AuthDtoResponseDto(userId)))
                     } else {
                         continuation.resume(Result.failure(AppError.DetailedError("El usuario es nulo.")))
                     }
@@ -40,6 +41,23 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun logInWhitToken(userLoginWhitTokenDto: AuthWhitTokenRequestDto): Result<AuthWhitTokenResponseDto>{
+        return suspendCoroutine { continuation ->
+            auth.signInWithCustomToken(userLoginWhitTokenDto.token)
+                .addOnSuccessListener { authResult ->
+                    val userId = authResult.user?.uid
+                    if (userId != null) {
+                        continuation.resume(Result.success(AuthWhitTokenResponseDto(userId)))
+                    } else {
+                        continuation.resume(Result.failure(AppError.DetailedError("El usuario es nulo.")))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(Result.failure(FirebaseAuthErrorMapper.map(exception)))
+                }
+        }
+
+    }
 
     override suspend fun recoverPassword(email: String): Result<Boolean> {
         return suspendCoroutine { continuation ->
@@ -54,13 +72,17 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun signUp(createUserRequestDto: CreateUserRequestDto): Response<CreateUserResponseDto>
+    override suspend fun signUp(authSignUpUserRequestDto: AuthSignUpUserRequestDto): Response<AuthSignUpUserResponseDto>
     {
-        return userApi.createUser(createUserRequestDto)
+        return userApi.signUp(authSignUpUserRequestDto)
+    }
+
+    override suspend fun verifyUserEmail(verifyUserEmailRequestDto: AuthVerifyUserEmailUpUserRequestDto): Response<AuthVerifyUserEmailUpUserResponseDto> {
+       return userApi.verifyUserEmail(verifyUserEmailRequestDto)
     }
 
     override fun logout() {
-
+        auth.signOut()
     }
 
     override suspend fun getUser(): List<String> {
