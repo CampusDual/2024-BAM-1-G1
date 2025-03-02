@@ -1,21 +1,20 @@
-package com.vango.data.dataSource.remote.auth
+package com.vango.domain.respositories
 
-import com.vango.shared.dtos.auth.AuthDtoRequestDto
 import com.vango.shared.dtos.auth.AuthDtoResponseDto
 import com.vango.shared.dtos.auth.AuthSignUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthSignUpUserResponseDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserResponseDto
-import com.vango.shared.dtos.auth.AuthWhitTokenRequestDto
 import com.vango.shared.dtos.auth.AuthWhitTokenResponseDto
 import retrofit2.Response
 
-interface AuthRemoteDataSource {
-    suspend fun getUser(): List<String>
-    fun logout()
-    suspend fun logIn(userLoginDto: AuthDtoRequestDto): Result<AuthDtoResponseDto>
+interface AuthRepository {
+
+
+    suspend fun logIn(email: String, password: String): Result<AuthDtoResponseDto>
     suspend fun recoverPassword(email: String): Result<Boolean>
-    suspend fun signUp(authSignUpUserRequestDto: AuthSignUpUserRequestDto): Response<AuthSignUpUserResponseDto>
+    suspend fun signUp(userRequestDto: AuthSignUpUserRequestDto): Response<AuthSignUpUserResponseDto>
+    fun logout()
     suspend fun verifyUserEmail(verifyUserEmailRequestDto: AuthVerifyUserEmailUpUserRequestDto): Response<AuthVerifyUserEmailUpUserResponseDto>
-    suspend fun logInWhitToken(userLoginWhitTokenDto: AuthWhitTokenRequestDto): Response<AuthWhitTokenResponseDto>
+    suspend fun logInWhitToken(token: String): Response<AuthWhitTokenResponseDto>
 }

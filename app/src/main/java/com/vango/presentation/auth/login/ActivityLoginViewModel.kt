@@ -1,12 +1,10 @@
 package com.vango.presentation.auth.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vango.domain.entities.AppError
-import com.vango.domain.usecase.AuthUseCase
+import com.vango.domain.usecase.auth.AuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,9 +41,11 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
             authUseCase.logIn(email, password)
                 .onSuccess { user ->
                     _success.postValue("Inicio de sesión exitoso")
+                    _isLoginSuccess.postValue(true)
                 }
                 .onFailure { error ->
                     _error.postValue(error.localizedMessage)
+                    _isLoginSuccess.postValue(false)
                 }
         }
     }
