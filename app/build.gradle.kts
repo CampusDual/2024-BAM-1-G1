@@ -123,5 +123,5 @@ dependencies {
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    implementation("com.hbb20:ccp:2.5.3")
+    implementation (libs.country.picker)
 }

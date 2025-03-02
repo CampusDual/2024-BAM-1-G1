@@ -59,7 +59,7 @@
                 app:hintEnabled="false"> <!-- Desactiva el hint flotante -->
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_prifile_input_nick"
+                    android:id="@+id/et_profile_input_nick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_font"
@@ -151,15 +151,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    app:ccp_textSize="30dp"
+                    app:ccp_textSize="24dp"
                     app:ccp_useFlagEmoji="true"
                     app:ccp_autoDetectLanguage="true"
                     app:ccp_autoDetectCountry="true"
+                    app:ccp_defaultNameCode="ES"
                     app:ccp_showFlag="true"
                     app:ccp_showFullName="false"
                     app:ccp_showNameCode="false"
                     app:ccp_showPhoneCode="false"
-                    app:ccpDialog_background="@color/white" />
+                    app:ccpDialog_background="@color/white"
+                    app:ccp_customMasterCountries="ES,PT,FR" />
             </LinearLayout>
             <!-- Contenedor de la ciudad -->
             <LinearLayout
@@ -179,31 +181,11 @@
                     android:layout_height="wrap_content"
                     android:text="@string/profile_title_province" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_profile_input_province"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="16dp"
-                    app:boxCornerRadiusBottomStart="16dp"
-                    app:boxCornerRadiusTopEnd="16dp"
-                    app:boxCornerRadiusTopStart="16dp"
-                    app:boxStrokeColor="@color/color_main"
-                    app:boxStrokeWidth="1dp"
-                    app:hintEnabled="false"> <!-- Desactiva el hint flotante -->
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_profile_input_province"
+                    <Spinner
+                        android:id="@+id/spinner_profile_province"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_font"
-                        android:hint="@string/profile_input_province"
-                        android:inputType="text"
-                        android:padding="22dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/color_secondary_grey" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:padding="24dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -295,7 +277,7 @@
 
         <!-- Botón de inicio de sesión -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/bt_login_button"
+            android:id="@+id/bt_sabe_button"
             style="@style/button_solid_16dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
