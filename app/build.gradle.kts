@@ -110,4 +110,6 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    implementation("com.hbb20:ccp:2.5.3")
 }
