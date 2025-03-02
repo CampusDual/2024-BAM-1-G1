@@ -20,10 +20,53 @@ class ActivityVerifyAccountViewModel @Inject constructor(private val authUseCase
     private var _success: MutableLiveData<String> = MutableLiveData()
     val success: LiveData<String> = _success
 
+    private var code:String = ""
+    private var codeOne:String = ""
+    private var codeTwo:String = ""
+    private var codeThree:String = ""
+    private var codeFour:String = ""
+
 
     fun resendEmailVerification(){
         viewModelScope.launch {
 
+        }
+    }
+
+    fun setTextOne(text:String){
+        codeOne = text
+
+    }
+    fun setTextTwo(text:String){
+        codeTwo = text
+
+    }
+    fun setTextThree(text:String){
+        codeThree = text
+
+    }
+    fun setTextFour(text:String){
+        codeFour = text
+
+    }
+
+
+
+    fun verifyCode() {
+
+        code = "$codeOne$codeTwo$codeThree$codeFour"
+
+        if(code.length == 4){
+            viewModelScope.launch {
+                val result = authUseCase.verifyUserEmail("firebaseId", code)
+                if(result.isSuccess){
+                    _success.postValue("Código de verificación correcto")
+                    _isAccountVerified.postValue(true)
+                }else{
+                    _error.postValue("Código de verificación incorrecto")
+                    _isAccountVerified.postValue(false)
+                }
+            }
         }
     }
 }
