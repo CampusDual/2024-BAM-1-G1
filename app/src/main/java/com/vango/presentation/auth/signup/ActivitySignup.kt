@@ -1,7 +1,10 @@
 package com.vango.presentation.auth.signup
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -72,38 +75,59 @@ class ActivitySignup : AppCompatActivity() {
         }
 
         viewModel?.isSignUpSuccessful?.observe(this) { isSuccess ->
-            if(isSuccess){
+            hideLoading()
+            if (isSuccess) {
                 val intent = Intent(this, ActivityVerifyAccount::class.java)
                 startActivity(intent)
             }
         }
 
         viewModel?.error?.observe(this) { message ->
+            hideLoading()
             Toast.makeText(this@ActivitySignup, message, Toast.LENGTH_LONG).show()
+        }
+
+        viewModel?.isLoading?.observe(this) { isLoading ->
+            if (isLoading) showLoading() else hideLoading()
         }
 
     }
 
     private fun initListeners() {
         with(binding) {
-            this?.tilSignupInputEmail?.editText?.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    viewModel?.setEmail(this.tilSignupInputEmail.editText?.text.toString())
-                }
+            this?.tilSignupInputEmail?.editText?.doOnTextChanged { text, _, _, _ ->
+                viewModel?.setEmail(this.tilSignupInputEmail.editText?.text.toString())
             }
 
-            this?.tilSignupInputPassword?.editText?.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    viewModel?.setPassword(this.tilSignupInputPassword.editText?.text.toString())
-                }
+            this?.tilSignupInputPassword?.editText?.doOnTextChanged { text, _, _, _ ->
+                viewModel?.setPassword(this.tilSignupInputPassword.editText?.text.toString())
             }
 
             this?.tilSignupInputConfirmPassword?.editText?.doOnTextChanged { text, _, _, _ ->
                 viewModel?.setConfirmPassword(text.toString())
             }
             this?.btSignupButton?.setOnClickListener {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val view = currentFocus ?: View(this@ActivitySignup)
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+                showLoading()
                 viewModel?.signUp()
             }
+
         }
+    }
+
+    private fun showLoading() {
+        binding?.loadingContainer?.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding?.loadingContainer?.visibility = View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }

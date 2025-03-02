@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -42,11 +43,32 @@ class ActivityVerifyAccount : AppCompatActivity() {
             }
         }
         viewModel?.error?.observe(this) { message ->
+            hideLoading()
+
             Toast.makeText(this@ActivityVerifyAccount, message, Toast.LENGTH_LONG).show()
         }
 
         viewModel?.success?.observe(this) { message ->
+            hideLoading()
+
             Toast.makeText(this@ActivityVerifyAccount, message, Toast.LENGTH_LONG).show()
+        }
+
+        viewModel?.isLoading?.observe(this) { isLoading ->
+            if (isLoading) showLoading() else hideLoading()
+        }
+        viewModel?.resendTimer?.observe(this) { time ->
+            if (time >= 0) {
+                binding?.timeResend?.visibility = View.VISIBLE
+                binding?.timeResend?.text = "Por favor espere $time segundos antes de volver a enviar el código"
+            } else {
+                binding?.timeResend?.visibility = View.GONE
+            }
+        }
+
+        viewModel?.isResendEnabled?.observe(this) { enabled ->
+            binding?.tvLoginForgotPassword?.isEnabled = enabled
+            binding?.tvLoginForgotPassword?.alpha = if (enabled) 1.0f else 0.5f
         }
     }
 
@@ -86,9 +108,22 @@ class ActivityVerifyAccount : AppCompatActivity() {
         }
 
         binding?.btSignupButton?.setOnClickListener {
+            showLoading()
             viewModel?.verifyCode()
         }
 
+        binding?.tvLoginForgotPassword?.setOnClickListener {
+            viewModel?.resendEmailVerification()
+        }
+
+    }
+
+    private fun showLoading() {
+        binding?.loadingContainer?.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding?.loadingContainer?.visibility = View.GONE
     }
 
     override fun onDestroy() {

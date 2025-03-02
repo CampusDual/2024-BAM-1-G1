@@ -122,4 +122,8 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    //lotie
+
+    implementation(libs.lottie)
 }
