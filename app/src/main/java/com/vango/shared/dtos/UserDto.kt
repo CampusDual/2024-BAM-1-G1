@@ -1,4 +1,4 @@
-package com.vango.data.dataSource.remote.auth.dto
+package com.vango.shared.dtos
 
 import com.google.firebase.firestore.Exclude
 

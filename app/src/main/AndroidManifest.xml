@@ -53,6 +53,9 @@
             android:name=".presentation.auth.passwordChanged.ActivityPasswordChanged"
             android:exported="false" />
         <activity
+            android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
+            android:exported="false" />
+        <activity
             android:name=".presentation.onboarding.onboarding1.ActivityOnboardingOne"
             android:exported="true">
             <intent-filter>
