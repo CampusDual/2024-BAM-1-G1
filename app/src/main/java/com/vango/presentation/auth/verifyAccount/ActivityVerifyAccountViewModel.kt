@@ -59,7 +59,7 @@ class ActivityVerifyAccountViewModel @Inject constructor(private val authUseCase
         startResendCountdown()
     }
 
-    fun resendEmailVerification() {
+    fun resendEmailVerification(email: String?, firebaseId: String?) {
         if (_isResendEnabled.value == false) return
 
         viewModelScope.launch {
@@ -81,13 +81,13 @@ class ActivityVerifyAccountViewModel @Inject constructor(private val authUseCase
         }
     }
 
-    fun verifyCode() {
+    fun verifyCode(firebaseId: String) {
         code = "$codeOne$codeTwo$codeThree$codeFour"
 
         if(code.length == 4){
             viewModelScope.launch {
                 _isLoading.value = true
-                val result = authUseCase.verifyUserEmail("firebaseId", code)
+                val result = authUseCase.verifyUserEmail(firebaseId, code)
                 if(result.isSuccess){
                     _success.postValue("Código de verificación correcto")
                     _isAccountVerified.postValue(true)

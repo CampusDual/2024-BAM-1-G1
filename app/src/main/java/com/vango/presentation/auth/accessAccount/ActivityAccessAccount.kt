@@ -32,7 +32,6 @@ class ActivityAccessAccount : BaseActivity() {
         btnLogin?.setOnClickListener{
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
-
         }
 
         val btnRegister = binding?.btAccessAccountLogin
