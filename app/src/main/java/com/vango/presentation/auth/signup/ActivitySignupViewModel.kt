@@ -72,6 +72,12 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
         val emailValue = _email.value
         val passwordValue = _password.value
         val confirmPasswordValue = _confirmPassword.value
+        if(emailValue.isNullOrBlank() || passwordValue.isNullOrBlank() || confirmPasswordValue.isNullOrBlank())
+        {
+            _isLoading.value = false
+            _error.value = "Por favor, complete todos los campos"
+            return
+        }
         if (emailValue != null && passwordValue != null && confirmPasswordValue != null) {
             viewModelScope.launch {
                 _isLoading.value = true
@@ -85,6 +91,8 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
                 _isLoading.value = false
             }
         }
+        _isLoading.value = false
+
     }
 
 

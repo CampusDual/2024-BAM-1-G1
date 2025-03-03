@@ -38,8 +38,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState? = null,
     permissionState: PermissionState? = null,
-    isPreview: Boolean = false,
-    isInPreviewMode: Boolean
+    isPreview: Boolean = false
 ) {
     val context = LocalContext.current
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -117,8 +116,7 @@ fun HomeScreenPreview() {
     }
 
     HomeScreen(
-        permissionState = mockPermissionState,
         cameraPositionState = cameraState,
-        isInPreviewMode = true
+        permissionState = mockPermissionState
     )
 }

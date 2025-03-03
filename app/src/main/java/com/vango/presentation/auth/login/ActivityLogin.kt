@@ -1,7 +1,10 @@
 package com.vango.presentation.auth.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +57,9 @@ class ActivityLogin : AppCompatActivity() {
         viewModel?.success?.observe(this) { message ->
             Toast.makeText(this@ActivityLogin, message, Toast.LENGTH_LONG).show()
         }
+        viewModel?.isLoading?.observe(this) { isLoading ->
+            if (isLoading) showLoading() else hideLoading()
+        }
     }
 
     private fun initListeners() {
@@ -66,20 +72,41 @@ class ActivityLogin : AppCompatActivity() {
         }
 
         binding?.btLoginButton?.setOnClickListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val view = currentFocus ?: View(this@ActivityLogin)
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+            showLoading()
             viewModel?.login()
         }
 
         val btnGoogle = binding?.mbGoogle
         btnGoogle?.setOnClickListener {
+            showLoading()
+
             lifecycleScope.launch {
-                val success = authRemoteGoogleClient.signIn(this@ActivityLogin)
-                if (success) {
-                    val intent = Intent(this@ActivityLogin, ActivityMain::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this@ActivityLogin, "Error al iniciar sesión con Google", Toast.LENGTH_LONG).show()
+                try {
+                    val success = authRemoteGoogleClient.signIn(this@ActivityLogin)
+                    if (success) {
+                        val intent = Intent(this@ActivityLogin, ActivityMain::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@ActivityLogin,
+                            "Error al iniciar sesión con Google",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@ActivityLogin,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } finally {
+                    hideLoading()
                 }
             }
         }
@@ -88,7 +115,6 @@ class ActivityLogin : AppCompatActivity() {
         linkSignup?.setOnClickListener {
             val intent = Intent(this, ActivitySignup::class.java)
             startActivity(intent)
-            finish()
         }
 
         val linkForgotPass = binding?.tvLoginForgotPassword
@@ -96,6 +122,14 @@ class ActivityLogin : AppCompatActivity() {
             val intent = Intent(this, ActivityForgottenPassword::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun showLoading() {
+        binding?.loadingContainer?.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding?.loadingContainer?.visibility = View.GONE
     }
 
     override fun onDestroy() {

@@ -1,7 +1,6 @@
 package com.vango.presentation.main
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
@@ -26,15 +25,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.vango.presentation.main.home.HomeScreen
+import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
+import com.vango.presentation.main.home.HomeScreen
 import com.vango.presentation.main.profile.ProfileScreen
 import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ActivityMain : ComponentActivity() {
+class ActivityMain :  BaseActivity() {
     private lateinit var viewModel: ActivityMainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +80,7 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable("home") {
-                HomeScreen(isInPreviewMode = true)
+                HomeScreen()
             }
             composable("routes") {
                 RoutesScreen()
@@ -147,7 +147,7 @@ fun HomeContentPreview() {
             )
         }
     ) { paddingValues ->
-        HomeScreen(modifier = Modifier.padding(paddingValues), isInPreviewMode = true)
+        HomeScreen(modifier = Modifier.padding(paddingValues))
     }
 }
 

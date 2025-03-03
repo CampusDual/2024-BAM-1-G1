@@ -31,6 +31,7 @@ class ActivitySignup : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivitySignupBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[ActivitySignupViewModel::class.java]
         setContentView(binding?.root)
@@ -40,17 +41,35 @@ class ActivitySignup : AppCompatActivity() {
         linkLogin?.setOnClickListener {
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
-            finish()
         }
 
         val btnGoogle = binding?.mbGoogle
         btnGoogle?.setOnClickListener {
+            showLoading()
+
             lifecycleScope.launch {
-                val success = authRemoteGoogleClient.signIn(this@ActivitySignup)
-                if (success) {
-                    val intent = Intent(this@ActivitySignup, ActivityMain::class.java)
-                    startActivity(intent)
-                    finish()
+                try {
+                    val success = authRemoteGoogleClient.signIn(this@ActivitySignup)
+                    if (success) {
+                        val intent = Intent(this@ActivitySignup, ActivityMain::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@ActivitySignup,
+                            "Error al iniciar sesión con Google",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@ActivitySignup,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } finally {
+                    hideLoading()
                 }
             }
         }
@@ -78,6 +97,7 @@ class ActivitySignup : AppCompatActivity() {
             hideLoading()
             if (isSuccess) {
                 val intent = Intent(this, ActivityVerifyAccount::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
         }

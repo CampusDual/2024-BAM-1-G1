@@ -142,6 +142,6 @@
             android:layout_gravity="center"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loading_animation" />
+            app:lottie_rawRes="@raw/loading_animation_two" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

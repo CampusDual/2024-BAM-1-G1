@@ -4,13 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.vango.data.preferences.OnboardingPreferences
 import com.vango.databinding.ActivityOnboardingThreeBinding
 import com.vango.presentation.auth.accessAccount.ActivityAccessAccount
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityOnboardingThree : AppCompatActivity() {
     var binding: ActivityOnboardingThreeBinding? = null
+
+    @Inject
+    lateinit var onboardingPreferences: OnboardingPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -19,11 +25,16 @@ class ActivityOnboardingThree : AppCompatActivity() {
 
         val btnNext = binding?.btnOnboardingButton
         btnNext?.setOnClickListener{
+            onboardingPreferences.setOnboardingCompleted(true)
             val intent = Intent(this, ActivityAccessAccount::class.java)
             startActivity(intent)
-            // clear back stack
             finishAffinity()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }
 
