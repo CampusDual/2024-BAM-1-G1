@@ -129,4 +129,21 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="next_button">next_button</string>
 
+    <!-- Profile -->
+    <!-- Strings reutilizables usados: ninguno -->
+    <string name="profile_title">Configura tu Perfil</string>
+    <string name="profile_title_nick">Apodo</string>
+    <string name="profile_input_nick">¿Como te llamaremos?</string>
+    <string name="profile_title_age">Edad</string>
+    <string name="profile_input_age">¿Que edad tienes?</string>
+    <string name="profile_title_province">Provincia</string>
+    <string name="profile_input_province">¿Donde vives?</string>
+    <string name="profile_title_country">País</string>
+    <string name="profile_input_country">País</string>
+    <string name="profile_button">Guardar</string>
+    <string name="profile_option_title">Opciones</string>
+    <string name="profile_option_a">a</string>
+    <string name="profile_option_b">b</string>
+    <string name="profile_option_c">c</string>
+    <string name="profile_option_d">d</string>
 </resources>
