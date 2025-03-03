@@ -12,33 +12,13 @@ class ActivityProfileViewModel() : ViewModel() {
 
     private val provincesByCountry = mapOf(
         // Provincias de España
-        "ES" to listOf(
-            "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila",
-            "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria",
-            "Castellón", "Ceuta", "Ciudad Real", "Córdoba", "Cuenca", "Girona",
-            "Granada", "Guadalajara", "Guipúzcoa", "Huelva", "Huesca", "Islas Baleares",
-            "Jaén", "La Rioja", "Las Palmas", "León", "Lleida", "Lugo", "Madrid",
-            "Málaga", "Melilla", "Murcia", "Navarra", "Ourense", "Palencia",
-            "Pontevedra", "Salamanca", "Santa Cruz de Tenerife", "Segovia",
-            "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia",
-            "Valladolid", "Vizcaya", "Zamora", "Zaragoza"
-        ),
+        "ES" to SpanishProvinces.values().map { it.name },
 
         // Regiones de Portugal
-        "PT" to listOf(
-            "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
-            "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Portalegre", "Porto",
-            "Santarém", "Setúbal", "Viana do Castelo", "Vila Real", "Viseu",
-            "Región Autónoma de Azores", "Región Autónoma de Madeira"
-        ),
+        "PT" to PortugueseRegions.values().map { it.name },
 
         // Regiones de Francia
-        "FR" to listOf(
-            "Alsacia", "Aquitania", "Auvernia-Ródano-Alpes", "Bretaña", "Borgoña-Franco Condado",
-            "Centro-Valle de Loira", "Champagne-Ardenas", "Córcega", "Gran Este", "Normandía",
-            "Nueva Aquitania", "Occitania", "Pays de la Loire", "Provenza-Alpes-Costa Azul",
-            "Isla de Francia", "Guyaña Francesa", "Guadalupe", "Martinica", "Reunión", "Mayotte"
-        )
+        "FR" to FrenchRegions.values().map { it.name }
     )
 
 

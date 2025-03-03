@@ -2,6 +2,7 @@ package com.vango.presentation.auth.profile
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -29,7 +30,7 @@ class ActivityProfile : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[ActivityProfileViewModel::class.java]
 
-        val countryPicker = findViewById<CountryCodePicker>(R.id.ccp_profile_input_country)
+        val countryPicker = findViewById<CountryCodePicker>(binding.ccpProfileInputCountry.id)
         countryPicker.setOnCountryChangeListener {
             viewModel.updateCountry(countryPicker.selectedCountryCode)
             updateProvinces(countryPicker.selectedCountryNameCode)
@@ -39,6 +40,8 @@ class ActivityProfile : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+        
+
         setupButton(binding.bOptionA, 0)
         setupButton(binding.bOptionB, 1)
         setupButton(binding.bOptionC, 2)
@@ -53,18 +56,30 @@ class ActivityProfile : AppCompatActivity() {
 
         initListeners()
 
-        binding.spinnerProfileProvince.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    viewModel.updateProvince(position)
+        binding.spinnerProfileProvince.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedProvince = parent.getItemAtPosition(position).toString()
+
+                // Convertir a enum según el país seleccionado
+                val countryCode = countryPicker.selectedCountryNameCode
+                when (countryCode) {
+                    "ES" -> {
+                        val spanishProvince = SpanishProvinces.fromString(selectedProvince)
+                        viewModel.updateProvince(spanishProvince?.ordinal ?: 0)
+                    }
+                    "PT" -> {
+                        val portugueseRegion = PortugueseRegions.fromString(selectedProvince)
+                        viewModel.updateProvince(portugueseRegion?.ordinal ?: 0)
+                    }
+                    "FR" -> {
+                        val frenchRegion = FrenchRegions.fromString(selectedProvince)
+                        viewModel.updateProvince(frenchRegion?.ordinal ?: 0)
+                    }
                 }
-                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
     }
 
     private fun initListeners() {
@@ -75,13 +90,6 @@ class ActivityProfile : AppCompatActivity() {
         binding?.etProfileInputAge?.doOnTextChanged { text, _, _, _ ->
             viewModel?.updateAge(text.toString())
         }
-
-        binding?.ccpProfileInputCountry?.setOnCountryChangeListener {
-            viewModel?.updateCountry(binding?.ccpProfileInputCountry?.selectedCountryCode.toString())
-        }
-
-
-
         binding?.btSabeButton?.setOnClickListener {
             viewModel?.saveProfile()
         }
