@@ -1,12 +1,11 @@
-package com.vango.presentation.auth.accessAccount
+package com.vango.presentation.main
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ActivityAccessAccountViewModel @Inject constructor() : ViewModel() {
+class ActivityMainViewModel @Inject constructor() : ViewModel(){
 
 
 }
-

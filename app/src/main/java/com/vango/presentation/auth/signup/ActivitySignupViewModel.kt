@@ -39,6 +39,9 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
     private var _error: MutableLiveData<String> = MutableLiveData()
     val error: LiveData<String> = _error
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
 
     fun setEmail(email: String) {
         _email.value = email
@@ -69,20 +72,26 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
         val emailValue = _email.value
         val passwordValue = _password.value
         val confirmPasswordValue = _confirmPassword.value
+        if(emailValue.isNullOrBlank() || passwordValue.isNullOrBlank() || confirmPasswordValue.isNullOrBlank())
+        {
+            _isLoading.value = false
+            _error.value = "Por favor, complete todos los campos"
+            return
+        }
         if (emailValue != null && passwordValue != null && confirmPasswordValue != null) {
             viewModelScope.launch {
+                _isLoading.value = true
                 val result = authUseCase.signUp(emailValue, passwordValue, 1)
-                if(result.isSuccess)
-                {
+                if (result.isSuccess) {
                     _isSignUpSuccessful.value = true
-                }
-                else if (result.isFailure)
-                {
+                } else if (result.isFailure) {
                     _error.value = result.exceptionOrNull()?.message
                     _isSignUpSuccessful.value = false
                 }
+                _isLoading.value = false
             }
         }
+        _isLoading.value = false
 
     }
 

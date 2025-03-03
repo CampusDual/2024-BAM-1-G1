@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivityForgottenPasswordBinding
 import com.vango.presentation.auth.changePass.ActivityChangePass
 import dagger.hilt.android.AndroidEntryPoint

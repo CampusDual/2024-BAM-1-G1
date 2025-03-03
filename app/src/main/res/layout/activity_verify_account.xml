@@ -76,6 +76,9 @@
             style="@style/VerificationCodeEditText" />
     </LinearLayout>
 
+
+
+
     <!-- Botón de verificación -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_signup_button"
@@ -93,6 +96,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_verification_code" />
 
+
+    <TextView
+        android:id="@+id/time_resend"
+        style="@style/text_link_underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text=""
+        android:visibility="gone"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_signup_button" />
+
     <!-- Texto de "No recibí el código" -->
     <TextView
         android:id="@+id/tv_login_forgot_password"
@@ -106,6 +125,23 @@
         android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bt_signup_button" />
+        app:layout_constraintTop_toBottomOf="@+id/time_resend" />
 
+
+    <FrameLayout
+        android:id="@+id/loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loading_animation"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_animation_two" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

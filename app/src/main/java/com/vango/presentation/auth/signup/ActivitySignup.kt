@@ -1,7 +1,10 @@
 package com.vango.presentation.auth.signup
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +15,7 @@ import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivitySignupBinding
 import com.vango.presentation.auth.login.ActivityLogin
 import com.vango.presentation.auth.verifyAccount.ActivityVerifyAccount
-import com.vango.presentation.home.ActivityHome
+import com.vango.presentation.main.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +31,7 @@ class ActivitySignup : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivitySignupBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[ActivitySignupViewModel::class.java]
         setContentView(binding?.root)
@@ -37,17 +41,35 @@ class ActivitySignup : AppCompatActivity() {
         linkLogin?.setOnClickListener {
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
-            finish()
         }
 
         val btnGoogle = binding?.mbGoogle
         btnGoogle?.setOnClickListener {
+            showLoading()
+
             lifecycleScope.launch {
-                val success = authRemoteGoogleClient.signIn(this@ActivitySignup)
-                if (success) {
-                    val intent = Intent(this@ActivitySignup, ActivityHome::class.java)
-                    startActivity(intent)
-                    finish()
+                try {
+                    val success = authRemoteGoogleClient.signIn(this@ActivitySignup)
+                    if (success) {
+                        val intent = Intent(this@ActivitySignup, ActivityMain::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@ActivitySignup,
+                            "Error al iniciar sesión con Google",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@ActivitySignup,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } finally {
+                    hideLoading()
                 }
             }
         }
@@ -72,38 +94,60 @@ class ActivitySignup : AppCompatActivity() {
         }
 
         viewModel?.isSignUpSuccessful?.observe(this) { isSuccess ->
-            if(isSuccess){
+            hideLoading()
+            if (isSuccess) {
                 val intent = Intent(this, ActivityVerifyAccount::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
         }
 
         viewModel?.error?.observe(this) { message ->
+            hideLoading()
             Toast.makeText(this@ActivitySignup, message, Toast.LENGTH_LONG).show()
+        }
+
+        viewModel?.isLoading?.observe(this) { isLoading ->
+            if (isLoading) showLoading() else hideLoading()
         }
 
     }
 
     private fun initListeners() {
         with(binding) {
-            this?.tilSignupInputEmail?.editText?.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    viewModel?.setEmail(this.tilSignupInputEmail.editText?.text.toString())
-                }
+            this?.tilSignupInputEmail?.editText?.doOnTextChanged { text, _, _, _ ->
+                viewModel?.setEmail(this.tilSignupInputEmail.editText?.text.toString())
             }
 
-            this?.tilSignupInputPassword?.editText?.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    viewModel?.setPassword(this.tilSignupInputPassword.editText?.text.toString())
-                }
+            this?.tilSignupInputPassword?.editText?.doOnTextChanged { text, _, _, _ ->
+                viewModel?.setPassword(this.tilSignupInputPassword.editText?.text.toString())
             }
 
             this?.tilSignupInputConfirmPassword?.editText?.doOnTextChanged { text, _, _, _ ->
                 viewModel?.setConfirmPassword(text.toString())
             }
             this?.btSignupButton?.setOnClickListener {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val view = currentFocus ?: View(this@ActivitySignup)
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+                showLoading()
                 viewModel?.signUp()
             }
+
         }
+    }
+
+    private fun showLoading() {
+        binding?.loadingContainer?.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding?.loadingContainer?.visibility = View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }

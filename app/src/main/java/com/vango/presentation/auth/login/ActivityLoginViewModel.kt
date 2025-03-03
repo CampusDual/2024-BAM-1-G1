@@ -23,6 +23,10 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
     private var _success: MutableLiveData<String> = MutableLiveData()
     val success: LiveData<String> = _success
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
+
     fun setEmail(text:String){
         email = text
 
@@ -35,9 +39,15 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
 
 
     fun login(){
+        if(email.isBlank() || password.isBlank())
+        {
+            _isLoading.value = false
+            _error.value = "Por favor, complete todos los campos"
+            return
+        }
 
         viewModelScope.launch {
-
+            _isLoading.value = true
             authUseCase.logIn(email, password)
                 .onSuccess { user ->
                     _success.postValue("Inicio de sesión exitoso")
@@ -47,6 +57,9 @@ class ActivityLoginViewModel @Inject constructor(private val authUseCase: AuthUs
                     _error.postValue(error.localizedMessage)
                     _isLoginSuccess.postValue(false)
                 }
+            _isLoading.value = false
         }
+        _isLoading.value = false
+
     }
 }
