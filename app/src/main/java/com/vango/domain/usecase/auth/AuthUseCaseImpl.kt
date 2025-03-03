@@ -48,7 +48,8 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
         val result = authRepository.signUp(authSignUpUserRequestDto)
 
         return if (result.isSuccessful) {
-            Result.success(result.body()?.firebaseId)
+            val firebaseId = result.body()?.firebaseId
+            Result.success(firebaseId)
         } else {
             Result.failure(
                 Exception(
@@ -64,8 +65,8 @@ class AuthUseCaseImpl @Inject constructor(private val authRepository: AuthReposi
         firebaseId: String,
         verificationCode: String
     ): Result<Boolean> {
-        val verifyUserEmailRequestDto =
-            AuthVerifyUserEmailUpUserRequestDto(verificationCode, firebaseId)
+        val verifyUserEmailRequestDto = AuthVerifyUserEmailUpUserRequestDto(verificationCode, firebaseId)
+
         val result = authRepository.verifyUserEmail(verifyUserEmailRequestDto)
 
         val finalResult: Result<Boolean> = if (result.isSuccessful) {

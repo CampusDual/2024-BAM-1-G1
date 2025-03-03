@@ -42,6 +42,8 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private var _firebaseId: MutableLiveData<String> = MutableLiveData()
+    val firebaseId: LiveData<String> = _firebaseId
 
     fun setEmail(email: String) {
         _email.value = email
@@ -82,8 +84,13 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
             viewModelScope.launch {
                 _isLoading.value = true
                 val result = authUseCase.signUp(emailValue, passwordValue, 1)
+
                 if (result.isSuccess) {
+                    val firebaseIdReceived = result.getOrNull()
+                    _firebaseId.value = firebaseIdReceived.toString()
+                    _success.value = "Registro exitoso"
                     _isSignUpSuccessful.value = true
+
                 } else if (result.isFailure) {
                     _error.value = result.exceptionOrNull()?.message
                     _isSignUpSuccessful.value = false

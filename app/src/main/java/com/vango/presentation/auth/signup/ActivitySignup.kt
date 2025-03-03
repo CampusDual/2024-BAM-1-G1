@@ -96,8 +96,12 @@ class ActivitySignup : AppCompatActivity() {
         viewModel?.isSignUpSuccessful?.observe(this) { isSuccess ->
             hideLoading()
             if (isSuccess) {
+                val firebaseId = viewModel?.firebaseId?.value
+                val email = viewModel?.email?.value
                 val intent = Intent(this, ActivityVerifyAccount::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("firebaseId", firebaseId)
+                intent.putExtra("email", email)
+
                 startActivity(intent)
             }
         }
@@ -127,6 +131,7 @@ class ActivitySignup : AppCompatActivity() {
                 viewModel?.setConfirmPassword(text.toString())
             }
             this?.btSignupButton?.setOnClickListener {
+
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 val view = currentFocus ?: View(this@ActivitySignup)
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
