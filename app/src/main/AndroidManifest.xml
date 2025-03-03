@@ -18,10 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VanGO"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBo0C9LERmZm2g7XfxZe8V2HoF1cRs1eeU" />
-
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.VanGO" />
         <activity
             android:name=".presentation.auth.forgottenPassword.ActivityForgottenPassword"
             android:exported="false" />

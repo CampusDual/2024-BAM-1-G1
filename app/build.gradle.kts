@@ -134,4 +134,6 @@ dependencies {
     //lotie
 
     implementation(libs.lottie)
+
+    implementation (libs.country.picker)
 }
