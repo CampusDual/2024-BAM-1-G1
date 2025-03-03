@@ -9,7 +9,7 @@ import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivityAccessAccountBinding
 import com.vango.presentation.auth.login.ActivityLogin
 import com.vango.presentation.auth.signup.ActivitySignup
-import com.vango.presentation.home.ActivityHome
+import com.vango.presentation.main.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class ActivityAccessAccount : AppCompatActivity() {
             lifecycleScope.launch {
                 val success = authRemoteGoogleClient.signIn(this@ActivityAccessAccount)
                 if (success){
-                    val intent = Intent(this@ActivityAccessAccount, ActivityHome::class.java)
+                    val intent = Intent(this@ActivityAccessAccount, ActivityMain::class.java)
                     startActivity(intent)
                     finish()
 

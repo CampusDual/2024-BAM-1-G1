@@ -26,7 +26,7 @@
             android:name=".presentation.auth.forgottenPassword.ActivityForgottenPassword"
             android:exported="false" />
         <activity
-            android:name=".presentation.home.ActivityHome"
+            android:name=".presentation.main.ActivityMain"
             android:exported="false" />
         <activity
             android:name=".presentation.auth.login.ActivityLogin"

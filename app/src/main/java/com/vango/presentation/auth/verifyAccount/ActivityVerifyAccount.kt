@@ -3,8 +3,6 @@ package com.vango.presentation.auth.verifyAccount
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -13,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.vango.databinding.ActivityVerifyAccountBinding
-import com.vango.presentation.home.ActivityHome
+import com.vango.presentation.main.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +34,7 @@ class ActivityVerifyAccount : AppCompatActivity() {
     private fun initObservers() {
         viewModel?.isAccountVerified?.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intentActivityHome = Intent(this, ActivityHome::class.java)
+                val intentActivityHome = Intent(this, ActivityMain::class.java)
                 intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)
                 finish()

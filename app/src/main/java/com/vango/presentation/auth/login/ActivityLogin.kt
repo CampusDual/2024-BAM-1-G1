@@ -12,7 +12,7 @@ import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivityLoginBinding
 import com.vango.presentation.auth.forgottenPassword.ActivityForgottenPassword
 import com.vango.presentation.auth.signup.ActivitySignup
-import com.vango.presentation.home.ActivityHome
+import com.vango.presentation.main.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class ActivityLogin : AppCompatActivity() {
     private fun initObservers() {
         viewModel?.isLoginSuccess?.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intentActivityHome = Intent(this, ActivityHome::class.java)
+                val intentActivityHome = Intent(this, ActivityMain::class.java)
                 intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)
                 finish()
@@ -74,7 +74,7 @@ class ActivityLogin : AppCompatActivity() {
             lifecycleScope.launch {
                 val success = authRemoteGoogleClient.signIn(this@ActivityLogin)
                 if (success) {
-                    val intent = Intent(this@ActivityLogin, ActivityHome::class.java)
+                    val intent = Intent(this@ActivityLogin, ActivityMain::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()

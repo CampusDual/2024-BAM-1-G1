@@ -15,7 +15,7 @@ import com.vango.data.dataSource.remote.auth.AuthRemoteGoogleClient
 import com.vango.databinding.ActivitySignupBinding
 import com.vango.presentation.auth.login.ActivityLogin
 import com.vango.presentation.auth.verifyAccount.ActivityVerifyAccount
-import com.vango.presentation.home.ActivityHome
+import com.vango.presentation.main.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,7 +48,7 @@ class ActivitySignup : AppCompatActivity() {
             lifecycleScope.launch {
                 val success = authRemoteGoogleClient.signIn(this@ActivitySignup)
                 if (success) {
-                    val intent = Intent(this@ActivitySignup, ActivityHome::class.java)
+                    val intent = Intent(this@ActivitySignup, ActivityMain::class.java)
                     startActivity(intent)
                     finish()
                 }
