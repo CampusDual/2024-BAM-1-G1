@@ -91,7 +91,6 @@ class ActivitySignupViewModel @Inject constructor(private val authUseCase: AuthU
                 _isLoading.value = false
             }
         }
-        _isLoading.value = false
 
     }
 
