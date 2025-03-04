@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
@@ -40,7 +41,7 @@ class ActivityProfile : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        
+
 
         setupButton(binding.bOptionA, 0)
         setupButton(binding.bOptionB, 1)
@@ -56,30 +57,41 @@ class ActivityProfile : AppCompatActivity() {
 
         initListeners()
 
-        binding.spinnerProfileProvince.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedProvince = parent.getItemAtPosition(position).toString()
+        binding.spinnerProfileProvince.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedProvince = parent.getItemAtPosition(position).toString()
 
-                // Convertir a enum según el país seleccionado
-                val countryCode = countryPicker.selectedCountryNameCode
-                when (countryCode) {
-                    "ES" -> {
-                        val spanishProvince = SpanishProvinces.fromString(selectedProvince)
-                        viewModel.updateProvince(spanishProvince?.ordinal ?: 0)
-                    }
-                    "PT" -> {
-                        val portugueseRegion = PortugueseRegions.fromString(selectedProvince)
-                        viewModel.updateProvince(portugueseRegion?.ordinal ?: 0)
-                    }
-                    "FR" -> {
-                        val frenchRegion = FrenchRegions.fromString(selectedProvince)
-                        viewModel.updateProvince(frenchRegion?.ordinal ?: 0)
+                    // Convertir a enum según el país seleccionado
+                    val countryCode = countryPicker.selectedCountryNameCode
+                    when (countryCode) {
+                        "ES" -> {
+                            val spanishProvince = SpanishProvinces.fromString(selectedProvince)
+                            viewModel.updateProvince(spanishProvince?.ordinal ?: 0)
+                            //   val selectedProvinceId = spanishProvince?.id
+                            // val selectedProvinceNamebyID = SpanishProvinces.fromId(selectedProvinceId ?: 0)
+                            //  Log.d("ActivityProfile", "Provincia ID = ${selectedProvinceId}, Provincia seleccionada: $selectedProvinceNamebyID $selectedProvince")
+                        }
+
+                        "PT" -> {
+                            val portugueseRegion = PortugueseRegions.fromString(selectedProvince)
+                            viewModel.updateProvince(portugueseRegion?.ordinal ?: 0)
+                        }
+
+                        "FR" -> {
+                            val frenchRegion = FrenchRegions.fromString(selectedProvince)
+                            viewModel.updateProvince(frenchRegion?.ordinal ?: 0)
+                        }
                     }
                 }
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
     }
 
     private fun initListeners() {
