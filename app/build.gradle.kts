@@ -30,7 +30,7 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://5qkl79zj-7220.uks1.devtunnels.ms/\"")
+            buildConfigField("String", "BASE_URL", "\"https://3mzjh2ct-7220.uks1.devtunnels.ms/\"")
 
         }
         release {
@@ -39,7 +39,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://5qkl79zj-7220.uks1.devtunnels.ms/\"")
+            buildConfigField("String", "BASE_URL", "\"https://3mzjh2ct-7220.uks1.devtunnels.ms/\"")
             signingConfig = signingConfigs.getByName("debug")
         }
     }
