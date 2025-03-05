@@ -14,7 +14,6 @@ import com.vango.presentation.onboarding.onboarding2.ActivityOnboardingTwo
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class ActivityOnboardingOne : BaseActivity() {
     private var binding: ActivityOnboardingOneBinding? = null

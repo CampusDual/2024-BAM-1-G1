@@ -41,6 +41,7 @@ import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
 import com.vango.presentation.main.profile.ProfileScreen
+import com.vango.presentation.main.results.HomeList
 import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -99,7 +100,13 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                 .fillMaxSize()
         ) {
             composable("home") {
-                HomeScreen()
+                HomeScreen(
+                    modifier = Modifier.padding(innerPadding), // Modifier para respetar el padding del Scaffold
+                    navController = navController, // Pasar el NavController real
+                    cameraPositionState = null, // Usar el valor por defecto de HomeScreen
+                    permissionState = null, // Usar el valor por defecto de HomeScreen
+                    isPreview = false // No es una previsualización
+                )
             }
             composable("routes") {
                 RoutesScreen()
@@ -112,6 +119,9 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             }
             composable("profile") {
                 ProfileScreen()
+            }
+            composable("results") {
+                HomeList(navController)
             }
         }
     }
@@ -164,6 +174,7 @@ fun BottomNavigationBar(currentRoute: String, onItemSelected: (String) -> Unit, 
 @Composable
 fun HomeContentPreview() {
     val mockViewModel = ActivityMainViewModel()
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -175,7 +186,13 @@ fun HomeContentPreview() {
             )
         }
     ) { paddingValues ->
-        HomeScreen(modifier = Modifier.padding(paddingValues))
+        HomeScreen(
+            modifier = Modifier.padding(paddingValues),
+            navController = rememberNavController(),
+            cameraPositionState = null,
+            permissionState = null,
+            isPreview = true
+        )
     }
 }
 
