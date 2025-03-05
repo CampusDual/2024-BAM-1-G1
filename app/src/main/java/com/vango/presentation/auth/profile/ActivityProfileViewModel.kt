@@ -1,5 +1,7 @@
 package com.vango.presentation.auth.profile
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ActivityProfileViewModel() : ViewModel() {
@@ -20,6 +22,20 @@ class ActivityProfileViewModel() : ViewModel() {
         // Regiones de Francia
         "FR" to FrenchRegions.values().map { it.name }
     )
+    private val _errorProfileNick: MutableLiveData<Boolean> = MutableLiveData(false)
+    var errorProfileNick: LiveData<Boolean> = _errorProfileNick
+
+    private val _errorProfileAge: MutableLiveData<Boolean> = MutableLiveData(false)
+    var errorProfileAge: LiveData<Boolean> = _errorProfileAge
+
+    private val _errorProfileCountry: MutableLiveData<Boolean> = MutableLiveData(false)
+    var errorProfileCountry: LiveData<Boolean> = _errorProfileCountry
+
+    private val _errorProfileProvince: MutableLiveData<Boolean> = MutableLiveData(false)
+    var errorProfileProvince: LiveData<Boolean> = _errorProfileProvince
+
+    private val _checkValius: MutableLiveData<Boolean> = MutableLiveData(false)
+    var checkValius: LiveData<Boolean> = _checkValius
 
 
     fun getProvincesByCountryNameCode(countryCode: String): List<String>? {
@@ -58,4 +74,28 @@ class ActivityProfileViewModel() : ViewModel() {
         return buttonStates[index]
     }
 
+    fun checkValius(): Boolean {
+        val errProfileNick: Boolean = checkProfileNick()
+        val errProfileAge: Boolean = checkProfileAge()
+        val errProfileCountry: Boolean = checkProfileCountry()
+        val errProfileProvince: Boolean = checkProfileProvince()
+
+        return errProfileNick && errProfileAge && errProfileCountry && errProfileProvince
+    }
+
+    fun checkProfileNick(): Boolean {
+        return profilenick.isNotEmpty()
+    }
+
+    fun checkProfileAge(): Boolean {
+        return profileage.toIntOrNull() != null && profileage.isNotEmpty()
+    }
+
+    fun checkProfileCountry(): Boolean {
+        return profilecountry != 0
+    }
+
+    fun checkProfileProvince(): Boolean {
+        return profileprovince != 0
+    }
 }

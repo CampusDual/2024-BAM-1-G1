@@ -1,5 +1,7 @@
 package com.vango.presentation.auth.profile
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +19,7 @@ import com.google.android.material.button.MaterialButton
 import com.hbb20.CountryCodePicker
 import com.vango.R
 import com.vango.databinding.ActivityProfileBinding
+import com.vango.presentation.main.ActivityMain
 
 class ActivityProfile : AppCompatActivity() {
 
@@ -56,6 +59,7 @@ class ActivityProfile : AppCompatActivity() {
         updateProvinces(countryPicker.selectedCountryNameCode)
 
         initListeners()
+        initObservers()
 
         binding.spinnerProfileProvince.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -72,7 +76,7 @@ class ActivityProfile : AppCompatActivity() {
                     when (countryCode) {
                         "ES" -> {
                             val spanishProvince = SpanishProvinces.fromString(selectedProvince)
-                            viewModel.updateProvince(spanishProvince?.ordinal ?: 0)
+                            viewModel.updateProvince(spanishProvince?.id ?: 0)
                             //   val selectedProvinceId = spanishProvince?.id
                             // val selectedProvinceNamebyID = SpanishProvinces.fromId(selectedProvinceId ?: 0)
                             //  Log.d("ActivityProfile", "Provincia ID = ${selectedProvinceId}, Provincia seleccionada: $selectedProvinceNamebyID $selectedProvince")
@@ -94,6 +98,60 @@ class ActivityProfile : AppCompatActivity() {
             }
     }
 
+
+
+    private fun initObservers() {
+        viewModel.errorProfileNick.observe(this) { hasError ->
+            binding.etProfileInputNick.setTextColor(
+                getResources().getColor(
+                    if (hasError) R.color.color_secondary_wine else R.color.black,
+                    null
+                )
+            )
+        }
+
+
+
+        viewModel.errorProfileAge.observe(this) { hasError ->
+            binding.etProfileInputAge.setTextColor(
+                getResources().getColor(
+                    if (hasError) R.color.color_secondary_wine else R.color.black,
+                    null
+                )
+            )
+        }
+
+
+        viewModel.errorProfileCountry.observe(this) { hasError ->
+            binding.ccpProfileInputCountry.setBackgroundColor(
+                getResources().getColor(
+                    if (hasError) R.color.color_secondary_wine else R.color.white,
+                    null
+                )
+            )
+        }
+
+
+        viewModel.errorProfileProvince.observe(this) { hasError ->
+            binding.spinnerProfileProvince.setBackgroundColor(
+                getResources().getColor(
+                    if (hasError) R.color.color_secondary_wine else R.color.white,
+                    null
+                )
+            )
+        }
+
+        viewModel.checkValius.observe(this) { isSuccess ->
+            if (isSuccess) {
+                val intentActivityHome = Intent(this, ActivityMain::class.java)
+                //ActivityMain::class.java)
+                intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intentActivityHome)
+                finish()
+            }
+        }
+    }
+
     private fun initListeners() {
         binding?.etProfileInputNick?.doOnTextChanged { text, _, _, _ ->
             viewModel?.updateNick(text.toString())
@@ -103,9 +161,11 @@ class ActivityProfile : AppCompatActivity() {
             viewModel?.updateAge(text.toString())
         }
         binding?.btSabeButton?.setOnClickListener {
-            viewModel?.saveProfile()
+            viewModel.checkValius()
         }
     }
+
+
 
 
     private fun setupButton(button: MaterialButton, index: Int) {
@@ -136,5 +196,6 @@ class ActivityProfile : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         provinceSpinner?.adapter = adapter
     }
+
 
 }

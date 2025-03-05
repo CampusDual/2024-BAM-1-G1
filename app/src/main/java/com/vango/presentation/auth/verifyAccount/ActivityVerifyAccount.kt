@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.vango.databinding.ActivityVerifyAccountBinding
+import com.vango.presentation.auth.profile.ActivityProfile
 import com.vango.presentation.main.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,7 +35,8 @@ class ActivityVerifyAccount : AppCompatActivity() {
     private fun initObservers() {
         viewModel?.isAccountVerified?.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intentActivityHome = Intent(this, ActivityMain::class.java)
+                val intentActivityHome = Intent(this, ActivityProfile::class.java)
+                    //ActivityMain::class.java)
                 intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)
                 finish()
