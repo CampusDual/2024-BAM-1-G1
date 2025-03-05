@@ -1,10 +1,22 @@
 package com.vango.presentation.onboarding
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.vango.R
 
-class AdapterOnboarding (activityFragment : FragmentActivity) : FragmentStateAdapter(ActivityFragment){
+class AdapterOnboarding (activityFragment : FragmentActivity) : FragmentStateAdapter(activityFragment){
 
+    override fun getItemCount(): Int = 3
+    override fun createFragment(position: Int): Fragment {
+        return when(position){
+            0 -> FragmentOnboarding.newInstance(R.drawable.image1)
+            1 -> FragmentOnboarding.newInstance(R.drawable.image2)
+            2 -> FragmentOnboarding.newInstance(R.drawable.image3)
+            else -> throw IllegalArgumentException("Invalid position")
 
+        }
+
+    }
 
 }

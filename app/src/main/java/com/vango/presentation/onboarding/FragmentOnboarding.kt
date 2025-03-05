@@ -31,7 +31,7 @@ class FragmentOnboarding : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-    _binding = FragmentOnboardingBinding.inflate(inflater,container,false)
+        _binding = FragmentOnboardingBinding.inflate(inflater,container,false)
         return binding.root
     }
 
