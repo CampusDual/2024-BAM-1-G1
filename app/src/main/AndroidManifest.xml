@@ -40,12 +40,6 @@
             android:name=".presentation.auth.accessAccount.ActivityAccessAccount"
             android:exported="false" />
         <activity
-            android:name=".presentation.onboarding.onboarding3.ActivityOnboardingThree"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.onboarding.onboarding2.ActivityOnboardingTwo"
-            android:exported="false" />
-        <activity
             android:name=".presentation.auth.changePass.ActivityChangePass"
             android:exported="false" />
         <activity
@@ -55,7 +49,7 @@
             android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
-            android:name=".presentation.onboarding.onboarding1.ActivityOnboardingOne"
+            android:name=".presentation.onboarding.ActivityOnboarding"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
