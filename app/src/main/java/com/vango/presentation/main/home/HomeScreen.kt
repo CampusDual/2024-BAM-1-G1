@@ -4,6 +4,9 @@ import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
@@ -36,6 +42,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     cameraPositionState: CameraPositionState? = null,
     permissionState: PermissionState? = null,
     isPreview: Boolean = false
@@ -77,24 +84,36 @@ fun HomeScreen(
             Text("Google Map Placeholder\nMadrid (40.416775, -3.703790)")
         }
     } else {
-        GoogleMap(
-            modifier = modifier.fillMaxSize(),
-            cameraPositionState = cameraState,
-            properties = MapProperties(
-                isMyLocationEnabled = locationPermission.status.isGranted,
-                isTrafficEnabled = true,
-            ),
-            uiSettings = MapUiSettings(
-                myLocationButtonEnabled = false,
-                zoomControlsEnabled = false,
-            )
-        ) {
-            Marker(
-                state = MarkerState(position = LatLng(40.416775, -3.703790)),
-                icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE),
-                title = "Madrid",
-                snippet = "Capital of Spain"
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraState,
+                properties = MapProperties(
+                    isMyLocationEnabled = locationPermission.status.isGranted,
+                    isTrafficEnabled = true,
+                ),
+                uiSettings = MapUiSettings(
+                    myLocationButtonEnabled = false,
+                    zoomControlsEnabled = false,
+                )
+            ) {
+                Marker(
+                    state = MarkerState(position = LatLng(40.416775, -3.703790)),
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE),
+                    title = "Madrid",
+                    snippet = "Capital of Spain"
+                )
+            }
+
+            Button(
+                onClick = { navController.navigate("results") },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .wrapContentWidth()
+                    .padding(16.dp)
+            ) {
+                Text("Lista")
+            }
         }
     }
 }
@@ -110,13 +129,14 @@ fun HomeScreenPreview() {
             get() = com.google.accompanist.permissions.PermissionStatus.Granted
         override fun launchPermissionRequest() {}
     }
-
+    val navController = rememberNavController()
     val cameraState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(40.416775, -3.703790), 12f)
     }
 
     HomeScreen(
         cameraPositionState = cameraState,
-        permissionState = mockPermissionState
+        permissionState = mockPermissionState,
+        navController = navController
     )
 }
