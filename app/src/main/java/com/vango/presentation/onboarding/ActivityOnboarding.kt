@@ -32,18 +32,22 @@ class ActivityOnboarding : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        if (isReinstalled(this)) {
+            firebaseAuth.signOut()
+            onboardingPreferences.resetOnboarding()
+        }
+
         if (isFirstLaunch(this)) {
             FirebaseAuth.getInstance().apply {
                 signOut()
             }
+
         }
 
-
-        firebaseAuth = FirebaseAuth.getInstance()
-
         if (firebaseAuth.currentUser != null) {
-            val intent = Intent(this, ActivityMain::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ActivityMain::class.java))
             finish()
             return
         }
@@ -57,22 +61,39 @@ class ActivityOnboarding : AppCompatActivity() {
 
         enableEdgeToEdge()
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         updateTitleAndDescription(0)
         setOnboarding()
 
     }
+
+    private fun isReinstalled(context: Context): Boolean {
+        val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val lastInstallTime = prefs.getLong("lastInstallTime", 0)
+
+        val packageInfo = try {
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        } catch (e: Exception) {
+            return true
+        }
+
+        val currentInstallTime = packageInfo.firstInstallTime
+        val isNewInstall = lastInstallTime == 0L || lastInstallTime != currentInstallTime
+
+        if (isNewInstall) {
+            prefs.edit().putLong("lastInstallTime", currentInstallTime).apply()
+            prefs.edit().putBoolean("isFirstLaunch", true).apply()
+
+        }
+        return isNewInstall
+    }
+
     private fun isFirstLaunch(context: Context): Boolean {
         val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val isFirstLaunch = prefs.getBoolean("isFirstLaunch", true)
 
-        if (isFirstLaunch) {
-            prefs.edit().putBoolean("isFirstLaunch", false).apply()
-            return true
-        }
-
-        return false
+        return isFirstLaunch
     }
 
     private fun setOnboarding() {
