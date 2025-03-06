@@ -49,9 +49,10 @@
 
     <!--    Access Account   -->
     <!-- Strings reutilizables usados: reusable_register, reusable_login -->
-    <string name="access_account_title">Tu aventura \n acaba de empezar</string>
+    <string name="access_account_title">Empieza ya</string>
+    <string name="access_account_body">Tu aventura está a punto de empezar</string>
     <string name="access_account_bt_signup">@string/reusable_register</string>
-    <string name="access_account_bt_login">@string/reusable_login</string>
+    <string name="access_account_login">Conéctate</string>
 
     <!--    Login   -->
     <!-- Strings reutilizables usados: google_outlook, content_desc_google, content_desc_outlook, reusable_email, reusable_password, reusable_login -->
