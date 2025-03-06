@@ -36,14 +36,14 @@
     <!-- Strings reutilizables usados: btn_arrow_right_desc -->
     <string name="onboarding_two_image_description">descripción imagen múltiples iconos de búsqueda</string>
     <string name="onboarding_two_title">Encuentra</string>
-    <string name="onboarding_two_body">Elige lo que más usas y encuéntralo fácilmente. Con "Buscar cerca de mí", siempre sabrás lo que tienes alrededor.\n\n<b><font color="#FBBB73">Con VanGo siempre estás cerca</font></b></string>
+    <string name="onboarding_two_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje</string>
     <string name="onboarding_two_subtitle">🔎 Encuéntralo todo</string>
 
     <!--    Onboarding página 3  -->
     <!-- Strings reutilizables usados: ninguno -->
     <string name="onboarding_three_image_description">descripción imagen personas viendo atardecer con vistas</string>
     <string name="onboarding_three_title">Comparte</string>
-    <string name="onboarding_three_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje\n\n<b><font color="#73ACB5">¡La carretera te espera con VanGo!</font></b></string>
+    <string name="onboarding_three_body">Diseña tu ruta perfecta, explora destinos asombrosos y localiza los mejores puntos para tu viaje</string>
     <string name="onboarding_three_subtitle">🗺️ El mapa es tuyo</string>
     <string name="onboarding_three_button">Empezamos</string>
 
