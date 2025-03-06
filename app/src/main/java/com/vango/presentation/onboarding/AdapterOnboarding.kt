@@ -8,6 +8,7 @@ import com.vango.R
 class AdapterOnboarding (activityFragment : FragmentActivity) : FragmentStateAdapter(activityFragment){
 
     override fun getItemCount(): Int = 3
+
     override fun createFragment(position: Int): Fragment {
         return when(position){
             0 -> FragmentOnboarding.newInstance(R.drawable.image1)

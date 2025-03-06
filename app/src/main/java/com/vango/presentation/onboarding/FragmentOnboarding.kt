@@ -19,7 +19,7 @@ class FragmentOnboarding : Fragment() {
         ) : FragmentOnboarding {
             val fragment = FragmentOnboarding()
             val arg = Bundle().apply {
-                putInt("imageResource", imageResource)
+                putInt("image_resource", imageResource)
             }
             fragment.arguments = arg
             return fragment

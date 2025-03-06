@@ -11,11 +11,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 
-class ActivityOnboardingViewModel @Inject constructor(): ViewModel(){
+class ActivityOnboardingViewModel @Inject constructor(
+    private val onboardingPreferences: OnboardingPreferences
+): ViewModel(){
     private var _showOnBoarding = MutableLiveData<Boolean>()
     var showOnBoarding : LiveData<Boolean> = _showOnBoarding
-    @Inject
-    lateinit var onboardingPreferences: OnboardingPreferences
+
     init {
         viewModelScope.launch {
             _showOnBoarding.value = onboardingPreferences.isOnboardingCompleted()

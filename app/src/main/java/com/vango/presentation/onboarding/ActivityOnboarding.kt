@@ -12,9 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.vango.R
 import com.vango.data.preferences.OnboardingPreferences
 import com.vango.databinding.ActivityOnboardingBinding
-import com.vango.databinding.FragmentOnboardingBinding
 import com.vango.presentation.auth.accessAccount.ActivityAccessAccount
-import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.ActivityMain
 import com.vango.utils.animation.Animations
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,6 +60,7 @@ class ActivityOnboarding : AppCompatActivity() {
         setContentView(binding?.root)
 
         updateTitleAndDescription(0)
+        setOnboarding()
 
     }
     private fun isFirstLaunch(context: Context): Boolean {
@@ -79,7 +78,7 @@ class ActivityOnboarding : AppCompatActivity() {
     private fun setOnboarding() {
         val onboardingAdapter = AdapterOnboarding(this)
 
-        binding?.viewPager?.adapter = onboardingAdapter
+        binding.viewPager.adapter = onboardingAdapter
         updateIndicators(0)
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -102,9 +101,9 @@ class ActivityOnboarding : AppCompatActivity() {
         }
 
         binding.btnNext.setOnClickListener {
-            var currentItem = binding.viewPager.currentItem
-            if (currentItem < onboardingAdapter.itemCount - 1) {
-                currentItem +=1
+
+            if (binding.viewPager.currentItem < onboardingAdapter.itemCount - 1) {
+                binding.viewPager.currentItem += 1
             }else {
                 onboardingPreferences.setOnboardingCompleted(true)
                 val intent = Intent(this, ActivityAccessAccount::class.java)
