@@ -23,4 +23,10 @@ class OnboardingPreferences @Inject constructor(
     fun setOnboardingCompleted(completed: Boolean) {
         prefs.edit { putBoolean(KEY_ONBOARDING_COMPLETED, completed) }
     }
+
+    fun resetOnboarding() {
+        prefs.edit().putBoolean("isFirstLaunch", true).apply()
+    }
+
+
 }

@@ -180,11 +180,11 @@ class ActivityProfile : AppCompatActivity() {
         val isActivated = viewModel.getButtonState(index)
         if (isActivated) {
             button.backgroundTintList =
-                ContextCompat.getColorStateList(this, R.color.activated_color) // Activado
+                ContextCompat.getColorStateList(this, R.color.color_main)
             button.setTextColor(Color.WHITE)
         } else {
             button.backgroundTintList =
-                ContextCompat.getColorStateList(this, R.color.deactivated_color) // Desactivado
+                ContextCompat.getColorStateList(this, R.color.deactivated_color)
             button.setTextColor(Color.WHITE)
         }
     }

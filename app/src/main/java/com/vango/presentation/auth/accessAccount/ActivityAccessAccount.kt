@@ -28,58 +28,17 @@ class ActivityAccessAccount : BaseActivity() {
         binding = ActivityAccessAccountBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        val btnLogin = binding?.btAccessAccountSignup
+        val btnLogin = binding?.tvAccessAccountLogin
         btnLogin?.setOnClickListener{
             val intent = Intent(this, ActivityLogin::class.java)
             startActivity(intent)
-
         }
 
-        val btnRegister = binding?.btAccessAccountLogin
+        val btnRegister = binding?.btAccessAccountSignup
         btnRegister?.setOnClickListener{
             val intent = Intent(this, ActivitySignup::class.java)
             startActivity(intent)
         }
-
-        val btnGoogle = binding?.mbGoogle
-        btnGoogle?.setOnClickListener {
-            showLoading()
-
-            lifecycleScope.launch {
-                try {
-                    val success = authRemoteGoogleClient.signIn(this@ActivityAccessAccount)
-                    if (success) {
-                        val intent = Intent(this@ActivityAccessAccount, ActivityMain::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(
-                            this@ActivityAccessAccount,
-                            "Error al iniciar sesión con Google",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        this@ActivityAccessAccount,
-                        "Error: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } finally {
-                    hideLoading()
-                }
-            }
-        }
-
-    }
-
-    private fun showLoading() {
-        binding?.loadingContainer?.visibility = View.VISIBLE
-    }
-
-    private fun hideLoading() {
-        binding?.loadingContainer?.visibility = View.GONE
     }
 
     override fun onDestroy() {

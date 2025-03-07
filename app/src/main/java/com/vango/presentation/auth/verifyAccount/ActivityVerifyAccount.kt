@@ -19,12 +19,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class ActivityVerifyAccount : AppCompatActivity() {
     private var binding: ActivityVerifyAccountBinding? = null
     private var viewModel: ActivityVerifyAccountViewModel? = null
+    private var firebaseIdReceived: String? = null
+    private var emailReceived: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityVerifyAccountBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+
+        firebaseIdReceived = intent.getStringExtra("firebaseId") ?: ""
+        emailReceived = intent.getStringExtra("email") ?: ""
 
         viewModel = ViewModelProvider(this)[ActivityVerifyAccountViewModel::class.java]
 
@@ -109,11 +114,11 @@ class ActivityVerifyAccount : AppCompatActivity() {
 
         binding?.btSignupButton?.setOnClickListener {
             showLoading()
-            viewModel?.verifyCode()
+            viewModel?.verifyCode(firebaseIdReceived.toString())
         }
 
         binding?.tvLoginForgotPassword?.setOnClickListener {
-            viewModel?.resendEmailVerification()
+            viewModel?.resendEmailVerification(emailReceived, firebaseIdReceived)
         }
 
     }
