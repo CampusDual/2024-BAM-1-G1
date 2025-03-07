@@ -99,26 +99,26 @@ class ActivityProfile : AppCompatActivity() {
     }
 
 
-
     private fun initObservers() {
-        viewModel.errorProfileNick.observe(this) { hasError ->
-            binding.etProfileInputNick.setTextColor(
-                getResources().getColor(
-                    if (hasError) R.color.color_secondary_wine else R.color.black,
-                    null
-                )
-            )
+        /*  viewModel.errorProfileNick.observe(this) { hasError ->
+              binding.etProfileInputNick.setTextColor(
+                  getResources().getColor(
+                      if (hasError) R.color.color_secondary_wine else R.color.black,
+                      null
+                  )
+              )
+          }*/
+
+        viewModel?.errorProfileNick?.observe(this) { (hasError, errorMessage) ->
+            binding?.tilProfileInputNick?.error = errorMessage
+            binding?.tilProfileInputNick?.isErrorEnabled = hasError
         }
 
 
 
-        viewModel.errorProfileAge.observe(this) { hasError ->
-            binding.etProfileInputAge.setTextColor(
-                getResources().getColor(
-                    if (hasError) R.color.color_secondary_wine else R.color.black,
-                    null
-                )
-            )
+        viewModel.errorProfileAge.observe(this) { (hasError, errorMessage) ->
+            binding?.tilProfileInputAge?.error = errorMessage
+            binding?.tilProfileInputAge?.isErrorEnabled = hasError
         }
 
 
@@ -145,7 +145,8 @@ class ActivityProfile : AppCompatActivity() {
             if (isSuccess) {
                 val intentActivityHome = Intent(this, ActivityMain::class.java)
                 //ActivityMain::class.java)
-                intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intentActivityHome.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)
                 finish()
             }
@@ -155,17 +156,17 @@ class ActivityProfile : AppCompatActivity() {
     private fun initListeners() {
         binding?.etProfileInputNick?.doOnTextChanged { text, _, _, _ ->
             viewModel?.updateNick(text.toString())
+            viewModel.checkProfileNick()
         }
 
         binding?.etProfileInputAge?.doOnTextChanged { text, _, _, _ ->
             viewModel?.updateAge(text.toString())
+            viewModel.checkProfileAge()
         }
         binding?.btSabeButton?.setOnClickListener {
             viewModel.checkValius()
         }
     }
-
-
 
 
     private fun setupButton(button: MaterialButton, index: Int) {

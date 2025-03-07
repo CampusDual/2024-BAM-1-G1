@@ -22,11 +22,11 @@ class ActivityProfileViewModel() : ViewModel() {
         // Regiones de Francia
         "FR" to FrenchRegions.values().map { it.name }
     )
-    private val _errorProfileNick: MutableLiveData<Boolean> = MutableLiveData(false)
-    var errorProfileNick: LiveData<Boolean> = _errorProfileNick
+    private val _errorProfileNick: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    var errorProfileNick: LiveData<Pair<Boolean, String>> = _errorProfileNick
 
-    private val _errorProfileAge: MutableLiveData<Boolean> = MutableLiveData(false)
-    var errorProfileAge: LiveData<Boolean> = _errorProfileAge
+    private val _errorProfileAge: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    var errorProfileAge: LiveData<Pair<Boolean, String>> = _errorProfileAge
 
     private val _errorProfileCountry: MutableLiveData<Boolean> = MutableLiveData(false)
     var errorProfileCountry: LiveData<Boolean> = _errorProfileCountry
@@ -43,8 +43,18 @@ class ActivityProfileViewModel() : ViewModel() {
     }
 
     // Estado de los botones
+
     private val buttonStates = BooleanArray(4) { false }
 
+    fun toggleButtonState(index: Int) {
+        buttonStates[index] = !buttonStates[index]
+    }
+
+    fun getButtonState(index: Int): Boolean {
+        return buttonStates[index]
+    }
+
+    // Actualización de los datos del perfil
     fun updateNick(nick: String) {
         profilenick = nick
     }
@@ -62,40 +72,76 @@ class ActivityProfileViewModel() : ViewModel() {
         profileprovince = position
     }
 
-    fun saveProfile() {
+    //Funciones de validación
 
-    }
-
-    fun toggleButtonState(index: Int) {
-        buttonStates[index] = !buttonStates[index]
-    }
-
-    fun getButtonState(index: Int): Boolean {
-        return buttonStates[index]
-    }
-
-    fun checkValius(): Boolean {
+    fun checkValius(){
         val errProfileNick: Boolean = checkProfileNick()
         val errProfileAge: Boolean = checkProfileAge()
-        val errProfileCountry: Boolean = checkProfileCountry()
-        val errProfileProvince: Boolean = checkProfileProvince()
-
-        return errProfileNick && errProfileAge && errProfileCountry && errProfileProvince
+        _checkValius.value = errProfileNick && errProfileAge
     }
 
     fun checkProfileNick(): Boolean {
-        return profilenick.isNotEmpty()
+        var errorMessages = mutableListOf<String>()
+        var error = false
+        if (profilenick.isEmpty()) {
+            errorMessages = (errorMessages + "El nick no puede estar vacío").toMutableList()
+            error = true
+        }
+        if (profilenick.length < 3) {
+            errorMessages =
+                (errorMessages + "El nick debe tener al menos 3 caracteres").toMutableList()
+            error = true
+        }
+        if (profilenick.length > 20) {
+            errorMessages =
+                (errorMessages + "El nick debe tener como máximo 20 caracteres").toMutableList()
+            error = true
+        }
+        if (profilenick.contains(" ")) {
+            errorMessages = (errorMessages + "El nick no puede contener espacios").toMutableList()
+            error = true
+        }
+        val forbiddenWords = ForbiddenWords.values()
+        if (forbiddenWords.any { profilenick.contains(it.name, ignoreCase = true) }) {
+            errorMessages = (errorMessages + "Contenido Inaptopiado").toMutableList()
+            error = true
+        }
+        if (error) {
+            _errorProfileNick.value = Pair(true, errorMessages.joinToString(". "))
+            return false
+        } else {
+            _errorProfileNick.value = Pair(false, "")
+            return true
+        }
+
+
     }
 
     fun checkProfileAge(): Boolean {
-        return profileage.toIntOrNull() != null && profileage.isNotEmpty()
+        var errorMessages = mutableListOf<String>()
+        var error = false
+        if (profileage.isEmpty()) {
+            errorMessages = (errorMessages + "La edad no puede estar vacía").toMutableList()
+            error = true
+        }
+        if (profileage.toIntOrNull() == null) {
+            errorMessages = (errorMessages + "La edad debe ser un número").toMutableList()
+            error = true
+        } else if (profileage.toInt() < 18) {
+            errorMessages = (errorMessages + "La edad debe ser mayor de 18 años").toMutableList()
+            error = true
+        } else if (profileage.toInt() > 150) {
+            errorMessages = (errorMessages + "La edad debe ser menor de 100 años").toMutableList()
+            error = true
+        }
+        if (error) {
+            _errorProfileAge.value = Pair(true, errorMessages.joinToString(". "))
+            return false
+        } else {
+            _errorProfileAge.value = Pair(false, "")
+            return true
+        }
+
     }
 
-    fun checkProfileCountry(): Boolean {
-        return profilecountry != 0
-    }
-
-    fun checkProfileProvince(): Boolean {
-        return profileprovince != 0
-    }
 }
