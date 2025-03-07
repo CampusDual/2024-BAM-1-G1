@@ -172,6 +172,7 @@ class ActivityProfile : AppCompatActivity() {
     private fun setupButton(button: MaterialButton, index: Int) {
         button.setOnClickListener {
             viewModel.toggleButtonState(index)
+            viewModel.getButtonStateBinare(index)
             updateButtonAppearance(button, index)
         }
     }

@@ -54,6 +54,15 @@ class ActivityProfileViewModel() : ViewModel() {
         return buttonStates[index]
     }
 
+    var buttonStateBinare = mutableListOf(0, 0, 0, 0)
+
+    fun getButtonStateBinare(index: Int){
+        if (buttonStates[index]) {
+           buttonStateBinare [index] = 1
+        }else buttonStateBinare [index] = 0
+    }
+
+
     // Actualización de los datos del perfil
     fun updateNick(nick: String) {
         profilenick = nick
@@ -74,7 +83,7 @@ class ActivityProfileViewModel() : ViewModel() {
 
     //Funciones de validación
 
-    fun checkValius(){
+    fun checkValius() {
         val errProfileNick: Boolean = checkProfileNick()
         val errProfileAge: Boolean = checkProfileAge()
         _checkValius.value = errProfileNick && errProfileAge
@@ -98,7 +107,8 @@ class ActivityProfileViewModel() : ViewModel() {
             error = true
         }
         if (profilenick.contains(" ")) {
-            errorMessages = (errorMessages + "El nick no puede contener espacios").toMutableList()
+            errorMessages =
+                (errorMessages + "El nick no puede contener espacios").toMutableList()
             error = true
         }
         val forbiddenWords = ForbiddenWords.values()
@@ -128,10 +138,12 @@ class ActivityProfileViewModel() : ViewModel() {
             errorMessages = (errorMessages + "La edad debe ser un número").toMutableList()
             error = true
         } else if (profileage.toInt() < 18) {
-            errorMessages = (errorMessages + "La edad debe ser mayor de 18 años").toMutableList()
+            errorMessages =
+                (errorMessages + "La edad debe ser mayor de 18 años").toMutableList()
             error = true
         } else if (profileage.toInt() > 150) {
-            errorMessages = (errorMessages + "La edad debe ser menor de 100 años").toMutableList()
+            errorMessages =
+                (errorMessages + "La edad debe ser menor de 100 años").toMutableList()
             error = true
         }
         if (error) {
