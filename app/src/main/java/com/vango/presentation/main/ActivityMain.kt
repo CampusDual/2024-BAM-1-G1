@@ -21,22 +21,28 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
@@ -45,6 +51,7 @@ import com.vango.presentation.main.results.HomeList
 import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class ActivityMain :  BaseActivity() {
@@ -101,11 +108,11 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
         ) {
             composable("home") {
                 HomeScreen(
-                    modifier = Modifier.padding(innerPadding), // Modifier para respetar el padding del Scaffold
-                    navController = navController, // Pasar el NavController real
-                    cameraPositionState = null, // Usar el valor por defecto de HomeScreen
-                    permissionState = null, // Usar el valor por defecto de HomeScreen
-                    isPreview = false // No es una previsualización
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController,
+                    cameraPositionState = null,
+                    permissionState = null,
+                    isPreview = false
                 )
             }
             composable("routes") {
@@ -129,42 +136,91 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
 
 @Composable
 fun BottomNavigationBar(currentRoute: String, onItemSelected: (String) -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val colorMain = Color(ContextCompat.getColor(context, R.color.color_main))
     NavigationBar(
         modifier = modifier
             .fillMaxWidth()
             .height(65.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()),
-        tonalElevation = 0.dp
+        tonalElevation = 0.dp,
+        containerColor = Color(ContextCompat.getColor(context, R.color.white))
     ) {
+        val iconColorUnselected = Color.Black
 
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Home",
+                    tint = if (currentRoute == "home") colorMain else iconColorUnselected
+                )
+            },
             label = { Text("Home") },
             selected = currentRoute == "home",
-            onClick = { onItemSelected("home") }
+            onClick = { onItemSelected("home")},
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Search, contentDescription = "Routes") },
-            label = { Text("Routes") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Routes",
+                    tint = if (currentRoute == "routes") colorMain else iconColorUnselected
+                )
+            },
+            label = { Text("Routes",) },
             selected = currentRoute == "routes",
-            onClick = { onItemSelected("routes") }
+            onClick = { onItemSelected("routes") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.LocationOn, contentDescription = "Travels") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = "Travels",
+                    tint = if (currentRoute == "travels") colorMain else iconColorUnselected
+                )
+            },
             label = { Text("Travels") },
             selected = currentRoute == "travels",
-            onClick = { onItemSelected("travels") }
+            onClick = { onItemSelected("travels") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favorites",
+                    tint = if (currentRoute == "favorites") colorMain else iconColorUnselected
+                )
+            },
             label = { Text("Favorites") },
             selected = currentRoute == "favorites",
-            onClick = { onItemSelected("favorites") }
+            onClick = { onItemSelected("favorites") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Profile",
+                    tint = if (currentRoute == "profile") colorMain else iconColorUnselected
+                )
+            },
             label = { Text("Profile") },
             selected = currentRoute == "profile",
-            onClick = { onItemSelected("profile") }
+            onClick = { onItemSelected("profile") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
     }
 }
