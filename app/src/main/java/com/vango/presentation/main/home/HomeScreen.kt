@@ -1,12 +1,17 @@
 package com.vango.presentation.main.home
 
 import android.Manifest
+import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +31,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.LocationListener
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -53,7 +61,8 @@ fun HomeScreen(
         mutableStateOf(LatLng(40.416775, -3.703790)) // Madrid
     }
 
-    val locationPermission = permissionState ?: rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    val locationPermission =
+        permissionState ?: rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val cameraState = cameraPositionState ?: rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
     }
@@ -73,6 +82,34 @@ fun HomeScreen(
                 }
         }
     }
+
+    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
+        .build()
+
+    val locationListener = LocationListener { location ->
+        val newLocation = LatLng(location.latitude, location.longitude)
+        cameraState.position = CameraPosition.fromLatLngZoom(newLocation, 15f)
+    }
+
+    fusedLocationClient.requestLocationUpdates(locationRequest, locationListener, null)
+
+
+
+    fun moveYourLocation() {
+        if (locationPermission.status.isGranted) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        val newLocation = LatLng(location.latitude, location.longitude)
+                        defaultLocation = newLocation
+                        cameraState.position = CameraPosition.fromLatLngZoom(newLocation, 15f)
+                    }
+                }
+        } else {
+            locationPermission.launchPermissionRequest()
+        }
+    }
+
 
     if (isPreview) {
         Box(
@@ -106,7 +143,7 @@ fun HomeScreen(
             }
 
             Button(
-                onClick = { navController.navigate("results") },
+                onClick = { navController.navigate("results")},
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .wrapContentWidth()
@@ -114,9 +151,39 @@ fun HomeScreen(
             ) {
                 Text("Lista")
             }
+
+            // Button to navigate to the results screen
+            Button(
+                onClick = { moveYourLocation() },
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .wrapContentWidth()
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Stop"
+                )
+            }
+            // button to add a new location
+            Button(
+                onClick = { navController.navigate("results") },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .wrapContentWidth()
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add"
+                )
+            }
+
+
         }
     }
 }
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
@@ -127,6 +194,7 @@ fun HomeScreenPreview() {
             get() = Manifest.permission.ACCESS_FINE_LOCATION
         override val status: com.google.accompanist.permissions.PermissionStatus
             get() = com.google.accompanist.permissions.PermissionStatus.Granted
+
         override fun launchPermissionRequest() {}
     }
     val navController = rememberNavController()
