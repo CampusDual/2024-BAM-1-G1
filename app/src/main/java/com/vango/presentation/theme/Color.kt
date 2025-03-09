@@ -12,3 +12,4 @@ val Pink40 = Color(0xFF7D5260)
 
 val BackgroundButtonColor = Color(0xFF3CA6A5)
 val BackgroundColorBadge = Color(0xFFE75E5F)
+val BackgroundColorList = Color(0xFF484848)

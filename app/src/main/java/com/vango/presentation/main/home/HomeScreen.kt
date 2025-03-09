@@ -3,28 +3,33 @@ package com.vango.presentation.main.home
 import android.Manifest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +42,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,6 +71,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorBadge
+import com.vango.presentation.theme.BackgroundColorList
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -85,6 +93,8 @@ fun HomeScreen(
     val cameraState = cameraPositionState ?: rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
     }
+    
+    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -127,6 +137,13 @@ fun HomeScreen(
         }
     }
 
+    fun performSearch(query: String) {
+        if (query.lowercase() == "madrid") {
+            val madridLocation = LatLng(40.416775, -3.703790)
+            cameraState.position = CameraPosition.fromLatLngZoom(madridLocation, 12f)
+        }
+    }
+
     if (isPreview) {
         Box(
             modifier = modifier
@@ -158,35 +175,250 @@ fun HomeScreen(
                 )
             }
 
-            Button(
-                onClick = { navController.navigate("results") },
+
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 20.dp, top = 120.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+
+                        Surface(
+                            onClick = { moveYourLocation() },
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                            shape = RoundedCornerShape(13.dp),
+                            color = BackgroundButtonColor
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.location),
+                                    contentDescription = "Ubicación",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.White
+                                )
+                            }
+                        }
+
+                        Surface(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                            shape = RoundedCornerShape(13.dp),
+                            color = BackgroundButtonColor
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.map_type_fill),
+                                    contentDescription = "tipo de mapa",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.White
+                                )
+                            }
+                        }
+
+                        Surface(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                            shape = RoundedCornerShape(13.dp),
+                            color = BackgroundButtonColor
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.heart),
+                                    contentDescription = "tipo de mapa",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                        Surface(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                            shape = RoundedCornerShape(13.dp),
+                            color = BackgroundButtonColor
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.road),
+                                    contentDescription = "tipo de mapa",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            TextField(
+                value = searchQuery,
+                shape = RoundedCornerShape(100.dp),
+                onValueChange = { searchQuery = it },
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .wrapContentWidth()
-                    .padding(16.dp)
-            ) {
-                Text("Lista")
+                    .align(Alignment.TopCenter)
+                    .padding(top = 16.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth()
+                    .background(Color.White, RoundedCornerShape(8.dp))
+                    .shadow(4.dp, RoundedCornerShape(8.dp)),
+                placeholder = { Text("Empieza a buscar") },
+                singleLine = true,
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.search),
+                        contentDescription = "Buscar",
+                        modifier = Modifier
+                            .clickable {
+                                performSearch(searchQuery)
+                            }
+                            .size(24.dp),
+                        tint = Color.Gray
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = { performSearch(searchQuery) }
+                )
+            )
+
+
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+                        Surface(
+                            onClick = { navController.navigate("results") },
+                            modifier = Modifier
+                                .width(98.dp)
+                                .height(51.dp)
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                            shape = RoundedCornerShape(13.dp),
+                            color = BackgroundColorList
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.list),
+                                    contentDescription = "Ubicación",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Lista",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 16.dp, end = 20.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.add_btn),
+                        contentDescription = "Añadir Punto Nuevo",
+                        modifier = Modifier
+                            .size(height = 53.dp, width = 45.dp)
+                            .clickable { navController.navigate("results") }
+                            .align(Alignment.BottomCenter)
+                    )
+
+                }
+
+            }
+
+
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 120.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+                        Surface(
+                            onClick = { navController.navigate("results") },
+                            modifier = Modifier
+                                .width(127.dp)
+                                .height(40.dp)
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                            shape = RoundedCornerShape(13.dp),
+                            color = BackgroundColorList
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Buscar aquí",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+
             }
 
             FilterButton(
-                onMoveYourLocation = { moveYourLocation() }, // Pasa la función
+                onMoveYourLocation = { moveYourLocation() },
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(top = 48.dp, start = 20.dp)
+                    .padding(top = 120.dp, start = 20.dp)
             )
 
-            Button(
-                onClick = { navController.navigate("results") },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .wrapContentWidth()
-                    .padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add"
-                )
-            }
+
         }
     }
 }
@@ -212,13 +444,14 @@ fun FilterButton(
     ).count { it }
 
     Box(
+
         modifier = Modifier
             .clickable(
                 enabled = isExpanded,
                 onClick = { isExpanded = false },
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            )
+            ).then(if (isExpanded) Modifier.fillMaxSize() else Modifier)
     ) {
 
         Box {
@@ -228,7 +461,6 @@ fun FilterButton(
                     .width(60.dp)
                     .height(60.dp)
                     .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
-
                 shape = RoundedCornerShape(16.dp),
                 color = BackgroundButtonColor
             ) {
@@ -238,8 +470,8 @@ fun FilterButton(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        painter = if (isExpanded) painterResource(id = R.drawable.filter_no_fill) else painterResource(
-                            id = R.drawable.filter_fill
+                        painter = if (isExpanded || selectedCount > 0) painterResource(id = R.drawable.filter_fill) else painterResource(
+                            id = R.drawable.filter_no_fill
                         ),
                         contentDescription = "Filtros",
                         modifier = Modifier.size(25.dp),
@@ -257,7 +489,7 @@ fun FilterButton(
                 Surface(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(top = 40.dp, start = 67.dp)
+                        .padding(top = 110.dp, start = 67.dp)
                         .size(22.dp)
                         .shadow(elevation = 2.dp, shape = CircleShape),
                     shape = CircleShape,
@@ -278,7 +510,7 @@ fun FilterButton(
                 enter = fadeIn(animationSpec = tween(durationMillis = 300)),
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(top = 115.dp, start = 20.dp)
+                    .padding(top = 188.dp, start = 20.dp)
                     .width(60.dp)
                     .background(Color.Transparent)
             ) {
