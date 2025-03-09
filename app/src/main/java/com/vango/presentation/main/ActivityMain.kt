@@ -139,7 +139,7 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val colorMain = Color(ContextCompat.getColor(context, R.color.color_main))
+    val colorMain = Color(ContextCompat.getColor(context, R.color.color_emphasis))
     NavigationBar(
         modifier = modifier
             .fillMaxWidth()

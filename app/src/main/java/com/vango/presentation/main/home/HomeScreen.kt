@@ -3,17 +3,16 @@ package com.vango.presentation.main.home
 import android.Manifest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,9 +26,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -71,6 +73,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorBadge
+import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 import com.vango.presentation.theme.BackgroundColorList
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -88,12 +91,13 @@ fun HomeScreen(
         mutableStateOf(LatLng(40.416775, -3.703790)) // Madrid
     }
 
+
     val locationPermission =
         permissionState ?: rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val cameraState = cameraPositionState ?: rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
     }
-    
+
     var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
@@ -202,7 +206,7 @@ fun HomeScreen(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.location),
+                                    painter = painterResource(id = R.drawable.location_no_fill),
                                     contentDescription = "Ubicación",
                                     modifier = Modifier.size(25.dp),
                                     tint = Color.White
@@ -223,7 +227,7 @@ fun HomeScreen(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.map_type_fill),
+                                    painter = painterResource(id = R.drawable.map_type),
                                     contentDescription = "tipo de mapa",
                                     modifier = Modifier.size(25.dp),
                                     tint = Color.White
@@ -276,37 +280,7 @@ fun HomeScreen(
 
             }
 
-            TextField(
-                value = searchQuery,
-                shape = RoundedCornerShape(100.dp),
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp)
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp))
-                    .shadow(4.dp, RoundedCornerShape(8.dp)),
-                placeholder = { Text("Empieza a buscar") },
-                singleLine = true,
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.search),
-                        contentDescription = "Buscar",
-                        modifier = Modifier
-                            .clickable {
-                                performSearch(searchQuery)
-                            }
-                            .size(24.dp),
-                        tint = Color.Gray
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search
-                ),
-                keyboardActions = KeyboardActions(
-                    onSearch = { performSearch(searchQuery) }
-                )
-            )
+
 
 
             Box(modifier = Modifier.fillMaxSize()) {
@@ -323,8 +297,8 @@ fun HomeScreen(
                         Surface(
                             onClick = { navController.navigate("results") },
                             modifier = Modifier
-                                .width(98.dp)
-                                .height(51.dp)
+                                .width(120.dp)
+                                .height(50.dp)
                                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
                             shape = RoundedCornerShape(13.dp),
                             color = BackgroundColorList
@@ -358,15 +332,28 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(bottom = 16.dp, end = 20.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.add_btn),
-                        contentDescription = "Añadir Punto Nuevo",
+                ){
+
+
+                    Surface(
                         modifier = Modifier
-                            .size(height = 53.dp, width = 45.dp)
-                            .clickable { navController.navigate("results") }
-                            .align(Alignment.BottomCenter)
-                    )
+                            .width(50.dp)
+                            .height(50.dp)
+                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                        shape = RoundedCornerShape(13.dp),
+                        color = BackgroundColorButtonPrincipal
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.add_btn),
+                                contentDescription = "tipo de mapa",
+                                modifier = Modifier.size(25.dp),
+                                tint = Color.Unspecified)
+                        }
+                    }
 
                 }
 
@@ -378,7 +365,7 @@ fun HomeScreen(
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 120.dp)
+                        .padding(top = 120.dp, start = 5.5.dp)
                 ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -387,7 +374,7 @@ fun HomeScreen(
                         Surface(
                             onClick = { navController.navigate("results") },
                             modifier = Modifier
-                                .width(127.dp)
+                                .width(128.dp)
                                 .height(40.dp)
                                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
                             shape = RoundedCornerShape(13.dp),
@@ -418,9 +405,108 @@ fun HomeScreen(
                     .padding(top = 120.dp, start = 20.dp)
             )
 
+            SearchTextField(
+                searchQuery = searchQuery,
+                onSearchQueryChange = { searchQuery = it },
+                performSearch = { query -> /* Lógica de búsqueda aquí */ }
+            )
+
 
         }
     }
+}
+
+
+@Composable
+fun SearchTextField(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    performSearch: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState() // Detecta si está enfocado
+    val focusManager = LocalFocusManager.current
+    TextField(
+        value = searchQuery,
+        shape = RoundedCornerShape(100.dp),
+        onValueChange = { onSearchQueryChange(it) },
+        modifier = modifier
+            .padding(top = 48.dp, start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .background(Color.Transparent, RoundedCornerShape(100.dp))
+            .shadow(4.dp, RoundedCornerShape(100.dp)),
+
+        placeholder = {
+            if (!isFocused) { // Mostrar placeholder solo si no está enfocado
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.search),
+                        contentDescription = "Buscar",
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clickable { performSearch(searchQuery) },
+                        tint = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Empieza a buscar",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        },
+        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+        singleLine = true,
+        leadingIcon = {
+            if (isFocused) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ex),
+                    contentDescription = "Borrar",
+                    modifier = Modifier
+                        .size(19.dp)
+                        .padding(start = 8.dp)
+                        .clickable {
+                            onSearchQueryChange("")
+                            focusManager.clearFocus()
+                        },
+                    tint = Color.Black
+                )
+            }
+        },
+        trailingIcon = {
+            if (isFocused) {
+                Icon(
+                    painter = painterResource(id = R.drawable.filter_search),
+                    contentDescription = "Filtro",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp)
+                        .clickable { },
+                    tint = Color.Black
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { performSearch(searchQuery) }
+        ),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            unfocusedContainerColor = Color.White,
+            focusedContainerColor = Color.White
+        ),
+        interactionSource = interactionSource
+    )
 }
 
 @Composable
@@ -451,7 +537,8 @@ fun FilterButton(
                 onClick = { isExpanded = false },
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ).then(if (isExpanded) Modifier.fillMaxSize() else Modifier)
+            )
+            .then(if (isExpanded) Modifier.fillMaxSize() else Modifier)
     ) {
 
         Box {
@@ -474,12 +561,13 @@ fun FilterButton(
                             id = R.drawable.filter_no_fill
                         ),
                         contentDescription = "Filtros",
-                        modifier = Modifier.size(25.dp),
+                        modifier = Modifier.size(27.dp),
                         tint = Color.White
                     )
                     Text(
                         text = "Filtros",
                         fontSize = 10.sp,
+                        fontWeight = FontWeight.SemiBold,
                         color = Color.White
                     )
                 }
@@ -608,6 +696,7 @@ fun FilterButton(
 
 
 }
+
 
 @Composable
 fun FilterOption(
