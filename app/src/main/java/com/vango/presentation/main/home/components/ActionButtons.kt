@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,55 +40,90 @@ fun LocationActionButtons(
     ) {
         Surface(
             onClick = onMoveToLocation,
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
             shape = RoundedCornerShape(13.dp),
             color = BackgroundButtonColor
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.location_no_fill),
-                contentDescription = "Ubicación",
-                modifier = Modifier.size(25.dp),
-                tint = Color.White
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.location_no_fill),
+                    contentDescription = "Ubicación",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.White
+                )
+            }
+        }
+
+        Surface(
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundButtonColor
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.map_type),
+                    contentDescription = "tipo de mapa",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.White
+                )
+            }
+        }
+
+        Surface(
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundButtonColor
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.heart),
+                    contentDescription = "tipo de mapa",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.White
+                )
+            }
         }
         Surface(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
             shape = RoundedCornerShape(13.dp),
             color = BackgroundButtonColor
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.map_type),
-                contentDescription = "Tipo de mapa",
-                modifier = Modifier.size(25.dp),
-                tint = Color.White
-            )
-        }
-        Surface(
-            modifier = Modifier.size(50.dp),
-            shape = RoundedCornerShape(13.dp),
-            color = BackgroundButtonColor
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.heart),
-                contentDescription = "Favoritos",
-                modifier = Modifier.size(25.dp),
-                tint = Color.White
-            )
-        }
-        Surface(
-            modifier = Modifier.size(50.dp),
-            shape = RoundedCornerShape(13.dp),
-            color = BackgroundButtonColor
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.road),
-                contentDescription = "Carretera",
-                modifier = Modifier.size(25.dp),
-                tint = Color.White
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.road),
+                    contentDescription = "tipo de mapa",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.White
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun BottomActionButtons(
@@ -96,10 +132,16 @@ fun BottomActionButtons(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(
+            modifier = Modifier
+                .width(50.dp)
+                .height(0.dp)
+        )
+
         Surface(
             onClick = onNavigateToResults,
             modifier = Modifier
@@ -128,6 +170,7 @@ fun BottomActionButtons(
                 )
             }
         }
+
         Surface(
             onClick = onAddAction,
             modifier = Modifier
@@ -136,12 +179,17 @@ fun BottomActionButtons(
             shape = RoundedCornerShape(13.dp),
             color = BackgroundColorButtonPrincipal
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.add_btn),
-                contentDescription = "Agregar",
-                modifier = Modifier.size(25.dp),
-                tint = Color.Unspecified
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.add_btn),
+                    contentDescription = "Agregar",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.Unspecified
+                )
+            }
         }
     }
 }
@@ -173,4 +221,16 @@ fun TopCenterButton(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomActionButtonsPreview() {
+    BottomActionButtons(
+        onNavigateToResults = {},
+        onAddAction = {},
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )
 }

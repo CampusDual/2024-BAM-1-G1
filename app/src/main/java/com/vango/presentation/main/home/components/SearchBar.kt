@@ -42,8 +42,9 @@ fun SearchBar(
     modifier: Modifier = Modifier
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState() // Detecta si está enfocado
+    val isFocused by interactionSource.collectIsFocusedAsState()
     val focusManager = LocalFocusManager.current
+
     TextField(
         value = searchQuery,
         shape = RoundedCornerShape(100.dp),
@@ -53,9 +54,8 @@ fun SearchBar(
             .fillMaxWidth()
             .background(Color.Transparent, RoundedCornerShape(100.dp))
             .shadow(4.dp, RoundedCornerShape(100.dp)),
-
         placeholder = {
-            if (!isFocused) { // Mostrar placeholder solo si no está enfocado
+            if (!isFocused) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -86,9 +86,12 @@ fun SearchBar(
                     painter = painterResource(id = R.drawable.ex),
                     contentDescription = "Borrar",
                     modifier = Modifier
-                        .size(19.dp)
+                        .size(18.dp)
                         .padding(start = 8.dp)
-                        .clickable {
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
                             onSearchQueryChange("")
                             focusManager.clearFocus()
                         },
@@ -113,7 +116,10 @@ fun SearchBar(
             imeAction = ImeAction.Search
         ),
         keyboardActions = KeyboardActions(
-            onSearch = { performSearch(searchQuery) }
+            onSearch = {
+                performSearch(searchQuery)
+                focusManager.clearFocus()
+            }
         ),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
