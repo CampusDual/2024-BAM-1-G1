@@ -108,8 +108,6 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                 HomeScreen(
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
-                    cameraPositionState = null,
-                    permissionState = null,
                     isPreview = false
                 )
             }
@@ -276,8 +274,6 @@ fun HomeContentPreview() {
         HomeScreen(
             modifier = Modifier.padding(paddingValues),
             navController = rememberNavController(),
-            cameraPositionState = null,
-            permissionState = null,
             isPreview = true
         )
     }

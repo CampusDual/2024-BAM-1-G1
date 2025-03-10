@@ -1,4 +1,4 @@
-package com.vango.domain.entities
+package com.vango.domain.model
 
 import java.util.Date
 

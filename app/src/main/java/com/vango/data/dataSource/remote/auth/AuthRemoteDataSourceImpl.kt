@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.vango.data.dataSource.remote.api.UserApi
 import com.vango.shared.dtos.auth.AuthDtoRequestDto
 import com.vango.shared.dtos.auth.AuthDtoResponseDto
-import com.vango.domain.entities.AppError
+import com.vango.domain.model.AppError
 import com.vango.shared.dtos.auth.AuthSignUpUserRequestDto
 import com.vango.shared.dtos.auth.AuthSignUpUserResponseDto
 import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserRequestDto
@@ -13,7 +13,6 @@ import com.vango.shared.dtos.auth.AuthVerifyUserEmailUpUserResponseDto
 import com.vango.shared.dtos.auth.AuthWhitTokenRequestDto
 import com.vango.shared.dtos.auth.AuthWhitTokenResponseDto
 import com.vango.shared.mappers.FirebaseAuthErrorMapper
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import javax.inject.Inject

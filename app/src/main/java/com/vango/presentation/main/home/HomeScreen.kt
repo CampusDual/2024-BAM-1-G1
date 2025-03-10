@@ -33,6 +33,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -71,6 +73,12 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.R
+import com.vango.presentation.main.home.components.BottomActionButtons
+import com.vango.presentation.main.home.components.FilterMenu
+import com.vango.presentation.main.home.components.LocationActionButtons
+import com.vango.presentation.main.home.components.MapComponent
+import com.vango.presentation.main.home.components.SearchBar
+import com.vango.presentation.main.home.components.TopCenterButton
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorBadge
 import com.vango.presentation.theme.BackgroundColorButtonPrincipal
@@ -81,24 +89,15 @@ import com.vango.presentation.theme.BackgroundColorList
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    cameraPositionState: CameraPositionState? = null,
-    permissionState: PermissionState? = null,
+    viewModel: HomeViewModel = hiltViewModel(),
     isPreview: Boolean = false
 ) {
-    val context = LocalContext.current
-    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-    var defaultLocation by remember {
-        mutableStateOf(LatLng(40.416775, -3.703790)) // Madrid
+    val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    val currentLocation = viewModel.currentLocation.collectAsState().value
+    val searchQuery = viewModel.searchQuery.collectAsState().value
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(currentLocation, 12f)
     }
-
-
-    val locationPermission =
-        permissionState ?: rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-    val cameraState = cameraPositionState ?: rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
-    }
-
-    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -106,46 +105,12 @@ fun HomeScreen(
 
     LaunchedEffect(locationPermission.status) {
         if (locationPermission.status.isGranted && !isPreview) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        defaultLocation = LatLng(location.latitude, location.longitude)
-                        cameraState.position = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
-                    }
-                }
+            viewModel.fetchUserLocation()
         }
     }
 
-    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
-        .build()
-
-    val locationListener = LocationListener { location ->
-        val newLocation = LatLng(location.latitude, location.longitude)
-        cameraState.position = CameraPosition.fromLatLngZoom(newLocation, 15f)
-    }
-
-    fusedLocationClient.requestLocationUpdates(locationRequest, locationListener, null)
-
-    fun moveYourLocation() {
-        if (locationPermission.status.isGranted) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        val newLocation = LatLng(location.latitude, location.longitude)
-                        defaultLocation = newLocation
-                        cameraState.position = CameraPosition.fromLatLngZoom(newLocation, 15f)
-                    }
-                }
-        } else {
-            locationPermission.launchPermissionRequest()
-        }
-    }
-
-    fun performSearch(query: String) {
-        if (query.lowercase() == "madrid") {
-            val madridLocation = LatLng(40.416775, -3.703790)
-            cameraState.position = CameraPosition.fromLatLngZoom(madridLocation, 12f)
-        }
+    LaunchedEffect(currentLocation) {
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(currentLocation, 15f)
     }
 
     if (isPreview) {
@@ -159,604 +124,61 @@ fun HomeScreen(
         }
     } else {
         Box(modifier = Modifier.fillMaxSize()) {
-            GoogleMap(
+            MapComponent(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraState,
-                properties = MapProperties(
-                    isMyLocationEnabled = locationPermission.status.isGranted,
-                    isTrafficEnabled = true,
-                ),
-                uiSettings = MapUiSettings(
-                    myLocationButtonEnabled = false,
-                    zoomControlsEnabled = false,
-                )
-            ) {
-                Marker(
-                    state = MarkerState(position = LatLng(40.416775, -3.703790)),
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE),
-                    title = "Madrid",
-                    snippet = "Capital of Spain"
-                )
-            }
+                cameraPositionState = cameraPositionState,
+                currentLocation = currentLocation,
+                isLocationEnabled = locationPermission.status.isGranted
+            )
 
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChange = viewModel::updateSearchQuery,
+                performSearch = viewModel::performSearch,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 48.dp, start = 20.dp, end = 20.dp)
+            )
 
-            Box(modifier = Modifier.fillMaxSize()) {
+            LocationActionButtons(
+                onMoveToLocation = { viewModel.fetchUserLocation() },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 20.dp, top = 120.dp)
+            )
 
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 20.dp, top = 120.dp)
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-
-                        Surface(
-                            onClick = { moveYourLocation() },
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(50.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                            shape = RoundedCornerShape(13.dp),
-                            color = BackgroundButtonColor
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.location_no_fill),
-                                    contentDescription = "Ubicación",
-                                    modifier = Modifier.size(25.dp),
-                                    tint = Color.White
-                                )
-                            }
-                        }
-
-                        Surface(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(50.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                            shape = RoundedCornerShape(13.dp),
-                            color = BackgroundButtonColor
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.map_type),
-                                    contentDescription = "tipo de mapa",
-                                    modifier = Modifier.size(25.dp),
-                                    tint = Color.White
-                                )
-                            }
-                        }
-
-                        Surface(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(50.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                            shape = RoundedCornerShape(13.dp),
-                            color = BackgroundButtonColor
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.heart),
-                                    contentDescription = "tipo de mapa",
-                                    modifier = Modifier.size(25.dp),
-                                    tint = Color.White
-                                )
-                            }
-                        }
-                        Surface(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(50.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                            shape = RoundedCornerShape(13.dp),
-                            color = BackgroundButtonColor
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.road),
-                                    contentDescription = "tipo de mapa",
-                                    modifier = Modifier.size(25.dp),
-                                    tint = Color.White
-                                )
-                            }
-                        }
-                    }
-                }
-
-            }
-
-
-
-
-            Box(modifier = Modifier.fillMaxSize()) {
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp)
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-                        Surface(
-                            onClick = { navController.navigate("results") },
-                            modifier = Modifier
-                                .width(120.dp)
-                                .height(50.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                            shape = RoundedCornerShape(13.dp),
-                            color = BackgroundColorList
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.list),
-                                    contentDescription = "Ubicación",
-                                    modifier = Modifier.size(25.dp),
-                                    tint = Color.White
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Lista",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
-                }
-
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(bottom = 16.dp, end = 20.dp)
-                ){
-
-
-                    Surface(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp)
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                        shape = RoundedCornerShape(13.dp),
-                        color = BackgroundColorButtonPrincipal
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.add_btn),
-                                contentDescription = "tipo de mapa",
-                                modifier = Modifier.size(25.dp),
-                                tint = Color.Unspecified)
-                        }
-                    }
-
-                }
-
-            }
-
-
-            Box(modifier = Modifier.fillMaxSize()) {
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 120.dp, start = 5.5.dp)
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-                        Surface(
-                            onClick = { navController.navigate("results") },
-                            modifier = Modifier
-                                .width(128.dp)
-                                .height(40.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-                            shape = RoundedCornerShape(13.dp),
-                            color = BackgroundColorList
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Buscar aquí",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
-                }
-
-            }
-
-            FilterButton(
-                onMoveYourLocation = { moveYourLocation() },
+            FilterMenu(
+                onMoveYourLocation = { viewModel.fetchUserLocation() },
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(top = 120.dp, start = 20.dp)
             )
 
-            SearchTextField(
-                searchQuery = searchQuery,
-                onSearchQueryChange = { searchQuery = it },
-                performSearch = { query -> /* Lógica de búsqueda aquí */ }
-            )
-
-
-        }
-    }
-}
-
-
-@Composable
-fun SearchTextField(
-    searchQuery: String,
-    onSearchQueryChange: (String) -> Unit,
-    performSearch: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState() // Detecta si está enfocado
-    val focusManager = LocalFocusManager.current
-    TextField(
-        value = searchQuery,
-        shape = RoundedCornerShape(100.dp),
-        onValueChange = { onSearchQueryChange(it) },
-        modifier = modifier
-            .padding(top = 48.dp, start = 20.dp, end = 20.dp)
-            .fillMaxWidth()
-            .background(Color.Transparent, RoundedCornerShape(100.dp))
-            .shadow(4.dp, RoundedCornerShape(100.dp)),
-
-        placeholder = {
-            if (!isFocused) { // Mostrar placeholder solo si no está enfocado
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.search),
-                        contentDescription = "Buscar",
-                        modifier = Modifier
-                            .size(16.dp)
-                            .clickable { performSearch(searchQuery) },
-                        tint = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Empieza a buscar",
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        },
-        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-        singleLine = true,
-        leadingIcon = {
-            if (isFocused) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ex),
-                    contentDescription = "Borrar",
-                    modifier = Modifier
-                        .size(19.dp)
-                        .padding(start = 8.dp)
-                        .clickable {
-                            onSearchQueryChange("")
-                            focusManager.clearFocus()
-                        },
-                    tint = Color.Black
-                )
-            }
-        },
-        trailingIcon = {
-            if (isFocused) {
-                Icon(
-                    painter = painterResource(id = R.drawable.filter_search),
-                    contentDescription = "Filtro",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp)
-                        .clickable { },
-                    tint = Color.Black
-                )
-            }
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = { performSearch(searchQuery) }
-        ),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White
-        ),
-        interactionSource = interactionSource
-    )
-}
-
-@Composable
-fun FilterButton(
-    onMoveYourLocation: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var isCampingSelected by remember { mutableStateOf(false) }
-    var isParkingSelected by remember { mutableStateOf(false) }
-    var isHospitalSelected by remember { mutableStateOf(false) }
-    var isFuelStationSelected by remember { mutableStateOf(false) }
-    var isLaundrySelected by remember { mutableStateOf(false) }
-
-    val selectedCount = listOf(
-        isCampingSelected,
-        isParkingSelected,
-        isHospitalSelected,
-        isFuelStationSelected,
-        isLaundrySelected
-    ).count { it }
-
-    Box(
-
-        modifier = Modifier
-            .clickable(
-                enabled = isExpanded,
-                onClick = { isExpanded = false },
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            )
-            .then(if (isExpanded) Modifier.fillMaxSize() else Modifier)
-    ) {
-
-        Box {
-            Surface(
-                onClick = { isExpanded = !isExpanded },
-                modifier = modifier
-                    .width(60.dp)
-                    .height(60.dp)
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
-                shape = RoundedCornerShape(16.dp),
-                color = BackgroundButtonColor
-            ) {
-                Column(
-                    modifier = Modifier.padding(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = if (isExpanded || selectedCount > 0) painterResource(id = R.drawable.filter_fill) else painterResource(
-                            id = R.drawable.filter_no_fill
-                        ),
-                        contentDescription = "Filtros",
-                        modifier = Modifier.size(27.dp),
-                        tint = Color.White
-                    )
-                    Text(
-                        text = "Filtros",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                }
-            }
-
-            if (selectedCount > 0) {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 110.dp, start = 67.dp)
-                        .size(22.dp)
-                        .shadow(elevation = 2.dp, shape = CircleShape),
-                    shape = CircleShape,
-                    color = BackgroundColorBadge
-                ) {
-                    Text(
-                        text = selectedCount.toString(),
-                        color = Color.White,
-                        fontSize = 15.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(2.dp)
-                    )
-                }
-            }
-
-            AnimatedVisibility(
-                visible = isExpanded,
-                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+            TopCenterButton(
+                onNavigateToResults = { navController.navigate("results") },
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(top = 188.dp, start = 20.dp)
-                    .width(60.dp)
-                    .background(Color.Transparent)
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    AnimatedVisibility(
-                        visible = isExpanded,
-                        enter = slideInVertically(
-                            initialOffsetY = { -it },
-                            animationSpec = tween(durationMillis = 300, delayMillis = 0)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 300, delayMillis = 0))
-                    ) {
-                        FilterOption(
-                            text = "Camping",
-                            painter = if (isCampingSelected) painterResource(id = R.drawable.camper_fill) else painterResource(
-                                id = R.drawable.camper_no_fill
-                            ),
-                            isSelected = isCampingSelected,
-                            onClick = { isCampingSelected = !isCampingSelected }
-                        )
-                    }
-
-                    AnimatedVisibility(
-                        visible = isExpanded,
-                        enter = slideInVertically(
-                            initialOffsetY = { -it },
-                            animationSpec = tween(durationMillis = 300, delayMillis = 100)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 300, delayMillis = 100))
-                    ) {
-                        FilterOption(
-                            text = "Parking",
-                            painter = if (isParkingSelected) painterResource(id = R.drawable.parking_fill) else painterResource(
-                                id = R.drawable.parking_no_fill
-                            ),
-                            isSelected = isParkingSelected,
-                            onClick = { isParkingSelected = !isParkingSelected }
-                        )
-                    }
-
-                    AnimatedVisibility(
-                        visible = isExpanded,
-                        enter = slideInVertically(
-                            initialOffsetY = { -it },
-                            animationSpec = tween(durationMillis = 300, delayMillis = 200)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 300, delayMillis = 200))
-                    ) {
-                        FilterOption(
-                            text = "Hospital",
-                            painter = if (isHospitalSelected) painterResource(id = R.drawable.hospital_fill) else painterResource(
-                                id = R.drawable.hospital_no_fill
-                            ),
-                            isSelected = isHospitalSelected,
-                            onClick = { isHospitalSelected = !isHospitalSelected }
-                        )
-                    }
-
-                    AnimatedVisibility(
-                        visible = isExpanded,
-                        enter = slideInVertically(
-                            initialOffsetY = { -it },
-                            animationSpec = tween(durationMillis = 300, delayMillis = 200)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 300, delayMillis = 200))
-                    ) {
-                        FilterOption(
-                            text = "Gasolinera",
-                            painter = if (isFuelStationSelected) painterResource(id = R.drawable.fuel_station_fill) else painterResource(
-                                id = R.drawable.fuel_station_no_fill
-                            ),
-                            isSelected = isFuelStationSelected,
-                            onClick = { isFuelStationSelected = !isFuelStationSelected }
-                        )
-                    }
-                    AnimatedVisibility(
-                        visible = isExpanded,
-                        enter = slideInVertically(
-                            initialOffsetY = { -it },
-                            animationSpec = tween(durationMillis = 300, delayMillis = 200)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 300, delayMillis = 200))
-                    ) {
-                        FilterOption(
-                            text = "Lavanderia",
-                            painter = if (isLaundrySelected) painterResource(id = R.drawable.laundry_fill) else painterResource(
-                                id = R.drawable.laundry_no_fill
-                            ),
-                            isSelected = isLaundrySelected,
-                            onClick = { isLaundrySelected = !isLaundrySelected }
-                        )
-                    }
-                }
-            }
-        }
-
-    }
-
-
-}
-
-
-@Composable
-fun FilterOption(
-    text: String,
-    painter: androidx.compose.ui.graphics.painter.Painter,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        modifier = Modifier
-            .width(60.dp)
-            .height(60.dp)
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
-        shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) BackgroundButtonColor else Color.Gray
-    ) {
-        Column(
-            modifier = Modifier.padding(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                painter = painter,
-                contentDescription = text,
-                modifier = Modifier.size(25.dp),
-                tint = Color.White
+                    .align(Alignment.TopCenter)
+                    .padding(top = 120.dp, start = 5.5.dp)
             )
 
-            Text(
-                text = text,
-                modifier = Modifier.padding(top = 3.dp),
-                fontSize = 10.sp,
-                color = Color.White
+            BottomActionButtons(
+                onNavigateToResults = { navController.navigate("results") },
+                onAddAction = { /* Lógica para agregar */ },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 16.dp)
             )
         }
     }
 }
-
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    val mockPermissionState = object : PermissionState {
-        override val permission: String
-            get() = Manifest.permission.ACCESS_FINE_LOCATION
-        override val status: com.google.accompanist.permissions.PermissionStatus
-            get() = com.google.accompanist.permissions.PermissionStatus.Granted
-
-        override fun launchPermissionRequest() {}
-    }
     val navController = rememberNavController()
-    val cameraState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(40.416775, -3.703790), 12f)
-    }
-
     HomeScreen(
-        cameraPositionState = cameraState,
-        permissionState = mockPermissionState,
-        navController = navController
+        navController = navController,
+        isPreview = true
     )
 }

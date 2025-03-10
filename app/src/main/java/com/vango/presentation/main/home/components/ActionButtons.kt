@@ -1,0 +1,176 @@
+package com.vango.presentation.main.home.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.vango.R
+import com.vango.presentation.theme.BackgroundButtonColor
+import com.vango.presentation.theme.BackgroundColorButtonPrincipal
+import com.vango.presentation.theme.BackgroundColorList
+
+@Composable
+fun LocationActionButtons(
+    onMoveToLocation: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Surface(
+            onClick = onMoveToLocation,
+            modifier = Modifier.size(50.dp),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundButtonColor
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.location_no_fill),
+                contentDescription = "Ubicación",
+                modifier = Modifier.size(25.dp),
+                tint = Color.White
+            )
+        }
+        Surface(
+            modifier = Modifier.size(50.dp),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundButtonColor
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.map_type),
+                contentDescription = "Tipo de mapa",
+                modifier = Modifier.size(25.dp),
+                tint = Color.White
+            )
+        }
+        Surface(
+            modifier = Modifier.size(50.dp),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundButtonColor
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.heart),
+                contentDescription = "Favoritos",
+                modifier = Modifier.size(25.dp),
+                tint = Color.White
+            )
+        }
+        Surface(
+            modifier = Modifier.size(50.dp),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundButtonColor
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.road),
+                contentDescription = "Carretera",
+                modifier = Modifier.size(25.dp),
+                tint = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomActionButtons(
+    onNavigateToResults: () -> Unit,
+    onAddAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            onClick = onNavigateToResults,
+            modifier = Modifier
+                .width(120.dp)
+                .height(50.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundColorList
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.list),
+                    contentDescription = "Lista",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.White
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Lista",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+        }
+        Surface(
+            onClick = onAddAction,
+            modifier = Modifier
+                .size(50.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundColorButtonPrincipal
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.add_btn),
+                contentDescription = "Agregar",
+                modifier = Modifier.size(25.dp),
+                tint = Color.Unspecified
+            )
+        }
+    }
+}
+
+@Composable
+fun TopCenterButton(
+    onNavigateToResults: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onNavigateToResults,
+        modifier = modifier
+            .width(128.dp)
+            .height(40.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+        shape = RoundedCornerShape(13.dp),
+        color = BackgroundColorList
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Buscar aquí",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+    }
+}
