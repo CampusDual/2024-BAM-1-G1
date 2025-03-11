@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -62,7 +63,7 @@ fun MapLayersMenu(
         shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
         scrimColor = Color.Black.copy(alpha = 0.4f),
         windowInsets = WindowInsets(0.dp),
-        dragHandle = {}
+        dragHandle = null
     ) {
         Column(
             modifier = Modifier
@@ -271,7 +272,7 @@ fun MapOptionButton(
                 .width(64.dp)
                 .height(64.dp),
             shape = RoundedCornerShape(16.dp),
-            color = BackgroundUnselected,
+            color = if(isSelected) BackgroundButtonColor else BackgroundUnselected,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

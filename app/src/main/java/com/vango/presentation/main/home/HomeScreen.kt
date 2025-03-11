@@ -1,6 +1,9 @@
 package com.vango.presentation.main.home
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,14 +21,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -55,17 +61,52 @@ fun HomeScreen(
     var showMapLayersMenu by remember { mutableStateOf(false) }
     val selectedLayer by viewModel.selectedLayer.collectAsState()
     val selectedOption by viewModel.selectedOption.collectAsState()
+    val hasToRequestPermission by viewModel.hasToRequestPermission.collectAsState()
     var isLocationVisible by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
+    val isLocationActive = locationPermission.status.isGranted
 
-    LaunchedEffect(Unit) {
-        locationPermission.launchPermissionRequest()
-    }
+    val context = LocalContext.current
+
 
     LaunchedEffect(locationPermission.status) {
-        if (locationPermission.status.isGranted && !isPreview) {
-            viewModel.fetchUserLocation()
+        val status = locationPermission.status
+        viewModel.setIsLocationActive(locationPermission.status.isGranted)
+        when (status) {
+            is PermissionStatus.Granted -> {
+                if (locationPermission.status.isGranted && !isPreview) {
+                    viewModel.fetchUserLocation()
+                }
+            }
+            is PermissionStatus.Denied -> {
+                if (locationPermission.status.shouldShowRationale) {
+                    locationPermission.launchPermissionRequest()
+                } else {
+                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                    }
+                    context.startActivity(intent)
+
+                }
+            }
         }
+    }
+
+    LaunchedEffect(hasToRequestPermission) {
+        if (hasToRequestPermission) {
+            val status = locationPermission.status
+            if (status is PermissionStatus.Denied) {
+                if (locationPermission.status.shouldShowRationale) {
+                    locationPermission.launchPermissionRequest()
+                } else {
+                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                    }
+                    context.startActivity(intent)
+                }
+            }
+        }
+        viewModel.clearPermissionRequest()
     }
 
     LaunchedEffect(currentLocation) {
@@ -107,10 +148,12 @@ fun HomeScreen(
                 onMoveToLocation = {
                     scope.launch {
                         viewModel.fetchUserLocation()
-                        cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
-                            1000
-                        )
+                        if (viewModel.isLocationActive) {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
+                                1000
+                            )
+                        }
                     }
                 },
                 onMapLayerClick = { showMapLayersMenu = true },
