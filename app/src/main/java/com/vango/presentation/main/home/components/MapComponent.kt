@@ -53,12 +53,10 @@ fun MapComponent(
             }
         }
     ) {
-        if (isLocationEnabled) {
-            Marker(
-                state = MarkerState(position = currentLocation),
-                title = "Ubicación actual"
-            )
-        }
+        Marker(
+            state = MarkerState(position = currentLocation),
+            title = "Ubicación actual"
+        )
     }
 
     LaunchedEffect(cameraPositionState.position) {

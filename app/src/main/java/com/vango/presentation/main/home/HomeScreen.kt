@@ -3,13 +3,16 @@ package com.vango.presentation.main.home
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,7 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
@@ -42,6 +44,7 @@ import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -53,10 +56,10 @@ fun HomeScreen(
     isPreview: Boolean = false
 ) {
     val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-    val currentLocation = viewModel.currentLocation.collectAsState().value
-    val searchQuery = viewModel.searchQuery.collectAsState().value
+    val currentLocation by viewModel.currentLocation.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentLocation, 12f)
+        position = CameraPosition.fromLatLngZoom(currentLocation, 15f)
     }
     var showMapLayersMenu by remember { mutableStateOf(false) }
     val selectedLayer by viewModel.selectedLayer.collectAsState()
@@ -64,54 +67,70 @@ fun HomeScreen(
     val hasToRequestPermission by viewModel.hasToRequestPermission.collectAsState()
     var isLocationVisible by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
-    val isLocationActive = locationPermission.status.isGranted
-
+    val errorMessage by viewModel.errorMessage.collectAsState()
     val context = LocalContext.current
+    var showPermissionDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        locationPermission.launchPermissionRequest()
+    }
 
     LaunchedEffect(locationPermission.status) {
-        val status = locationPermission.status
-        viewModel.setIsLocationActive(locationPermission.status.isGranted)
-        when (status) {
-            is PermissionStatus.Granted -> {
-                if (locationPermission.status.isGranted && !isPreview) {
-                    viewModel.fetchUserLocation()
-                }
-            }
-            is PermissionStatus.Denied -> {
-                if (locationPermission.status.shouldShowRationale) {
-                    locationPermission.launchPermissionRequest()
-                } else {
-                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", context.packageName, null)
-                    }
-                    context.startActivity(intent)
+        if (locationPermission.status.isGranted && !isPreview) {
+            viewModel.fetchUserLocation()
+        }
+    }
 
-                }
-            }
+    LaunchedEffect(currentLocation) {
+        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f), 1000)
+    }
+
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            viewModel.clearErrorMessage()
         }
     }
 
     LaunchedEffect(hasToRequestPermission) {
-        if (hasToRequestPermission) {
-            val status = locationPermission.status
-            if (status is PermissionStatus.Denied) {
-                if (locationPermission.status.shouldShowRationale) {
-                    locationPermission.launchPermissionRequest()
-                } else {
-                    val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", context.packageName, null)
-                    }
-                    context.startActivity(intent)
-                }
+        if (hasToRequestPermission && !locationPermission.status.isGranted) {
+            if (locationPermission.status.shouldShowRationale) {
+                locationPermission.launchPermissionRequest()
+            } else {
+                showPermissionDialog = true
             }
+            viewModel.clearPermissionRequest()
         }
-        viewModel.clearPermissionRequest()
     }
 
-    LaunchedEffect(currentLocation) {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(currentLocation, 15f)
+    if (showPermissionDialog) {
+        AlertDialog(
+            onDismissRequest = { showPermissionDialog = false },
+            title = { Text("Permisos necesarios") },
+            text = { Text("Por favor, habilita los permisos de ubicación en la configuración de la app para continuar.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showPermissionDialog = false
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", context.packageName, null)
+                        }
+                        context.startActivity(intent)
+                    }
+                ) {
+                    Text("Aceptar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showPermissionDialog = false }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
+
 
     if (isPreview) {
         Box(
@@ -148,12 +167,8 @@ fun HomeScreen(
                 onMoveToLocation = {
                     scope.launch {
                         viewModel.fetchUserLocation()
-                        if (viewModel.isLocationActive) {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
-                                1000
-                            )
-                        }
+                        delay(100)
+                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f), 1000)
                     }
                 },
                 onMapLayerClick = { showMapLayersMenu = true },
@@ -189,12 +204,8 @@ fun HomeScreen(
                 MapLayersMenu(
                     selectedLayer = selectedLayer,
                     selectedOption = selectedOption,
-                    onLayerSelected = { layer ->
-                        viewModel.updateMapLayer(layer)
-                    },
-                    onOptionSelected = { option ->
-                        viewModel.updateMapOption(option)
-                    },
+                    onLayerSelected = { layer -> viewModel.updateMapLayer(layer) },
+                    onOptionSelected = { option -> viewModel.updateMapOption(option) },
                     onDismiss = { showMapLayersMenu = false }
                 )
             }

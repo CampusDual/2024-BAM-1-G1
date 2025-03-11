@@ -31,6 +31,8 @@ class HomeViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     private val _hasToRequestPermission = MutableStateFlow(false)
     val hasToRequestPermission: StateFlow<Boolean> = _hasToRequestPermission.asStateFlow()
@@ -50,20 +52,23 @@ class HomeViewModel @Inject constructor(
 
     fun fetchUserLocation() {
         viewModelScope.launch {
-            if (isLocationActive){
-                val location = getUserLocationUseCase()
-                if (location != null) {
-                    _currentLocation.value = location
-                } else {
-                    TODO("Hacer algo con el error, es decir que no se pudo obtener la ubicación o pedir permisos nuevamente")
-                    Log.e("HomeViewModel", "No se pudo obtener la ubicación")
-                }
-            }else{
+            val location = getUserLocationUseCase()
+            if (location != null) {
+                _currentLocation.value = location
+            } else {
+                _errorMessage.value = "Se necesitan permisos de ubicación para obtener tu posición actual."
                 _hasToRequestPermission.value = true
+                _currentLocation.value = LatLng(40.416775, -3.703790)
             }
-
-
         }
+    }
+
+    fun clearErrorMessage() {
+        _errorMessage.value = null
+    }
+
+    fun clearPermissionRequest() {
+        _hasToRequestPermission.value = false
     }
 
     fun updateMapLayer(layer: MapLayer) {
@@ -76,10 +81,6 @@ class HomeViewModel @Inject constructor(
 
     fun setIsLocationActive(isActive: Boolean) {
         isLocationActive = isActive
-    }
-
-    fun clearPermissionRequest() {
-        _hasToRequestPermission.value = false
     }
 
 
