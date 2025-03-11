@@ -57,7 +57,6 @@ fun HomeScreen(
 ) {
     val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val currentLocation by viewModel.currentLocation.collectAsState()
-    val searchQuery by viewModel.searchQuery.collectAsState()
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(currentLocation, 15f)
     }
@@ -70,6 +69,8 @@ fun HomeScreen(
     val errorMessage by viewModel.errorMessage.collectAsState()
     val context = LocalContext.current
     var showPermissionDialog by remember { mutableStateOf(false) }
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -154,14 +155,8 @@ fun HomeScreen(
                 }
             )
 
-            SearchBar(
-                searchQuery = searchQuery,
-                onSearchQueryChange = viewModel::updateSearchQuery,
-                performSearch = viewModel::performSearch,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(start = 20.dp, end = 20.dp)
-            )
+
+
 
             LocationActionButtons(
                 onMoveToLocation = {
@@ -199,6 +194,16 @@ fun HomeScreen(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)
             )
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChange = viewModel::updateSearchQuery,
+                performSearch = viewModel::performSearch,
+                searchResults = searchResults,
+                onResultSelected = viewModel::selectSearchResult,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(start = 20.dp, end = 20.dp)
+            )
 
             if (showMapLayersMenu) {
                 MapLayersMenu(
@@ -213,7 +218,6 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {

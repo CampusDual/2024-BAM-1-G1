@@ -53,6 +53,8 @@ navigationCompose = "2.8.8"
 countryPicker = "2.7.0"
 hilt-navigation-compose = "1.2.0"
 
+google-places = "4.1.0"
+
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -129,6 +131,7 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+google-places = { group = "com.google.android.libraries.places", name = "places", version.ref = "google-places" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

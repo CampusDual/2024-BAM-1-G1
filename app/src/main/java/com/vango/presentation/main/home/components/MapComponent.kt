@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
@@ -53,13 +54,19 @@ fun MapComponent(
             }
         }
     ) {
-        Marker(
-            state = MarkerState(position = currentLocation),
-            title = "Ubicación actual"
-        )
+        if (isLocationEnabled && currentLocation.latitude != 0.0 && currentLocation.longitude != 0.0) {
+            Marker(
+                state = MarkerState(position = currentLocation),
+                title = "Ubicación actual"
+            )
+        }
     }
 
-    LaunchedEffect(cameraPositionState.position) {
+    LaunchedEffect(currentLocation) {
+        cameraPositionState.animate(
+            CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
+            1000
+        )
         val bounds = cameraPositionState.projection?.visibleRegion?.latLngBounds
         bounds?.let {
             onLocationVisibilityChanged(it.contains(currentLocation))
