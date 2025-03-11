@@ -10,6 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +31,7 @@ import com.vango.presentation.main.home.components.BottomActionButtons
 import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
+import com.vango.presentation.main.home.components.MapLayersMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
 
@@ -44,6 +49,7 @@ fun HomeScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(currentLocation, 12f)
     }
+    var showMapLayersMenu by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -88,6 +94,7 @@ fun HomeScreen(
 
             LocationActionButtons(
                 onMoveToLocation = { viewModel.fetchUserLocation() },
+                onMapLayerClick = {showMapLayersMenu = true},
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(end = 20.dp, top = 120.dp)
@@ -113,6 +120,19 @@ fun HomeScreen(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)
             )
+
+            if (showMapLayersMenu) {
+                MapLayersMenu (
+                    onLayerSelected = { layer ->
+                        viewModel.updateMapLayer(layer)
+                    },
+                    onOptionSelected = { option ->
+                        viewModel.updateMapOption(option)
+                    },
+                    onDismiss = { showMapLayersMenu = false }
+
+                )
+            }
         }
     }
 }

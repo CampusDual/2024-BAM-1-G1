@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorBadge
+import com.vango.presentation.theme.BackgroundUnselected
 
 @Composable
 fun FilterMenu(
@@ -231,7 +232,7 @@ fun FilterOption(
             .height(60.dp)
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) BackgroundButtonColor else Color.Gray
+        color = if (isSelected) BackgroundButtonColor else BackgroundUnselected
     ) {
         Column(
             modifier = Modifier.padding(4.dp),

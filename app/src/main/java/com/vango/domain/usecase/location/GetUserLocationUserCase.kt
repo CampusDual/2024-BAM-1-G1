@@ -14,4 +14,5 @@ class GetUserLocationUseCase @Inject constructor(
             null
         }
     }
+
 }

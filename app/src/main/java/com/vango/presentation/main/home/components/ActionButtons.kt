@@ -27,10 +27,12 @@ import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 import com.vango.presentation.theme.BackgroundColorList
+import com.vango.presentation.theme.BackgroundUnselected
 
 @Composable
 fun LocationActionButtons(
     onMoveToLocation: () -> Unit,
+    onMapLayerClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -45,7 +47,7 @@ fun LocationActionButtons(
                 .height(50.dp)
                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
             shape = RoundedCornerShape(13.dp),
-            color = BackgroundButtonColor
+            color = BackgroundUnselected
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,12 +63,13 @@ fun LocationActionButtons(
         }
 
         Surface(
+            onClick = onMapLayerClick,
             modifier = Modifier
                 .width(50.dp)
                 .height(50.dp)
                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
             shape = RoundedCornerShape(13.dp),
-            color = BackgroundButtonColor
+            color = BackgroundUnselected
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -87,7 +90,7 @@ fun LocationActionButtons(
                 .height(50.dp)
                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
             shape = RoundedCornerShape(13.dp),
-            color = BackgroundButtonColor
+            color = BackgroundUnselected
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,7 +110,7 @@ fun LocationActionButtons(
                 .height(50.dp)
                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
             shape = RoundedCornerShape(13.dp),
-            color = BackgroundButtonColor
+            color = BackgroundUnselected
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
