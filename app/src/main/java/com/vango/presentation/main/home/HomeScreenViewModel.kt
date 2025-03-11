@@ -1,5 +1,6 @@
 package com.vango.presentation.main.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -20,11 +21,12 @@ class HomeViewModel @Inject constructor(
 
     private val _currentLocation = MutableStateFlow(LatLng(40.416775, -3.703790))
     val currentLocation: StateFlow<LatLng> = _currentLocation
-    private val _selectedLayer = MutableStateFlow(MapLayer.NORMAL)
-    private val _selectedOption = MutableStateFlow(MapOption.WEATHER)
-    val selectedLayer: StateFlow<MapLayer> = _selectedLayer.asStateFlow()
-    val selectedOption: StateFlow<MapOption> = _selectedOption.asStateFlow()
 
+    private val _selectedLayer = MutableStateFlow(MapLayer.NORMAL)
+    val selectedLayer: StateFlow<MapLayer> = _selectedLayer.asStateFlow()
+
+    private val _selectedOption = MutableStateFlow<MapOption?>(null)
+    val selectedOption: StateFlow<MapOption?> = _selectedOption.asStateFlow()
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery
 
@@ -43,14 +45,18 @@ class HomeViewModel @Inject constructor(
             val location = getUserLocationUseCase()
             if (location != null) {
                 _currentLocation.value = location
+            }else {
+                TODO("Hacer algo con el error, es decir que no se pudo obtener la ubicación o pedir permisos nuevamente")
+                Log.e("HomeViewModel", "No se pudo obtener la ubicación")
             }
+
         }
     }
 
     fun updateMapLayer(layer: MapLayer) {
         _selectedLayer.value = layer
     }
-    fun updateMapOption(option: MapOption) {
+    fun updateMapOption(option: MapOption?) {
         _selectedOption.value = option
     }
 

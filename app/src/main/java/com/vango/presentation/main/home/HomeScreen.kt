@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.presentation.main.home.components.BottomActionButtons
@@ -34,6 +36,7 @@ import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -50,6 +53,10 @@ fun HomeScreen(
         position = CameraPosition.fromLatLngZoom(currentLocation, 12f)
     }
     var showMapLayersMenu by remember { mutableStateOf(false) }
+    val selectedLayer by viewModel.selectedLayer.collectAsState()
+    val selectedOption by viewModel.selectedOption.collectAsState()
+    var isLocationVisible by remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -80,7 +87,11 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 currentLocation = currentLocation,
-                isLocationEnabled = locationPermission.status.isGranted
+                isLocationEnabled = locationPermission.status.isGranted,
+                selectedLayer = selectedLayer,
+                onLocationVisibilityChanged = { visible ->
+                    isLocationVisible = visible
+                }
             )
 
             SearchBar(
@@ -93,8 +104,18 @@ fun HomeScreen(
             )
 
             LocationActionButtons(
-                onMoveToLocation = { viewModel.fetchUserLocation() },
-                onMapLayerClick = {showMapLayersMenu = true},
+                onMoveToLocation = {
+                    scope.launch {
+                        viewModel.fetchUserLocation()
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
+                            1000
+                        )
+                    }
+                },
+                onMapLayerClick = { showMapLayersMenu = true },
+                selectedOption = selectedOption,
+                isLocationVisible = isLocationVisible,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(end = 20.dp, top = 120.dp)
@@ -122,7 +143,9 @@ fun HomeScreen(
             )
 
             if (showMapLayersMenu) {
-                MapLayersMenu (
+                MapLayersMenu(
+                    selectedLayer = selectedLayer,
+                    selectedOption = selectedOption,
                     onLayerSelected = { layer ->
                         viewModel.updateMapLayer(layer)
                     },
@@ -130,7 +153,6 @@ fun HomeScreen(
                         viewModel.updateMapOption(option)
                     },
                     onDismiss = { showMapLayersMenu = false }
-
                 )
             }
         }

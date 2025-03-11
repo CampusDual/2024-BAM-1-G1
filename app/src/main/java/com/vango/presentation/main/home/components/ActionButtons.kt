@@ -33,6 +33,8 @@ import com.vango.presentation.theme.BackgroundUnselected
 fun LocationActionButtons(
     onMoveToLocation: () -> Unit,
     onMapLayerClick: () -> Unit,
+    selectedOption: MapOption?,
+    isLocationVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,8 +56,9 @@ fun LocationActionButtons(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.location_no_fill),
-                    contentDescription = "Ubicación",
+                    painter = painterResource(
+                        id = if (isLocationVisible) R.drawable.location else R.drawable.location_no_fill
+                    ),                    contentDescription = "Ubicación",
                     modifier = Modifier.size(25.dp),
                     tint = Color.White
                 )
@@ -105,6 +108,7 @@ fun LocationActionButtons(
             }
         }
         Surface(
+            onClick = onMapLayerClick,
             modifier = Modifier
                 .width(50.dp)
                 .height(50.dp)
@@ -117,8 +121,15 @@ fun LocationActionButtons(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.road),
-                    contentDescription = "tipo de mapa",
+                    painter = painterResource(
+                        id = when (selectedOption) {
+                            MapOption.TRAFFIC -> R.drawable.road_full
+                            MapOption.WEATHER -> R.drawable.weather_full
+                            MapOption.PUBLIC_TRANSPORT -> R.drawable.traffic_full
+                            null -> R.drawable.road
+                        }
+                    ),
+                    contentDescription = "Tipo de mapa",
                     modifier = Modifier.size(25.dp),
                     tint = Color.White
                 )

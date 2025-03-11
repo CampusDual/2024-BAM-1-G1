@@ -46,14 +46,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapLayersMenu(
+    selectedLayer: MapLayer,
+    selectedOption: MapOption?,
     onLayerSelected: (MapLayer) -> Unit,
-    onOptionSelected: (MapOption) -> Unit,
+    onOptionSelected: (MapOption?) -> Unit,
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    var selectedLayer by remember { mutableStateOf(MapLayer.NORMAL) }
-    var selectedOption by remember { mutableStateOf(MapOption.TRAFFIC) }
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
@@ -127,37 +127,25 @@ fun MapLayersMenu(
                             text = "Predefinido",
                             iconRes = R.drawable.preset,
                             isSelected = selectedLayer == MapLayer.NORMAL,
-                            onClick = {
-                                selectedLayer = MapLayer.NORMAL
-                                onLayerSelected(MapLayer.NORMAL)
-                            }
+                            onClick = { onLayerSelected(MapLayer.NORMAL) }
                         )
                         MapLayerButton(
                             text = "Satélite",
                             iconRes = R.drawable.satellite,
                             isSelected = selectedLayer == MapLayer.SATELLITE,
-                            onClick = {
-                                selectedLayer = MapLayer.SATELLITE
-                                onLayerSelected(MapLayer.SATELLITE)
-                            }
+                            onClick = { onLayerSelected(MapLayer.SATELLITE) }
                         )
                         MapLayerButton(
                             text = "Terreno",
                             iconRes = R.drawable.terrain,
                             isSelected = selectedLayer == MapLayer.RELIEF,
-                            onClick = {
-                                selectedLayer = MapLayer.RELIEF
-                                onLayerSelected(MapLayer.RELIEF)
-                            }
+                            onClick = { onLayerSelected(MapLayer.RELIEF) }
                         )
                         MapLayerButton(
                             text = "Sin conexión",
                             iconRes = R.drawable.save_map,
                             isSelected = selectedLayer == MapLayer.NO_CONNECTION,
-                            onClick = {
-                                selectedLayer = MapLayer.NO_CONNECTION
-                                onLayerSelected(MapLayer.NO_CONNECTION)
-                            }
+                            onClick = { onLayerSelected(MapLayer.NO_CONNECTION) }
                         )
                     }
 
@@ -191,8 +179,7 @@ fun MapLayersMenu(
                             iconResFull = R.drawable.road_full,
                             isSelected = selectedOption == MapOption.TRAFFIC,
                             onClick = {
-                                selectedOption = MapOption.TRAFFIC
-                                onOptionSelected(MapOption.TRAFFIC)
+                                onOptionSelected(if (selectedOption == MapOption.TRAFFIC) null else MapOption.TRAFFIC)
                             }
                         )
                         MapOptionButton(
@@ -201,8 +188,7 @@ fun MapLayersMenu(
                             iconResFull = R.drawable.weather_full,
                             isSelected = selectedOption == MapOption.WEATHER,
                             onClick = {
-                                selectedOption = MapOption.WEATHER
-                                onOptionSelected(MapOption.WEATHER)
+                                onOptionSelected(if (selectedOption == MapOption.WEATHER) null else MapOption.WEATHER)
                             }
                         )
                         MapOptionButton(
@@ -211,8 +197,7 @@ fun MapLayersMenu(
                             iconResFull = R.drawable.traffic_full,
                             isSelected = selectedOption == MapOption.PUBLIC_TRANSPORT,
                             onClick = {
-                                selectedOption = MapOption.PUBLIC_TRANSPORT
-                                onOptionSelected(MapOption.PUBLIC_TRANSPORT)
+                                onOptionSelected(if (selectedOption == MapOption.PUBLIC_TRANSPORT) null else MapOption.PUBLIC_TRANSPORT)
                             }
                         )
                         Spacer(modifier = Modifier.width(60.dp))
@@ -331,6 +316,8 @@ fun MapLayersBottomSheetPreview() {
     MapLayersMenu(
         onLayerSelected = {},
         onOptionSelected = {},
+        selectedLayer = MapLayer.NORMAL,
+        selectedOption = MapOption.TRAFFIC,
         onDismiss = {}
     )
 }
