@@ -7,6 +7,7 @@ import com.vango.domain.model.SearchResult
 import com.vango.domain.usecase.location.GetUserLocationUseCase
 import com.vango.domain.usecase.places.SearchPlacesUseCase
 import com.vango.presentation.main.home.components.MapLayer
+import com.vango.presentation.main.home.components.MapNewPointRoute
 import com.vango.presentation.main.home.components.MapOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +42,10 @@ class HomeViewModel @Inject constructor(
 
     private val _searchResults = MutableStateFlow<List<SearchResult>>(emptyList())
     val searchResults: StateFlow<List<SearchResult>> = _searchResults.asStateFlow()
+
+
+    private val _selectedRoutePoint = MutableStateFlow<MapNewPointRoute?>(null)
+    val selectedRoutePoint: StateFlow<MapNewPointRoute?> = _selectedRoutePoint.asStateFlow()
 
     var isLocationActive: Boolean = false
         private set
@@ -111,6 +116,10 @@ class HomeViewModel @Inject constructor(
 
     fun updateMapOption(option: MapOption?) {
         _selectedOption.value = option
+    }
+
+    fun selectRoutePoint(point: MapNewPointRoute?) {
+        _selectedRoutePoint.value = point
     }
 
     fun setIsLocationActive(isActive: Boolean) {

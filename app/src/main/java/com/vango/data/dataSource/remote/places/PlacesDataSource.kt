@@ -1,18 +1,18 @@
 package com.vango.data.dataSource.remote.places
 
 import android.util.Log
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.CircularBounds
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.model.RectangularBounds
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.vango.domain.model.SearchResult
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+
 
 class PlacesDataSource @Inject constructor(
     private val placesClient: PlacesClient
@@ -24,6 +24,25 @@ class PlacesDataSource @Inject constructor(
                     currentLocation.latitude,
                     currentLocation.longitude
                 )
+
+                val circle = CircularBounds.newInstance(placesLatLng,  50000.0)
+
+
+
+                val distance = 50.0
+                val latDelta = distance / 111.0
+                val lonDelta = distance / (111.0 * Math.cos(Math.toRadians(currentLocation.latitude)))
+
+                val southwest = LatLng(
+                    currentLocation.latitude - latDelta,
+                    currentLocation.longitude - lonDelta
+                )
+                val northeast = LatLng(
+                    currentLocation.latitude + latDelta,
+                    currentLocation.longitude + lonDelta
+                )
+
+                val bounds = RectangularBounds.newInstance(southwest, northeast)
 
                 val request = FindAutocompletePredictionsRequest.builder()
                     .setQuery(query)

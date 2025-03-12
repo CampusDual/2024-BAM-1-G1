@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.SecureFlagPolicy
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorCard
@@ -61,8 +63,11 @@ fun MapLayersMenu(
         sheetState = sheetState,
         containerColor = Color.White,
         shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
-        scrimColor = Color.Black.copy(alpha = 0.4f),
         windowInsets = WindowInsets(0.dp),
+        properties = ModalBottomSheetDefaults.properties(
+            securePolicy = SecureFlagPolicy.SecureOn,
+            shouldDismissOnBackPress = true
+        ),
         dragHandle = null
     ) {
         Column(
@@ -319,6 +324,7 @@ fun MapLayersBottomSheetPreview() {
         onOptionSelected = {},
         selectedLayer = MapLayer.NORMAL,
         selectedOption = MapOption.TRAFFIC,
+
         onDismiss = {}
     )
 }

@@ -13,6 +13,7 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -62,11 +63,19 @@ fun MapComponent(
         }
     }
 
-    LaunchedEffect(currentLocation) {
-        cameraPositionState.animate(
-            CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
-            1000
-        )
+//    LaunchedEffect(currentLocation) {
+//        cameraPositionState.animate(
+//            CameraUpdateFactory.newLatLngZoom(currentLocation, 15f),
+//            1000
+//        )
+//        delay(1100)
+//        val bounds = cameraPositionState.projection?.visibleRegion?.latLngBounds
+//        val isVisible = bounds?.contains(currentLocation) ?: false
+//        onLocationVisibilityChanged(isVisible)
+//
+//    }
+
+    LaunchedEffect(cameraPositionState.position) {
         val bounds = cameraPositionState.projection?.visibleRegion?.latLngBounds
         bounds?.let {
             onLocationVisibilityChanged(it.contains(currentLocation))

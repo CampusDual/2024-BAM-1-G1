@@ -42,6 +42,7 @@ import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
+import com.vango.presentation.main.home.components.MapNewRoutePointMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
 import kotlinx.coroutines.delay
@@ -71,6 +72,11 @@ fun HomeScreen(
     var showPermissionDialog by remember { mutableStateOf(false) }
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
+
+    val selectedRoutePoint by viewModel.selectedRoutePoint.collectAsState()
+    var showMapCreatePointRouteMenu by remember { mutableStateOf(false) }
+
+
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -155,9 +161,6 @@ fun HomeScreen(
                 }
             )
 
-
-
-
             LocationActionButtons(
                 onMoveToLocation = {
                     scope.launch {
@@ -189,11 +192,13 @@ fun HomeScreen(
 
             BottomActionButtons(
                 onNavigateToResults = { navController.navigate("results") },
-                onAddAction = {  },
+                onAddAction = { showMapCreatePointRouteMenu = true },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)
             )
+
+
             SearchBar(
                 searchQuery = searchQuery,
                 onSearchQueryChange = viewModel::updateSearchQuery,
@@ -205,6 +210,8 @@ fun HomeScreen(
                     .padding(start = 20.dp, end = 20.dp)
             )
 
+
+            //bottomsheetscaffold
             if (showMapLayersMenu) {
                 MapLayersMenu(
                     selectedLayer = selectedLayer,
@@ -214,6 +221,16 @@ fun HomeScreen(
                     onDismiss = { showMapLayersMenu = false }
                 )
             }
+
+            if(showMapCreatePointRouteMenu){
+                MapNewRoutePointMenu(
+                    selectedRoutePoint = selectedRoutePoint,
+                    onLayerSelected = { layer -> viewModel.selectRoutePoint(layer)},
+                    onDismiss = { showMapCreatePointRouteMenu = false }
+                )
+
+            }
+
         }
     }
 }
@@ -227,3 +244,4 @@ fun HomeScreenPreview() {
         isPreview = true
     )
 }
+
