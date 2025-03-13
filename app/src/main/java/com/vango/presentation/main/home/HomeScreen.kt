@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,7 +57,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel(),
-    isPreview: Boolean = false
+    isPreview: Boolean = false,
+    onMapLayersMenuVisibilityChange: (Boolean) -> Unit = {}
 ) {
     val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val currentLocation by viewModel.currentLocation.collectAsState()
@@ -75,7 +79,6 @@ fun HomeScreen(
 
     val selectedRoutePoint by viewModel.selectedRoutePoint.collectAsState()
     var showMapCreatePointRouteMenu by remember { mutableStateOf(false) }
-
 
 
     LaunchedEffect(Unit) {
@@ -108,6 +111,10 @@ fun HomeScreen(
             }
             viewModel.clearPermissionRequest()
         }
+    }
+
+    LaunchedEffect(showMapLayersMenu) {
+        onMapLayersMenuVisibilityChange(showMapLayersMenu)
     }
 
     if (showPermissionDialog) {
@@ -195,7 +202,7 @@ fun HomeScreen(
                 onAddAction = { showMapCreatePointRouteMenu = true },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 101.dp)
             )
 
 
@@ -207,18 +214,17 @@ fun HomeScreen(
                 onResultSelected = viewModel::selectSearchResult,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(start = 20.dp, end = 20.dp)
             )
 
-
-            //bottomsheetscaffold
             if (showMapLayersMenu) {
+
                 MapLayersMenu(
                     selectedLayer = selectedLayer,
                     selectedOption = selectedOption,
                     onLayerSelected = { layer -> viewModel.updateMapLayer(layer) },
                     onOptionSelected = { option -> viewModel.updateMapOption(option) },
                     onDismiss = { showMapLayersMenu = false }
+
                 )
             }
 
@@ -228,11 +234,12 @@ fun HomeScreen(
                     onLayerSelected = { layer -> viewModel.selectRoutePoint(layer)},
                     onDismiss = { showMapCreatePointRouteMenu = false }
                 )
-
             }
 
         }
     }
+
+
 }
 
 @Preview(showBackground = true)
