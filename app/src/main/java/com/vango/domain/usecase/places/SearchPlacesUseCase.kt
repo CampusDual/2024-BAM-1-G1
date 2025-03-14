@@ -16,6 +16,10 @@ class SearchPlacesUseCase @Inject constructor(
         return searchRepository.getPlaceDetails(placeId)
     }
 
+    suspend fun searchNearby(query: String, location: LatLng, radius: Int, type: String): List<SearchResult> {
+        return searchRepository.searchPlaces(query, location)
+    }
+
     fun toLatLng(result: SearchResult): LatLng {
         return LatLng(result.latitude, result.longitude)
     }

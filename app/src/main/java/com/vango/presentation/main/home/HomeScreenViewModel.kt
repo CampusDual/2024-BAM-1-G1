@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val results = searchPlacesUseCase(query, _currentLocation.value).map {
-                    SearchResult(it.name, it.latitude, it.longitude, it.placeId, it.secondaryText, it.distanceMeters)
+                    SearchResult(it.name, it.latitude, it.longitude, it.placeId, it.secondaryText, it.types,it.distanceMeters)
                 }
                 _searchResults.value = results
             } catch (e: Exception) {
