@@ -5,8 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.presentation.main.home.components.BottomActionButtons
+import com.vango.presentation.main.home.components.BottomCoordButton
 import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
@@ -80,6 +78,7 @@ fun HomeScreen(
     val selectedRoutePoint by viewModel.selectedRoutePoint.collectAsState()
     var showMapCreatePointRouteMenu by remember { mutableStateOf(false) }
 
+    var showBottomActionButtons by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -115,6 +114,10 @@ fun HomeScreen(
 
     LaunchedEffect(showMapLayersMenu) {
         onMapLayersMenuVisibilityChange(showMapLayersMenu)
+    }
+
+    LaunchedEffect(showMapCreatePointRouteMenu) {
+        onMapLayersMenuVisibilityChange(showMapCreatePointRouteMenu)
     }
 
     if (showPermissionDialog) {
@@ -173,7 +176,12 @@ fun HomeScreen(
                     scope.launch {
                         viewModel.fetchUserLocation()
                         delay(100)
-                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f), 1000)
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(
+                                currentLocation,
+                                15f
+                            ), 1000
+                        )
                     }
                 },
                 onMapLayerClick = { showMapLayersMenu = true },
@@ -197,13 +205,31 @@ fun HomeScreen(
                     .padding(top = 120.dp, start = 5.5.dp)
             )
 
-            BottomActionButtons(
-                onNavigateToResults = { navController.navigate("results") },
-                onAddAction = { showMapCreatePointRouteMenu = true },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 101.dp)
-            )
+            if (showBottomActionButtons) {
+                BottomActionButtons(
+                    onNavigateToResults = { navController.navigate("results") },
+                    onAddAction = {
+                        showBottomActionButtons =
+                            false // Hide BottomActionButtons and show BottomCoordButton
+                        showMapCreatePointRouteMenu = true // Optionally keep this if needed
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 101.dp)
+                )
+            } else {
+                BottomCoordButton(
+                    onNavigateToResults = { navController.navigate("results") },
+                    onAddAction = {
+                        showBottomActionButtons =
+                            true
+                        showMapCreatePointRouteMenu = false
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 300.dp)
+                )
+            }
 
 
             SearchBar(
@@ -228,11 +254,14 @@ fun HomeScreen(
                 )
             }
 
-            if(showMapCreatePointRouteMenu){
+            if (showMapCreatePointRouteMenu) {
                 MapNewRoutePointMenu(
                     selectedRoutePoint = selectedRoutePoint,
-                    onLayerSelected = { layer -> viewModel.selectRoutePoint(layer)},
-                    onDismiss = { showMapCreatePointRouteMenu = false }
+                    onLayerSelected = { layer -> viewModel.selectRoutePoint(layer) },
+                    onDismiss = {
+                        showMapCreatePointRouteMenu = false
+                        showBottomActionButtons = true
+                    }
                 )
             }
 
