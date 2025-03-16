@@ -43,6 +43,8 @@ import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
+import com.vango.presentation.main.home.components.MapNewPointMenu
+import com.vango.presentation.main.home.components.MapNewPointRoute
 import com.vango.presentation.main.home.components.MapNewRoutePointMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
@@ -79,6 +81,8 @@ fun HomeScreen(
     var showMapCreatePointRouteMenu by remember { mutableStateOf(false) }
 
     var showBottomActionButtons by remember { mutableStateOf(true) }
+    var isSelectingPoint by remember { mutableStateOf(false) }
+    var showMapNewPointMenu by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -118,6 +122,23 @@ fun HomeScreen(
 
     LaunchedEffect(showMapCreatePointRouteMenu) {
         onMapLayersMenuVisibilityChange(showMapCreatePointRouteMenu)
+    }
+
+    LaunchedEffect(showMapNewPointMenu) {
+        onMapLayersMenuVisibilityChange(showMapNewPointMenu)
+    }
+
+
+
+    LaunchedEffect(viewModel.selectedPoint.collectAsState().value) {
+        viewModel.selectedPoint.value?.let { latLng ->
+            val address = viewModel.selectedAddress.value ?: "No address available"
+//            Toast.makeText(
+//                context,
+//                "Selected: (${latLng.latitude}, ${latLng.longitude})\nAddress: $address",
+//                Toast.LENGTH_LONG
+//            ).show()
+        }
     }
 
     if (showPermissionDialog) {
@@ -168,7 +189,19 @@ fun HomeScreen(
                 selectedLayer = selectedLayer,
                 onLocationVisibilityChanged = { visible ->
                     isLocationVisible = visible
+                },
+                isSelectingPoint = isSelectingPoint,
+                isShowingRoutePoint = showMapNewPointMenu,
+                onMapClick = {
+                    if (isSelectingPoint) {
+                        val centerLatLng = cameraPositionState.position.target
+                        viewModel.selectPoint(centerLatLng)
+                        isSelectingPoint = false
+                        showBottomActionButtons = true
+                        showMapNewPointMenu = true
+                    }
                 }
+
             )
 
             LocationActionButtons(
@@ -205,13 +238,12 @@ fun HomeScreen(
                     .padding(top = 120.dp, start = 5.5.dp)
             )
 
-            if (showBottomActionButtons) {
+            if (showBottomActionButtons && !isSelectingPoint) {
                 BottomActionButtons(
                     onNavigateToResults = { navController.navigate("results") },
                     onAddAction = {
-                        showBottomActionButtons =
-                            false // Hide BottomActionButtons and show BottomCoordButton
-                        showMapCreatePointRouteMenu = true // Optionally keep this if needed
+                        showBottomActionButtons = false
+                        showMapCreatePointRouteMenu = true
                     },
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -221,8 +253,7 @@ fun HomeScreen(
                 BottomCoordButton(
                     onNavigateToResults = { navController.navigate("results") },
                     onAddAction = {
-                        showBottomActionButtons =
-                            true
+                        showBottomActionButtons = true
                         showMapCreatePointRouteMenu = false
                     },
                     modifier = Modifier
@@ -257,7 +288,16 @@ fun HomeScreen(
             if (showMapCreatePointRouteMenu) {
                 MapNewRoutePointMenu(
                     selectedRoutePoint = selectedRoutePoint,
-                    onLayerSelected = { layer -> viewModel.selectRoutePoint(layer) },
+                    onLayerSelected = { routePoint ->
+                        viewModel.selectRoutePoint(routePoint)
+                        if (routePoint == MapNewPointRoute.CREATE_POINT) {
+                            println("DEBUG: Seleccionando CREATE_POINT")
+                            showMapCreatePointRouteMenu = false
+                            showMapNewPointMenu = true
+                            isSelectingPoint = true
+                            println("DEBUG: isSelectingPoint = $isSelectingPoint")
+                        }
+                    },
                     onDismiss = {
                         showMapCreatePointRouteMenu = false
                         showBottomActionButtons = true
@@ -265,10 +305,28 @@ fun HomeScreen(
                 )
             }
 
+            if (showMapNewPointMenu) {
+                MapNewPointMenu(
+                    selectedRoutePoint = selectedRoutePoint,
+                    selectedPoint = viewModel.selectedPoint.value,
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onLayerSelected = { },
+                    onDismiss = {
+                        showMapNewPointMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    onClearAndDismiss = {
+                        viewModel.clearSelectedPoint()
+                        showBottomActionButtons = false
+                        isSelectingPoint = true
+
+                    }
+                )
+            }
         }
     }
-
-
 }
 
 @Preview(showBackground = true)

@@ -82,12 +82,13 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "home"
     var showMapLayersMenu by remember { mutableStateOf(false) }
+    var showMapNewPointMenu by remember { mutableStateOf(false) }
 
     val navBarOffset = remember { Animatable(0f) }
     val navBarHeightPx = with(LocalDensity.current) { 85.dp.toPx() }
 
-    LaunchedEffect(showMapLayersMenu) {
-        if (showMapLayersMenu) {
+    LaunchedEffect(showMapLayersMenu || showMapNewPointMenu) {
+        if (showMapLayersMenu || showMapNewPointMenu) {
             launch {
                 navBarOffset.animateTo(
                     targetValue = navBarHeightPx,
@@ -149,6 +150,8 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                     isPreview = false,
                     onMapLayersMenuVisibilityChange = { isVisible ->
                         showMapLayersMenu = isVisible
+                        showMapNewPointMenu = isVisible
+
                     }
                 )
             }
