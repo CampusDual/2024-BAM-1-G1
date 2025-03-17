@@ -3198,11 +3198,11 @@ fun CustomDropdown() {
                     dropdownWidth = layoutCoordinates.size.width
                 }
                 .clickable { expanded = true }
-                .border(1.dp, Color.LightGray, shape = RoundedCornerShape(14.dp))
-                .background(Color.White, shape = RoundedCornerShape(14.dp))
+                .border(1.dp, Color.LightGray,  shape = if(expanded == true)RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp, bottomEnd = 0.dp, bottomStart = 0.dp) else RoundedCornerShape(14.dp))
+                .background(Color.White, shape = if(expanded == true)RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp, bottomEnd = 0.dp, bottomStart = 0.dp) else RoundedCornerShape(14.dp))
                 .padding(14.dp),
             color = Color.White,
-            shape = RoundedCornerShape(14.dp),
+            shape = if(expanded == true)RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp, bottomEnd = 0.dp, bottomStart = 0.dp) else RoundedCornerShape(14.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -3222,8 +3222,8 @@ fun CustomDropdown() {
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .width(with(LocalDensity.current) { dropdownWidth.toDp() })
-                .clip(RoundedCornerShape(14.dp))
-                .background(Color.White, shape = RoundedCornerShape(14.dp))
+                .clip(RoundedCornerShape(0.dp))
+                .background(Color.White, shape = RoundedCornerShape(0.dp))
         ) {
 
             opciones.forEach { opcion ->
