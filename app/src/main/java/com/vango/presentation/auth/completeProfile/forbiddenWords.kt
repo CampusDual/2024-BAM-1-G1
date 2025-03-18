@@ -1,4 +1,4 @@
-package com.vango.presentation.auth.profile
+package com.vango.presentation.auth.completeProfile
 
 enum class ForbiddenWords {
     // --- Palabras originales ---

@@ -1,4 +1,4 @@
-package com.vango.presentation.auth.profile
+package com.vango.presentation.auth.completeProfile
 
 enum class SpanishProvinces(val id: Int) {
     ALAVA(1), ALBACETE(2), ALICANTE(3), ALMERIA(4), ASTURIAS(5), AVILA(6),

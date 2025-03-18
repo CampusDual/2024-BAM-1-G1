@@ -55,7 +55,7 @@
             android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
-            android:name=".presentation.auth.profile.ActivityProfile"
+            android:name=".presentation.auth.completeProfile.ActivityCompleteProfile"
 
             android:exported="false" />
 

@@ -1,10 +1,10 @@
-package com.vango.presentation.auth.profile
+package com.vango.presentation.auth.completeProfile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ActivityProfileViewModel() : ViewModel() {
+class ActivityCompleteProfileViewModel() : ViewModel() {
 
     // Datos del perfil
     private var profilenick: String = ""

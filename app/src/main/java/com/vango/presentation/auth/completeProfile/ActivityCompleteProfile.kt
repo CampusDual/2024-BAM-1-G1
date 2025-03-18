@@ -1,10 +1,8 @@
-package com.vango.presentation.auth.profile
+package com.vango.presentation.auth.completeProfile
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -12,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
@@ -21,10 +18,10 @@ import com.vango.R
 import com.vango.databinding.ActivityProfileBinding
 import com.vango.presentation.main.ActivityMain
 
-class ActivityProfile : AppCompatActivity() {
+class ActivityCompleteProfile : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
-    private lateinit var viewModel: ActivityProfileViewModel
+    private lateinit var viewModel: ActivityCompleteProfileViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +29,7 @@ class ActivityProfile : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[ActivityProfileViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ActivityCompleteProfileViewModel::class.java]
 
         val countryPicker = findViewById<CountryCodePicker>(binding.ccpProfileInputCountry.id)
         countryPicker.setOnCountryChangeListener {
