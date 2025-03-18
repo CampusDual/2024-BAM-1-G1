@@ -1,4 +1,4 @@
-package com.vango.domain.entities
+package com.vango.domain.model
 
 sealed class AppError(override val message: String) : Exception(message) {
     class DetailedError(message: String) : AppError(message)

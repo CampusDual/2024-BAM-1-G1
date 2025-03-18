@@ -136,4 +136,8 @@ dependencies {
     implementation(libs.lottie)
 
     implementation (libs.country.picker)
+
+    implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.google.places)
 }

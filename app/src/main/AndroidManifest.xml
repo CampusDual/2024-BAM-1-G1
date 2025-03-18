@@ -29,7 +29,13 @@
             android:exported="false" />
         <activity
             android:name=".presentation.main.ActivityMain"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.auth.login.ActivityLogin"
             android:exported="false" />
@@ -38,12 +44,6 @@
             android:exported="false" />
         <activity
             android:name=".presentation.auth.accessAccount.ActivityAccessAccount"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.onboarding.onboarding3.ActivityOnboardingThree"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.onboarding.onboarding2.ActivityOnboardingTwo"
             android:exported="false" />
         <activity
             android:name=".presentation.auth.changePass.ActivityChangePass"
@@ -55,18 +55,9 @@
             android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
-            android:name=".presentation.auth.completeProfile.ActivityCompleteProfile"
+            android:name=".presentation.onboarding.ActivityOnboarding"
+            android:exported="false">
 
-            android:exported="false" />
-
-        <activity
-            android:name=".presentation.onboarding.onboarding1.ActivityOnboardingOne"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

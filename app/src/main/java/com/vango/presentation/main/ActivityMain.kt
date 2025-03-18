@@ -10,33 +10,36 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
@@ -46,8 +49,9 @@ import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
-class ActivityMain :  BaseActivity() {
+class ActivityMain : BaseActivity() {
     private lateinit var viewModel: ActivityMainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,11 +105,9 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
         ) {
             composable("home") {
                 HomeScreen(
-                    modifier = Modifier.padding(innerPadding), // Modifier para respetar el padding del Scaffold
-                    navController = navController, // Pasar el NavController real
-                    cameraPositionState = null, // Usar el valor por defecto de HomeScreen
-                    permissionState = null, // Usar el valor por defecto de HomeScreen
-                    isPreview = false // No es una previsualización
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController,
+                    isPreview = false
                 )
             }
             composable("routes") {
@@ -117,7 +119,7 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             composable("favorites") {
                 FavoritesScreen()
             }
-            composable("profile") {
+            composable("menu") {
                 ProfileScreen()
             }
             composable("results") {
@@ -128,43 +130,125 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
 }
 
 @Composable
-fun BottomNavigationBar(currentRoute: String, onItemSelected: (String) -> Unit, modifier: Modifier = Modifier) {
+fun BottomNavigationBar(
+    currentRoute: String,
+    onItemSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val colorMain = Color(ContextCompat.getColor(context, R.color.color_emphasis))
     NavigationBar(
         modifier = modifier
             .fillMaxWidth()
-            .height(65.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()),
-        tonalElevation = 0.dp
+            .wrapContentHeight(),
+            tonalElevation = 0.dp,
+
+        containerColor = Color(ContextCompat.getColor(context, R.color.white))
     ) {
+        val iconColorUnselected = Color.Black
 
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            modifier = Modifier.wrapContentHeight(),
+            icon = {
+                Icon(
+                    painter = if (currentRoute == "home") painterResource(id = R.drawable.home_fill) else painterResource(id = R.drawable.home),
+                    modifier = Modifier.size(25.dp),
+                    contentDescription = "Inicio",
+                    tint = if (currentRoute == "home") colorMain else iconColorUnselected
+                )
+            },
+            label = {
+                Text(
+                    text = "Inicio",
+                    fontSize = 9.sp,
+                    fontWeight = if (currentRoute == "home") FontWeight.Bold else FontWeight.Normal,
+
+                    color = if (currentRoute == "home") colorMain else iconColorUnselected
+
+                )
+            },
             selected = currentRoute == "home",
-            onClick = { onItemSelected("home") }
+            onClick = { onItemSelected("home") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Search, contentDescription = "Routes") },
-            label = { Text("Routes") },
+            modifier = Modifier.wrapContentHeight(),
+            icon = {
+                Icon(
+                    painter = if (currentRoute == "routes") painterResource(id = R.drawable.ruta_fill) else  painterResource(id = R.drawable.ruta),
+                    modifier = Modifier.size(25.dp),
+                    contentDescription = "Mis rutas",
+                    tint = if (currentRoute == "routes") colorMain else iconColorUnselected
+                )
+            },
+            label = {
+                Text(
+                    text = "Mis rutas",
+                    fontWeight = if (currentRoute == "routes") FontWeight.Bold else FontWeight.Normal,
+
+                    fontSize = 9.sp,
+                    color = if (currentRoute == "routes") colorMain else iconColorUnselected
+                )
+            },
             selected = currentRoute == "routes",
-            onClick = { onItemSelected("routes") }
+            onClick = { onItemSelected("routes") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.LocationOn, contentDescription = "Travels") },
-            label = { Text("Travels") },
+            modifier = Modifier.wrapContentHeight(),
+
+            icon = {
+                Icon(
+                    painter = if (currentRoute == "travels") painterResource(id = R.drawable.travel_fill) else  painterResource(id = R.drawable.travel),
+                    modifier = Modifier.size(25.dp),
+                    contentDescription = "Mis viajes",
+                    tint = if (currentRoute == "travels") colorMain else iconColorUnselected
+                )
+            },
+            label = {
+                Text(
+                    "Mis viajes",
+                    fontSize = 9.sp,
+                    fontWeight = if (currentRoute == "travels") FontWeight.Bold else FontWeight.Normal,
+
+                    color = if (currentRoute == "travels") colorMain else iconColorUnselected
+                )
+            },
             selected = currentRoute == "travels",
-            onClick = { onItemSelected("travels") }
+            onClick = { onItemSelected("travels") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
+
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-            label = { Text("Favorites") },
-            selected = currentRoute == "favorites",
-            onClick = { onItemSelected("favorites") }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") },
-            selected = currentRoute == "profile",
-            onClick = { onItemSelected("profile") }
+            modifier = Modifier.wrapContentHeight(),
+
+            icon = {
+                Icon(
+                    painter = if (currentRoute == "menu") painterResource(id = R.drawable.menu_fill) else  painterResource(id = R.drawable.menu),
+                    modifier = Modifier.size(25.dp),
+                    contentDescription = "Menú",
+                    tint = if (currentRoute == "menu") colorMain else iconColorUnselected
+                )
+            },
+            label = {
+                Text(
+                    text ="Menú",
+                    fontSize = 9.sp,
+                    fontWeight = if (currentRoute == "menu") FontWeight.Bold else FontWeight.Normal,
+                    color = if (currentRoute == "menu") colorMain else iconColorUnselected
+                )
+            },
+            selected = currentRoute == "menu",
+            onClick = { onItemSelected("menu") },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
     }
 }
@@ -189,8 +273,6 @@ fun HomeContentPreview() {
         HomeScreen(
             modifier = Modifier.padding(paddingValues),
             navController = rememberNavController(),
-            cameraPositionState = null,
-            permissionState = null,
             isPreview = true
         )
     }
@@ -209,7 +291,10 @@ fun BottomNavigationBarPreview() {
 }
 
 @Composable
-private fun customPadding(innerPadding: PaddingValues, systemBarsPadding: PaddingValues): PaddingValues {
+private fun customPadding(
+    innerPadding: PaddingValues,
+    systemBarsPadding: PaddingValues
+): PaddingValues {
     return PaddingValues(
         top = 0.dp,
         bottom = innerPadding.calculateBottomPadding(),

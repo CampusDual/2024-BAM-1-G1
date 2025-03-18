@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.vango.domain.entities.AppError
+import com.vango.domain.model.AppError
 
 object FirebaseAuthErrorMapper {
     fun map(exception: Exception): AppError {
