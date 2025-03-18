@@ -29,7 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".presentation.main.ActivityMain"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,8 +55,12 @@
             android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
+            android:name=".presentation.auth.completeProfile.ActivityCompleteProfile"
+            android:exported="false" />
+        <activity
             android:name=".presentation.onboarding.ActivityOnboarding"
             android:exported="false">
+
 
         </activity>
     </application>
