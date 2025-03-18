@@ -15,19 +15,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import com.hbb20.CountryCodePicker
 import com.vango.R
-import com.vango.databinding.ActivityProfileBinding
+import com.vango.databinding.ActivityCompleteProfileBinding
 import com.vango.presentation.main.ActivityMain
 
 class ActivityCompleteProfile : AppCompatActivity() {
 
-    private lateinit var binding: ActivityProfileBinding
+    private lateinit var binding: ActivityCompleteProfileBinding
     private lateinit var viewModel: ActivityCompleteProfileViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityProfileBinding.inflate(layoutInflater)
+        binding = ActivityCompleteProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[ActivityCompleteProfileViewModel::class.java]
 
