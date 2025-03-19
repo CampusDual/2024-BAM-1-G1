@@ -1,4 +1,5 @@
-package com.vango.presentation.main.profile
+package com.vango.presentation.main.menu.notification
+
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ProfileScreen(
-    modifier: Modifier = Modifier
+fun NotificationScreen(navController: NavHostController,
+                       modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -22,7 +25,7 @@ fun ProfileScreen(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Pantalla de Perfil",
+            "Pantalla de Notificaciones",
             style = MaterialTheme.typography.headlineMedium
         )
     }
@@ -31,5 +34,6 @@ fun ProfileScreen(
 @Preview(showBackground = true)
 @Composable
 fun RoutesScreenPreview() {
-    ProfileScreen()
+    val navController = rememberNavController()
+    NotificationScreen(navController = navController)
 }

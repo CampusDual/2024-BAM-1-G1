@@ -1,5 +1,6 @@
 package com.vango.presentation.main
 
+import MenuScreen
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -43,7 +44,11 @@ import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
-import com.vango.presentation.main.profile.ProfileScreen
+import com.vango.presentation.main.menu.logout.LogoutScreen
+import com.vango.presentation.main.menu.notification.NotificationScreen
+import com.vango.presentation.main.menu.profile.ProfileScreen
+import com.vango.presentation.main.menu.settings.SettingsScreen
+import com.vango.presentation.main.menu.support.SupportScreen
 import com.vango.presentation.main.results.HomeList
 import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
@@ -116,14 +121,34 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             composable("travels") {
                 TravelsScreen()
             }
-            composable("favorites") {
-                FavoritesScreen()
-            }
-            composable("menu") {
-                ProfileScreen()
-            }
+
             composable("results") {
                 HomeList(navController)
+            }
+            composable("menu") {
+                MenuScreen(
+                    navController = navController
+                )
+            }
+            // Componentes composables del menu
+
+            composable("profile") {
+                ProfileScreen(navController)
+            }
+            composable("notifications") {
+                NotificationScreen(navController)
+            }
+            composable("favorites") {
+                FavoritesScreen(navController)
+            }
+            composable("settings") {
+                SettingsScreen(navController)
+            }
+            composable("support") {
+                SupportScreen(navController)
+            }
+            composable("logout") {
+                LogoutScreen(navController)
             }
         }
     }
@@ -141,7 +166,7 @@ fun BottomNavigationBar(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-            tonalElevation = 0.dp,
+        tonalElevation = 0.dp,
 
         containerColor = Color(ContextCompat.getColor(context, R.color.white))
     ) {
@@ -151,7 +176,9 @@ fun BottomNavigationBar(
             modifier = Modifier.wrapContentHeight(),
             icon = {
                 Icon(
-                    painter = if (currentRoute == "home") painterResource(id = R.drawable.home_fill) else painterResource(id = R.drawable.home),
+                    painter = if (currentRoute == "home") painterResource(id = R.drawable.home_fill) else painterResource(
+                        id = R.drawable.home
+                    ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Inicio",
                     tint = if (currentRoute == "home") colorMain else iconColorUnselected
@@ -177,7 +204,9 @@ fun BottomNavigationBar(
             modifier = Modifier.wrapContentHeight(),
             icon = {
                 Icon(
-                    painter = if (currentRoute == "routes") painterResource(id = R.drawable.ruta_fill) else  painterResource(id = R.drawable.ruta),
+                    painter = if (currentRoute == "routes") painterResource(id = R.drawable.ruta_fill) else painterResource(
+                        id = R.drawable.ruta
+                    ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Mis rutas",
                     tint = if (currentRoute == "routes") colorMain else iconColorUnselected
@@ -203,7 +232,9 @@ fun BottomNavigationBar(
 
             icon = {
                 Icon(
-                    painter = if (currentRoute == "travels") painterResource(id = R.drawable.travel_fill) else  painterResource(id = R.drawable.travel),
+                    painter = if (currentRoute == "travels") painterResource(id = R.drawable.travel_fill) else painterResource(
+                        id = R.drawable.travel
+                    ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Mis viajes",
                     tint = if (currentRoute == "travels") colorMain else iconColorUnselected
@@ -230,7 +261,9 @@ fun BottomNavigationBar(
 
             icon = {
                 Icon(
-                    painter = if (currentRoute == "menu") painterResource(id = R.drawable.menu_fill) else  painterResource(id = R.drawable.menu),
+                    painter = if (currentRoute == "menu") painterResource(id = R.drawable.menu_fill) else painterResource(
+                        id = R.drawable.menu
+                    ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Menú",
                     tint = if (currentRoute == "menu") colorMain else iconColorUnselected
@@ -238,7 +271,7 @@ fun BottomNavigationBar(
             },
             label = {
                 Text(
-                    text ="Menú",
+                    text = "Menú",
                     fontSize = 9.sp,
                     fontWeight = if (currentRoute == "menu") FontWeight.Bold else FontWeight.Normal,
                     color = if (currentRoute == "menu") colorMain else iconColorUnselected
@@ -263,7 +296,7 @@ fun HomeContentPreview() {
         bottomBar = {
             BottomNavigationBar(
                 currentRoute = "home",
-                onItemSelected = { },
+                onItemSelected = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets(0, 0, 0, 0))
