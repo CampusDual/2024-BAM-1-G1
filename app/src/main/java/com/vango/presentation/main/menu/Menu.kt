@@ -13,12 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -108,7 +102,6 @@ fun MenuScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Lista de textos clicables con iconos
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
@@ -126,22 +119,22 @@ fun MenuScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { navController.navigate(route) } // Navegar a la ruta específica
+                        .clickable { navController.navigate(route) }
                         .padding(vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = when (route) {
-                            "profile" -> Icons.Default.Person
-                            "notifications" -> Icons.Default.Notifications
-                            "favorites" -> Icons.Default.FavoriteBorder
-                            "settings" -> Icons.Default.Settings
-                            "support" -> Icons.Default.Info
-                            "logout" -> Icons.Default.ExitToApp
-                            else -> Icons.Default.Person
+                    Image(
+                        painter = when (route) {
+                            "profile" -> painterResource(id = R.drawable.ic_profile)
+                            "notifications" -> painterResource(id = R.drawable.ic_notifications)
+                            "favorites" -> painterResource(id = R.drawable.ic_favorites)
+                            "settings" -> painterResource(id = R.drawable.ic_settings)
+                            "support" -> painterResource(id = R.drawable.ic_support)
+                            "logout" -> painterResource(id = R.drawable.ic_logout)
+                            else -> painterResource(id = R.drawable.ic_profile)
                         },
                         contentDescription = null,
-                        tint = Color.Black,
+                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black), // Opcional: Aplicar un color
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
