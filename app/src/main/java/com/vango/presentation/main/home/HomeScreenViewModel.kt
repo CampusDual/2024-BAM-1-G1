@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,8 @@ import com.vango.domain.usecase.places.SearchPlacesUseCase
 import com.vango.presentation.main.home.components.MapLayer
 import com.vango.presentation.main.home.components.MapNewPointRoute
 import com.vango.presentation.main.home.components.MapOption
+import com.vango.shared.dtos.places.PlacesRequestDto
+import com.vango.shared.dtos.places.PlacesResponseDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,10 +72,42 @@ class HomeViewModel @Inject constructor(
     private val _pointName = MutableStateFlow<String?>(null)
     val pointName: StateFlow<String?> = _pointName.asStateFlow()
 
+    private val _nearbyPlaces = MutableStateFlow<List<PlacesResponseDto>>(emptyList())
+    val nearbyPlaces: StateFlow<List<PlacesResponseDto>> = _nearbyPlaces.asStateFlow()
+
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         performSearch(query)
     }
+
+    fun searchNearbyPlaces(radius: Int = 5000) {
+        viewModelScope.launch {
+            try {
+//                val request = PlacesRequestDto(
+//                    lat = _currentLocation.value.latitude,
+//                    lng = _currentLocation.value.longitude,
+//                    radius = radius,
+//                    placeType = 5
+//                )
+
+                val request = PlacesRequestDto(
+                    lat = 42.5518048,
+                    lng = -9.0044835,
+                    radius = radius,
+                    placeType = 5
+                )
+
+                val results = searchPlacesUseCase.searchNearby(request)
+                _nearbyPlaces.value = results
+                Log.d("HomeViewModel", "Lugares cercanos encontrados: ${results.size}")
+            } catch (e: Exception) {
+                _errorMessage.value = "Error al buscar lugares cercanos: ${e.message}"
+                _nearbyPlaces.value = emptyList()
+            }
+        }
+    }
+
+
 
     fun selectPoint(latLng: LatLng) {
         viewModelScope.launch {

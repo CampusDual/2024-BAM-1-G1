@@ -2,6 +2,7 @@ package com.vango.presentation.main.home.components
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,6 +19,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.vango.R
+import com.vango.shared.dtos.places.PlacesResponseDto
 
 
 @Composable
@@ -30,9 +32,11 @@ fun MapComponent(
     onLocationVisibilityChanged: (Boolean) -> Unit = {},
     onMapClick: (LatLng) -> Unit,
     isSelectingPoint: Boolean = false,
-    isShowingRoutePoint: Boolean = false
+    isShowingRoutePoint: Boolean = false,
+    onMapLoadedCallback: () -> Unit = {},
+    nearbyPlaces: List<PlacesResponseDto>,
 
-) {
+    ) {
     val mapProperties = remember(selectedLayer) {
         MapProperties(
             mapType = when (selectedLayer) {
@@ -63,6 +67,7 @@ fun MapComponent(
             bounds?.let {
                 onLocationVisibilityChanged(it.contains(currentLocation))
             }
+            onMapLoadedCallback()
         },
         onMapClick = onMapClick
     ) {
@@ -74,9 +79,19 @@ fun MapComponent(
                     title = "Ubicación actual"
                 )
             }
-
-
         }
+
+        nearbyPlaces.forEach { place ->
+            place.toLatLng()?.let { latLng ->
+                Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
+                Marker(
+                    state = MarkerState(position = latLng),
+                    title = place.title,
+                    snippet = place.address
+                )
+            } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+        }
+
         if (isSelectingPoint) {
             Marker(
                 state = MarkerState(position = cameraPositionState.position.target),
@@ -92,6 +107,8 @@ fun MapComponent(
                 snippet = "Toca el mapa para confirmar",
             )
         }
+
+
     }
 
 

@@ -8,7 +8,7 @@ data class PlacesRequestDto(
 ) {
     fun toQueryMap(): Map<String, String> = mapOf(
         "lat" to lat.toString(),
-        "long" to lng.toString(),
+        "lng" to lng.toString(),
         "radius" to radius.toString(),
         "placeType" to placeType.toString()
     )

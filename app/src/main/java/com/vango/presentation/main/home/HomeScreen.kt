@@ -36,6 +36,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.presentation.main.home.components.BottomActionButtons
 import com.vango.presentation.main.home.components.BottomCoordButton
@@ -89,6 +91,9 @@ fun HomeScreen(
     var showMapNewPointNameMenu by remember { mutableStateOf(false) }
     var showMapNewPointTagMenu by remember { mutableStateOf(false) }
     var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
+    var isMapLoaded by remember { mutableStateOf(false) }
+
+    val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -102,6 +107,25 @@ fun HomeScreen(
 
     LaunchedEffect(currentLocation) {
         cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f), 1000)
+
+    }
+
+    LaunchedEffect(isMapLoaded, currentLocation) {
+        if (isMapLoaded && currentLocation != LatLng(40.416775, -3.703790) && nearbyPlaces.isEmpty()) {
+            viewModel.searchNearbyPlaces()
+        }
+    }
+
+    LaunchedEffect(nearbyPlaces) {
+        if (nearbyPlaces.isNotEmpty()) {
+            val boundsBuilder = LatLngBounds.Builder()
+            nearbyPlaces.forEach { place ->
+                place.toLatLng()?.let { boundsBuilder.include(it) }
+            }
+            boundsBuilder.include(currentLocation)
+            val bounds = boundsBuilder.build()
+            cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 100), 1000)
+        }
     }
 
     LaunchedEffect(errorMessage) {
@@ -193,6 +217,7 @@ fun HomeScreen(
                 currentLocation = currentLocation,
                 isLocationEnabled = locationPermission.status.isGranted,
                 selectedLayer = selectedLayer,
+                nearbyPlaces = nearbyPlaces,
                 onLocationVisibilityChanged = { visible ->
                     isLocationVisible = visible
                 },
@@ -206,6 +231,9 @@ fun HomeScreen(
                         showBottomActionButtons = true
                         showMapNewPointMenu = true
                     }
+                },
+                onMapLoadedCallback = {
+                    isMapLoaded = true
                 }
 
             )
