@@ -1,6 +1,5 @@
 package com.vango.presentation.main.home.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -31,8 +30,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -211,7 +208,8 @@ fun MapNewPointMenu(
     selectedAddress: String?,
     onLayerSelected: (MapNewPointRoute) -> Unit,
     onDismiss: () -> Unit,
-    onClearAndDismiss: () -> Unit
+    onClearAndDismiss: () -> Unit,
+    onConfirm: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
@@ -378,7 +376,7 @@ fun MapNewPointMenu(
                                     ) {
                                         Icon(
                                             painter = painterResource(id = R.drawable.check),
-                                            contentDescription = "Cerrar",
+                                            contentDescription = "Confirmar",
                                             modifier = Modifier
                                                 .width(12.5.dp)
                                                 .height(14.29.dp)
@@ -388,6 +386,7 @@ fun MapNewPointMenu(
                                                             600f,
                                                             animationSpec = tween(300)
                                                         )
+                                                        onConfirm()
                                                     }
                                                 },
                                             tint = Color.White
@@ -417,7 +416,9 @@ fun MapNewPointNameMenu(
     selectedPoint: LatLng?,
     selectedAddress: String?,
     onNameConfirmed: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
@@ -592,6 +593,7 @@ fun MapNewPointNameMenu(
                                                         600f,
                                                         animationSpec = tween(300)
                                                     )
+                                                    onConfirm()
                                                 }
                                             },
                                         tint = Color.White
@@ -617,8 +619,9 @@ fun MapNewPointNameMenu(
 fun MapNewPointTagMenu(
     selectedPoint: LatLng?,
     selectedAddress: String?,
-    onNameConfirmed: (String) -> Unit,
-    onDismiss: () -> Unit
+    onNameConfirmed: String?,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
@@ -902,10 +905,19 @@ fun MapNewPointTagMenu(
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(51.dp),
-
+                            .height(51.dp)
+                            .clickable {
+                                scope.launch {
+                                    offsetY.animateTo(
+                                        600f,
+                                        animationSpec = tween(300)
+                                    )
+                                    onConfirm()
+                                }
+                            },
                         shape = RoundedCornerShape(20.dp),
                         color = MainColor,
+
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.Center,
@@ -938,7 +950,7 @@ fun MapNewPointTagMenu(
 fun MapNewPointConfirmMenu(
     selectedPoint: LatLng?,
     selectedAddress: String?,
-    onNameConfirmed: (String) -> Unit,
+    onNameConfirmed: String?,
     onDismiss: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -1204,12 +1216,11 @@ fun MapNewPointConfirmMenu(
     }
 }
 
-
 @Composable
 fun MapNewPointTagServicesMenu(
     selectedPoint: LatLng?,
     selectedAddress: String?,
-    onNameConfirmed: (String) -> Unit,
+    onNameConfirmed: String?,
     onDismiss: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -3298,11 +3309,8 @@ fun CustomCheckBoxDays(
         ) {
             Text(text = day, color = Color.Black, fontSize = 12.sp)
         }
-
     }
-
 }
-
 
 @Composable
 fun CustomDropdownHour() {
@@ -3367,20 +3375,14 @@ fun CustomDropdownHour() {
     }
 }
 
-
-
-
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun MapNewImageServiceMenu() {
     var nameInput by remember { mutableStateOf("Punto de prueba") }
-    MapNewLastDatesMenu(
+    MapNewPointTagServicesMenu(
         selectedPoint = LatLng(42.704, 0.106),
         selectedAddress = "C. Felipe Coscolla, 11, 22004 Huesca",
-        onNameConfirmed = { name -> println("Nombre confirmado: $name") },
+        onNameConfirmed = { "menu" }.toString(),
         onDismiss = { println("Menú cerrado") }
     )
 }

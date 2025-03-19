@@ -44,7 +44,10 @@ import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
 import com.vango.presentation.main.home.components.MapNewPointMenu
+import com.vango.presentation.main.home.components.MapNewPointNameMenu
 import com.vango.presentation.main.home.components.MapNewPointRoute
+import com.vango.presentation.main.home.components.MapNewPointTagMenu
+import com.vango.presentation.main.home.components.MapNewPointTagServicesMenu
 import com.vango.presentation.main.home.components.MapNewRoutePointMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
@@ -83,6 +86,9 @@ fun HomeScreen(
     var showBottomActionButtons by remember { mutableStateOf(true) }
     var isSelectingPoint by remember { mutableStateOf(false) }
     var showMapNewPointMenu by remember { mutableStateOf(false) }
+    var showMapNewPointNameMenu by remember { mutableStateOf(false) }
+    var showMapNewPointTagMenu by remember { mutableStateOf(false) }
+    var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -119,25 +125,25 @@ fun HomeScreen(
     LaunchedEffect(showMapLayersMenu) {
         onMapLayersMenuVisibilityChange(showMapLayersMenu)
     }
-
     LaunchedEffect(showMapCreatePointRouteMenu) {
         onMapLayersMenuVisibilityChange(showMapCreatePointRouteMenu)
     }
-
     LaunchedEffect(showMapNewPointMenu) {
         onMapLayersMenuVisibilityChange(showMapNewPointMenu)
     }
-
-
+    LaunchedEffect(showMapNewPointNameMenu) {
+        onMapLayersMenuVisibilityChange(showMapNewPointNameMenu)
+    }
+    LaunchedEffect(showMapNewPointTagMenu) {
+        onMapLayersMenuVisibilityChange(showMapNewPointTagMenu)
+    }
+    LaunchedEffect(showMapNewPointTagServicesMenu) {
+        onMapLayersMenuVisibilityChange(showMapNewPointTagServicesMenu)
+    }
 
     LaunchedEffect(viewModel.selectedPoint.collectAsState().value) {
         viewModel.selectedPoint.value?.let { latLng ->
             val address = viewModel.selectedAddress.value ?: "No address available"
-//            Toast.makeText(
-//                context,
-//                "Selected: (${latLng.latitude}, ${latLng.longitude})\nAddress: $address",
-//                Toast.LENGTH_LONG
-//            ).show()
         }
     }
 
@@ -322,7 +328,67 @@ fun HomeScreen(
                         showBottomActionButtons = false
                         isSelectingPoint = true
 
+                    },
+                    onConfirm = {
+                        showMapNewPointMenu = false
+                        showMapNewPointNameMenu = true
                     }
+                )
+            }
+
+            if (showMapNewPointNameMenu) {
+                MapNewPointNameMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onDismiss = {
+                        showMapNewPointNameMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    onNameConfirmed = { name ->
+                        viewModel.saveNewPoint(name)
+                        showMapNewPointNameMenu = false
+                        showBottomActionButtons = true
+                    },
+                    onConfirm = {
+                        showMapNewPointNameMenu = false
+                        showMapNewPointTagMenu = true
+
+                    }
+                )
+            }
+
+            if(showMapNewPointTagMenu){
+                MapNewPointTagMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewPointTagMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = viewModel.selectedAddress.value,
+                    onConfirm = {
+                        showMapNewPointTagMenu = false
+                        showMapNewPointTagServicesMenu = true
+
+                    }
+                )
+            }
+
+            if(showMapNewPointTagServicesMenu){
+                MapNewPointTagServicesMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewPointTagServicesMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = viewModel.selectedAddress.value
                 )
             }
         }

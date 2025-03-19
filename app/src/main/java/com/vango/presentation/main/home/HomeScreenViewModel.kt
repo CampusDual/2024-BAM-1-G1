@@ -177,4 +177,11 @@ class HomeViewModel @Inject constructor(
         _pointName.value = null
     }
 
+    fun saveNewPoint(name: String) {
+        selectedPoint.value?.let { point ->
+            println("Punto guardado: $name en ($point)")
+            clearSelectedPoint()
+        }
+    }
+
 }
