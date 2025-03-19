@@ -28,9 +28,14 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         return suspendCoroutine { continuation ->
             auth.signInWithEmailAndPassword(userLoginDto.email, userLoginDto.password)
                 .addOnSuccessListener { authResult ->
-                    val userId = authResult.user?.uid
-                    if (userId != null) {
-                        continuation.resume(Result.success(AuthDtoResponseDto(userId)))
+                    val user = authResult.user
+                    if (user != null) {
+                        user.getIdToken(false).addOnSuccessListener { tokenResult ->
+                            val idToken = tokenResult.token
+                            continuation.resume(Result.success(AuthDtoResponseDto(user.uid, idToken)))
+                        }.addOnFailureListener { exception ->
+                            continuation.resume(Result.failure(FirebaseAuthErrorMapper.map(exception)))
+                        }
                     } else {
                         continuation.resume(Result.failure(AppError.DetailedError("El usuario es nulo.")))
                     }
@@ -45,9 +50,15 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         return suspendCoroutine { continuation ->
             auth.signInWithCustomToken(userLoginWhitTokenDto.token)
                 .addOnSuccessListener { authResult ->
-                    val userId = authResult.user?.uid
-                    if (userId != null) {
-                        continuation.resume(Response.success(AuthWhitTokenResponseDto(userId)))
+                    val user = authResult.user
+                    if (user != null) {
+                        user.getIdToken(false).addOnSuccessListener { tokenResult ->
+                            val idToken = tokenResult.token
+                            continuation.resume(Response.success(AuthWhitTokenResponseDto(user.uid, idToken)))
+                        }.addOnFailureListener { exception ->
+                            val errorBody = FirebaseAuthErrorMapper.map(exception).message?.toResponseBody(null)
+                            continuation.resume(Response.error(401, errorBody ?: "Error al obtener token".toResponseBody(null)))
+                        }
                     } else {
                         val errorBody = "El usuario es nulo.".toResponseBody(null)
                         continuation.resume(Response.error(400, errorBody))
@@ -59,7 +70,6 @@ class AuthRemoteDataSourceImpl @Inject constructor(
                     continuation.resume(Response.error(401, errorBody))
                 }
         }
-
     }
 
     override suspend fun recoverPassword(email: String): Result<Boolean> {

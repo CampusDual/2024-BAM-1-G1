@@ -1,6 +1,7 @@
 package com.vango.di
 
 import com.vango.BuildConfig
+import com.vango.data.dataSource.remote.api.PlacesAPi
 import com.vango.data.dataSource.remote.api.UserApi
 import com.vango.utils.data.AccessTokenInterceptor
 import dagger.Module
@@ -28,11 +29,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor, accessTokenInterceptor: AccessTokenInterceptor): OkHttpClient {
         return OkHttpClient
             .Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(accessTokenInterceptor)
             .build()
     }
 
@@ -52,5 +54,13 @@ object NetworkModule {
     fun provideApiService(retrofit: Retrofit): UserApi {
         return retrofit.create(UserApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun providePlacesApi(retrofit: Retrofit): PlacesAPi {
+        return retrofit.create(PlacesAPi::class.java)
+    }
+
+
 }
 
