@@ -27,13 +27,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.vango.R
 
 @Composable
 fun MenuScreen(
-    navController: NavHostController
+    navController: NavController
 ) {
     Column(
         modifier = Modifier
@@ -45,13 +46,13 @@ fun MenuScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp),
+                .padding(top = 30.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 onClick = { navController.navigate("home") },
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(32.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -61,13 +62,13 @@ fun MenuScreen(
             }
             Text(
                 text = "Perfil de Usuario",
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.width(40.dp)) // Espacio reservado para equilibrar
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Columna central con la foto, nick y tipo de cuenta
         Column(
@@ -79,7 +80,7 @@ fun MenuScreen(
                 contentDescription = "Foto de perfil",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(180.dp)
+                    .size(80.dp)
                     .clip(CircleShape)
             )
 
@@ -87,15 +88,15 @@ fun MenuScreen(
 
             Text(
                 text = "Usuario123", // Nick del usuario
-                fontSize = 24.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 text = "Premium", // O "Cuenta Free" según corresponda
-                fontSize = 18.sp,
+                fontSize = 10.sp,
                 color = Color.Red
             )
         }
@@ -120,7 +121,7 @@ fun MenuScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { navController.navigate(route) }
-                        .padding(vertical = 12.dp),
+                        .padding(vertical = 18.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
@@ -135,12 +136,12 @@ fun MenuScreen(
                         },
                         contentDescription = null,
                         colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black), // Opcional: Aplicar un color
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = title,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         color = Color.Black
                     )
                 }

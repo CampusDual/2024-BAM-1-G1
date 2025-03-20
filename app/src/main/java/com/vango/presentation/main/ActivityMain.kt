@@ -44,9 +44,12 @@ import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
+import com.vango.presentation.main.menu.changescreens.ChangeEmailScreen
+import com.vango.presentation.main.menu.changescreens.ChangePasswordScreen
 import com.vango.presentation.main.menu.logout.LogoutScreen
 import com.vango.presentation.main.menu.notification.NotificationScreen
 import com.vango.presentation.main.menu.profile.ProfileScreen
+import com.vango.presentation.main.menu.profile.ProfileScreenNavHost
 import com.vango.presentation.main.menu.settings.SettingsScreen
 import com.vango.presentation.main.menu.support.SupportScreen
 import com.vango.presentation.main.results.HomeList
@@ -126,9 +129,8 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                 HomeList(navController)
             }
             composable("menu") {
-                MenuScreen(
-                    navController = navController
-                )
+               MenuScreen(navController
+               )
             }
             // Componentes composables del menu
 
