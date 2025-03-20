@@ -80,21 +80,14 @@ class HomeViewModel @Inject constructor(
         performSearch(query)
     }
 
-    fun searchNearbyPlaces(radius: Int = 5000) {
+    fun searchNearbyPlaces(radius: Int, placeType: Int) {
         viewModelScope.launch {
             try {
-//                val request = PlacesRequestDto(
-//                    lat = _currentLocation.value.latitude,
-//                    lng = _currentLocation.value.longitude,
-//                    radius = radius,
-//                    placeType = 5
-//                )
-
                 val request = PlacesRequestDto(
-                    lat = 42.5518048,
-                    lng = -9.0044835,
+                    lat = _currentLocation.value.latitude,
+                    lng = _currentLocation.value.longitude,
                     radius = radius,
-                    placeType = 5
+                    placeType = placeType
                 )
 
                 val results = searchPlacesUseCase.searchNearby(request)

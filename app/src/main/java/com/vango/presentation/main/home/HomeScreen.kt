@@ -53,6 +53,7 @@ import com.vango.presentation.main.home.components.MapNewPointTagServicesMenu
 import com.vango.presentation.main.home.components.MapNewRoutePointMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
+import com.vango.shared.dtos.places.PlacesResponseDto
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -92,6 +93,7 @@ fun HomeScreen(
     var showMapNewPointTagMenu by remember { mutableStateOf(false) }
     var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
     var isMapLoaded by remember { mutableStateOf(false) }
+    var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
 
     val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
 
@@ -112,7 +114,7 @@ fun HomeScreen(
 
     LaunchedEffect(isMapLoaded, currentLocation) {
         if (isMapLoaded && currentLocation != LatLng(40.416775, -3.703790) && nearbyPlaces.isEmpty()) {
-            viewModel.searchNearbyPlaces()
+            viewModel.searchNearbyPlaces(radius = 5000, placeType = 5)
         }
     }
 
@@ -211,6 +213,7 @@ fun HomeScreen(
         }
     } else {
         Box(modifier = Modifier.fillMaxSize()) {
+
             MapComponent(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
@@ -234,6 +237,9 @@ fun HomeScreen(
                 },
                 onMapLoadedCallback = {
                     isMapLoaded = true
+                },
+                onPlaceSelected = { place ->
+                    selectedPlace = place
                 }
 
             )
@@ -272,7 +278,7 @@ fun HomeScreen(
                     .padding(top = 120.dp, start = 5.5.dp)
             )
 
-            if (showBottomActionButtons && !isSelectingPoint) {
+            if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
                 BottomActionButtons(
                     onNavigateToResults = { navController.navigate("results") },
                     onAddAction = {
@@ -283,7 +289,7 @@ fun HomeScreen(
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 101.dp)
                 )
-            } else {
+            } else if (selectedPlace == null){
                 BottomCoordButton(
                     onNavigateToResults = { navController.navigate("results") },
                     onAddAction = {
@@ -295,6 +301,8 @@ fun HomeScreen(
                         .padding(bottom = 300.dp)
                 )
             }
+
+
 
 
             SearchBar(
