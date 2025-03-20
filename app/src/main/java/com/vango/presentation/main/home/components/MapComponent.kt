@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -79,6 +80,7 @@ fun MapComponent(
     isShowingRoutePoint: Boolean = false,
     onMapLoadedCallback: () -> Unit = {},
     nearbyPlaces: List<PlacesResponseDto>,
+    selectedFilterTypes: Set<Int>,
     onPlaceSelected: (PlacesResponseDto?) -> Unit = {}
     ) {
     val context = LocalContext.current
@@ -106,9 +108,25 @@ fun MapComponent(
         )
     }
 
-    val markerStates = remember { mutableStateListOf<MarkerState>() }
-    var firstLoadMarkers by remember { mutableStateOf(true) }
+//    var firstLoadMarkers by remember { mutableStateOf(true) }
+    val markerStatesMap = remember { mutableStateMapOf<String, MarkerState>() }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
+
+    val filteredPlaces = remember(nearbyPlaces, selectedFilterTypes) {
+        val filtered = if (selectedFilterTypes.isEmpty()) {
+            nearbyPlaces
+        } else {
+            nearbyPlaces.filter { place ->
+                place.type in selectedFilterTypes
+            }
+        }
+        Log.d("MapComponent", "NearbyPlaces: ${nearbyPlaces.size}, FilteredPlaces: ${filtered.size}, Filters: $selectedFilterTypes")
+        filtered.forEach { place ->
+            Log.d("MapComponent", "Filtered Place: ${place.title}, Type: ${place.type}, PlaceId: ${place.placeId}")
+        }
+        filtered
+    }
+
 //    LaunchedEffect(nearbyPlaces) {
 //        if (firstLoadMarkers && nearbyPlaces.isNotEmpty()) {
 //            markerStates.clear()
@@ -122,15 +140,31 @@ fun MapComponent(
 //        }
 //    }
 
-    LaunchedEffect(nearbyPlaces) {
-        markerStates.clear()
-        nearbyPlaces.forEach { place ->
-            place.toLatLng()?.let { latLng ->
-                Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
-                markerStates.add(MarkerState(position = latLng))
-            } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+    LaunchedEffect(filteredPlaces) {
+        val currentPlaceIds = filteredPlaces.map { it.placeId }.toSet()
+        markerStatesMap.keys.retainAll(currentPlaceIds)
+
+        filteredPlaces.forEach { place ->
+            place.placeId?.let { placeId ->
+                if (!markerStatesMap.containsKey(placeId)) {
+                    place.toLatLng()?.let { latLng ->
+                        Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
+                        markerStatesMap[placeId] = MarkerState(position = latLng)
+                    } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+                }
+            }
         }
     }
+
+//    LaunchedEffect(nearbyPlaces) {
+//        markerStates.clear()
+//        nearbyPlaces.forEach { place ->
+//            place.toLatLng()?.let { latLng ->
+//                Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
+//                markerStates.add(MarkerState(position = latLng))
+//            } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+//        }
+//    }
 
     Box(modifier = modifier.fillMaxSize()) {
         GoogleMap(
@@ -161,27 +195,28 @@ fun MapComponent(
                 }
             }
 
-            markerStates.forEachIndexed { index, markerState ->
-                if (index < nearbyPlaces.size) {
-                    val place = nearbyPlaces[index]
-                    Marker(
-                        state = markerState,
-                        title = place.title,
-                        snippet = place.address,
-                        icon = when (place.type) {
-                            0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
-                            1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
-                            2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
-                            3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
-                            4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
-                            else -> null
-                        },
-                        onClick = {
-                            selectedPlace = place
-                            onPlaceSelected(place)
-                            true
-                        }
-                    )
+            filteredPlaces.forEach { place ->
+                place.placeId?.let { placeId ->
+                    markerStatesMap[placeId]?.let { markerState ->
+                        Marker(
+                            state = markerState,
+                            title = place.title,
+                            snippet = place.address,
+                            icon = when (place.type) {
+                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
+                                else -> null
+                            },
+                            onClick = {
+                                selectedPlace = place
+                                onPlaceSelected(place)
+                                true
+                            }
+                        )
+                    }
                 }
             }
 

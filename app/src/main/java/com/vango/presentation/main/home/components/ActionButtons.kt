@@ -263,6 +263,7 @@ fun TopCenterButton(
     onNavigateToResults: () -> Unit,
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
+    selectedFilterTypes: Set<Int>,
     viewModel: HomeViewModel,
 ) {
     Surface(

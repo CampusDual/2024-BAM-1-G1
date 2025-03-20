@@ -96,7 +96,7 @@ fun HomeScreen(
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
 
     val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
-
+    var selectedFilterTypes by remember { mutableStateOf<Set<Int>>(emptySet()) }
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
     }
@@ -221,6 +221,7 @@ fun HomeScreen(
                 isLocationEnabled = locationPermission.status.isGranted,
                 selectedLayer = selectedLayer,
                 nearbyPlaces = nearbyPlaces,
+                selectedFilterTypes = selectedFilterTypes,
                 onLocationVisibilityChanged = { visible ->
                     isLocationVisible = visible
                 },
@@ -268,13 +269,17 @@ fun HomeScreen(
             FilterMenu(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .offset(y = 120.dp, x = 20.dp)
+                    .offset(y = 120.dp, x = 20.dp),
+                onFiltersChanged = { filters ->
+                    selectedFilterTypes = filters
+                }
             )
 
             TopCenterButton(
                 onNavigateToResults = { navController.navigate("results") },
                 viewModel = viewModel,
                 cameraPositionState = cameraPositionState,
+                selectedFilterTypes = selectedFilterTypes,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 120.dp, start = 5.5.dp)
