@@ -197,9 +197,16 @@ fun MapComponent(
 
             filteredPlaces.forEach { place ->
                 place.placeId?.let { placeId ->
-                    markerStatesMap[placeId]?.let { markerState ->
+                    val markerState = remember(placeId) {
+                        place.toLatLng()?.let { MarkerState(position = it) }
+                            ?: run {
+                                Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+                                null
+                            }
+                    }
+                    markerState?.let {
                         Marker(
-                            state = markerState,
+                            state = it,
                             title = place.title,
                             snippet = place.address,
                             icon = when (place.type) {
