@@ -23,7 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.maps.android.compose.CameraPositionState
 import com.vango.R
+import com.vango.presentation.main.home.HomeViewModel
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 import com.vango.presentation.theme.BackgroundColorList
@@ -259,10 +261,15 @@ fun BottomCoordButton(
 @Composable
 fun TopCenterButton(
     onNavigateToResults: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cameraPositionState: CameraPositionState,
+    viewModel: HomeViewModel,
 ) {
     Surface(
-        onClick = onNavigateToResults,
+        onClick = {
+            val centerLatLng = cameraPositionState.position.target
+            viewModel.searchNearbyPlaces(centerLatLng, radius = 5000, placeType = 5)
+        },
         modifier = modifier
             .width(128.dp)
             .height(40.dp)

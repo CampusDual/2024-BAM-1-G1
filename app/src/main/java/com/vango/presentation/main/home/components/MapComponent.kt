@@ -109,16 +109,26 @@ fun MapComponent(
     val markerStates = remember { mutableStateListOf<MarkerState>() }
     var firstLoadMarkers by remember { mutableStateOf(true) }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
+//    LaunchedEffect(nearbyPlaces) {
+//        if (firstLoadMarkers && nearbyPlaces.isNotEmpty()) {
+//            markerStates.clear()
+//            nearbyPlaces.forEach { place ->
+//                place.toLatLng()?.let { latLng ->
+//                    Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
+//                    markerStates.add(MarkerState(position = latLng))
+//                } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+//            }
+//            firstLoadMarkers = false
+//        }
+//    }
+
     LaunchedEffect(nearbyPlaces) {
-        if (firstLoadMarkers && nearbyPlaces.isNotEmpty()) {
-            markerStates.clear()
-            nearbyPlaces.forEach { place ->
-                place.toLatLng()?.let { latLng ->
-                    Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
-                    markerStates.add(MarkerState(position = latLng))
-                } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
-            }
-            firstLoadMarkers = false
+        markerStates.clear()
+        nearbyPlaces.forEach { place ->
+            place.toLatLng()?.let { latLng ->
+                Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
+                markerStates.add(MarkerState(position = latLng))
+            } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
         }
     }
 
@@ -152,27 +162,53 @@ fun MapComponent(
             }
 
             markerStates.forEachIndexed { index, markerState ->
-                val place = nearbyPlaces[index]
-                Marker(
-                    state = markerState,
-                    title = place.title,
-                    snippet = place.address,
-                    icon = when (place.type) {
-
-                        0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
-                        1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
-                        2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
-                        3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
-                        4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
-                        else -> null
-                    },
-                    onClick = {
-                        selectedPlace = place
-                        onPlaceSelected(place)
-                        true
-                    }
-                )
+                if (index < nearbyPlaces.size) {
+                    val place = nearbyPlaces[index]
+                    Marker(
+                        state = markerState,
+                        title = place.title,
+                        snippet = place.address,
+                        icon = when (place.type) {
+                            0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+                            1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+                            2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+                            3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+                            4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
+                            else -> null
+                        },
+                        onClick = {
+                            selectedPlace = place
+                            onPlaceSelected(place)
+                            true
+                        }
+                    )
+                }
             }
+
+
+
+//            markerStates.forEachIndexed { index, markerState ->
+//                val place = nearbyPlaces[index]
+//                Marker(
+//                    state = markerState,
+//                    title = place.title,
+//                    snippet = place.address,
+//                    icon = when (place.type) {
+//
+//                        0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+//                        1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+//                        2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+//                        3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+//                        4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
+//                        else -> null
+//                    },
+//                    onClick = {
+//                        selectedPlace = place
+//                        onPlaceSelected(place)
+//                        true
+//                    }
+//                )
+//            }
 
             if (isSelectingPoint) {
                 Marker(

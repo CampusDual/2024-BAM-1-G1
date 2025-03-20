@@ -114,7 +114,7 @@ fun HomeScreen(
 
     LaunchedEffect(isMapLoaded, currentLocation) {
         if (isMapLoaded && currentLocation != LatLng(40.416775, -3.703790) && nearbyPlaces.isEmpty()) {
-            viewModel.searchNearbyPlaces(radius = 5000, placeType = 5)
+            viewModel.searchNearbyPlaces(radius = 5000, placeType = 5, latLng = currentLocation)
         }
     }
 
@@ -273,6 +273,8 @@ fun HomeScreen(
 
             TopCenterButton(
                 onNavigateToResults = { navController.navigate("results") },
+                viewModel = viewModel,
+                cameraPositionState = cameraPositionState,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 120.dp, start = 5.5.dp)
