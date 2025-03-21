@@ -1,6 +1,7 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -23,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.vango.R
+import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 
 @Composable
 fun MenuScreen(
@@ -55,13 +59,13 @@ fun MenuScreen(
                 modifier = Modifier.size(32.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Close,
+                    painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = "Cerrar",
-                    tint = Color.Black
+                    tint = Color.Unspecified
                 )
             }
             Text(
-                text = "Perfil de Usuario",
+                text = "Menú",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -75,14 +79,31 @@ fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Reemplaza con tu imagen
-                contentDescription = "Foto de perfil",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-            )
+            Box() {
+                Image(
+                    painter = painterResource(id = R.drawable.default_image_profile), // Reemplaza con tu imagen
+                    contentDescription = "Foto de perfil",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                )
+                IconButton(
+                    onClick = { navController.navigate("change_profile_picture") },
+                    modifier = Modifier.size(27.dp).align( Alignment.BottomEnd)
+                )
+                {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_change_profile_image),
+                        contentDescription = "Editar",
+                        tint = Color.Unspecified
+
+                    )
+                }
+            }
+
+
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -96,8 +117,10 @@ fun MenuScreen(
 
             Text(
                 text = "Premium", // O "Cuenta Free" según corresponda
+                fontWeight = FontWeight.ExtraBold,
+                fontStyle = FontStyle.Italic,
                 fontSize = 10.sp,
-                color = Color.Red
+                color = BackgroundColorButtonPrincipal
             )
         }
 
@@ -142,13 +165,21 @@ fun MenuScreen(
                     Text(
                         text = title,
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal
                     )
+
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 0.dp),
+                    thickness = 1.dp,
+                    color = Color.Gray.copy(alpha = 0.2f)
+                )
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

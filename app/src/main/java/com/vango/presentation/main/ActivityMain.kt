@@ -268,7 +268,7 @@ fun BottomNavigationBar(
                     ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Menú",
-                    tint = if (currentRoute == "menu") colorMain else iconColorUnselected
+                    tint = if (currentRoute == "menu"||currentRoute == "profile"||currentRoute == "notifications"||currentRoute == "favorites"||currentRoute == "settings"||currentRoute == "support"||currentRoute == "logout") colorMain else iconColorUnselected
                 )
             },
             label = {
@@ -276,7 +276,7 @@ fun BottomNavigationBar(
                     text = "Menú",
                     fontSize = 9.sp,
                     fontWeight = if (currentRoute == "menu") FontWeight.Bold else FontWeight.Normal,
-                    color = if (currentRoute == "menu") colorMain else iconColorUnselected
+                    color = if (currentRoute == "menu"||currentRoute == "profile"||currentRoute == "notifications"||currentRoute == "favorites"||currentRoute == "settings"||currentRoute == "support"||currentRoute == "logout") colorMain else iconColorUnselected
                 )
             },
             selected = currentRoute == "menu",

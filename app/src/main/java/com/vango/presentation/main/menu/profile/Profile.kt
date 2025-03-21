@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,8 @@ import com.vango.presentation.main.menu.changescreens.ChangePasswordScreen
 import com.vango.presentation.theme.StyledButton
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.vango.R
 
 @AndroidEntryPoint
 class ProfileActivity : BaseActivity() {
@@ -60,6 +63,7 @@ fun ProfileScreen(navController: NavController) {
     val nestedNavController = rememberNavController()
 
     Scaffold(
+        Modifier.padding(20.dp,0.dp,20.dp,0.dp),
         topBar = {
             Row(
                 modifier = Modifier
@@ -69,13 +73,13 @@ fun ProfileScreen(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { navController.popBackStack() }, // Ir hacia atrás
+                    onClick = { navController.popBackStack()}, // Ir hacia atrás
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        painter = painterResource(id = R.drawable.ic_go_back),
                         contentDescription = "Ir atrás",
-                        tint = Color.Black
+                        tint = Color.Unspecified
                     )
                 }
                 Text(
@@ -88,9 +92,9 @@ fun ProfileScreen(navController: NavController) {
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Close,
+                        painter = painterResource(id = R.drawable.ic_close),
                         contentDescription = "Cerrar",
-                        tint = Color.Black
+                        tint = Color.Unspecified
                     )
                 }
             }
@@ -135,7 +139,7 @@ fun ProfileScreen(navController: NavController) {
                 // Contenido dinámico según el botón seleccionado
                 when (selectedSection) {
                     "mis_datos" -> {
-                        ProfileScreenNavHost(navController = nestedNavController)
+                        ProfileScreenNavHost(navController= nestedNavController)
                     }
 
                     "premium" -> PremiumContent()

@@ -69,17 +69,17 @@ fun VanGOTheme(
         content = content
     )
 }
-val customColor = Color(android.graphics.Color.parseColor("#32788C"))
+
 @Composable
 fun StyledButton(
     text: String,
     onClick: () -> Unit,
     isSelected: Boolean = false,
     modifier: Modifier = Modifier,
-    selectedBackgroundColor: Color = customColor, // Color seleccionado
-    unselectedBackgroundColor: Color = Color.LightGray, // Color deseleccionado
+    selectedBackgroundColor: Color = BackgroundButtonColor, // Color seleccionado
+    unselectedBackgroundColor: Color = BackgroundUnselected, // Color deseleccionado
     contentColor: Color = Color.White,
-    cornerRadius: Dp = 16.dp,
+    cornerRadius: Dp = 10.dp,
     padding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
 ) {
     Button(

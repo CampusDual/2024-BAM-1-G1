@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +45,10 @@ import com.vango.presentation.theme.StyledButton
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.vango.R.drawable
+import com.vango.R.drawable.ic_edit
+import com.vango.presentation.theme.BackgroundButtonColor
+import com.vango.presentation.theme.BackgroundUnselected
 
 @Composable
 fun MyDataContent(navController: NavController) {
@@ -100,7 +106,8 @@ fun MyDataContent(navController: NavController) {
                     label = "Foto de perfil",
                     imageUri = profilePictureUri,
                     isEditing = isEditingAccount
-                ) { ImageSelectlauncher.launch("image/*")
+                ) {
+                    ImageSelectlauncher.launch("image/*")
                 }
                 DataRow(
                     label = "Usuario",
@@ -123,9 +130,13 @@ fun MyDataContent(navController: NavController) {
                         text = password,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Blue,
-                        modifier = Modifier.clickable {
-                            navController.navigate("change_password")
+                        color = Color.Black,
+                        modifier = if (isEditingAccount) {
+                            Modifier.clickable {
+                                navController.navigate("change_password")
+                            }
+                        } else {
+                            Modifier
                         }
                     )
                 }
@@ -171,9 +182,13 @@ fun MyDataContent(navController: NavController) {
                         text = email,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Blue,
-                        modifier = Modifier.clickable {
-                            navController.navigate("change_email")
+                        color = Color.Black,
+                        modifier = if (isEditingPersonal) {
+                            Modifier.clickable {
+                                navController.navigate("change_email")
+                            }
+                        } else {
+                            Modifier
                         }
                     )
                 }
@@ -304,9 +319,13 @@ fun DataBlock(
                 modifier = Modifier.size(24.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Edit,
+                    painter = painterResource(id = drawable.ic_edit),
                     contentDescription = "Editar",
-                    tint = Color.Black
+                    tint = if (isEditing) {
+                        BackgroundButtonColor
+                    } else {
+                        BackgroundUnselected
+                    }
                 )
             }
         }
@@ -348,11 +367,8 @@ fun DataRow(
             TextField(
                 value, onValueChange, Modifier
                     .width(200.dp)
-                    .height(24.dp)
-                    .background(
-                        Color.LightGray.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(8.dp,8.dp,8.dp,8.dp)
-                    ),
+                    .height(48.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 // Fondo blanco con bordes redondeados
                 singleLine = true,
                 colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
@@ -367,12 +383,12 @@ fun DataRow(
             Text(
                 text = value,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black,
+                fontWeight = FontWeight.Normal
             )
         }
     }
 }
+
 @Composable
 fun DataRowImage(
     label: String,
@@ -396,7 +412,7 @@ fun DataRowImage(
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Ícono de edición
+                    painter = painterResource(id = drawable.default_image_profile), // Ícono de edición
                     contentDescription = "Seleccionar imagen",
                     tint = Color.Unspecified // Mantener el color original del ícono
                 )
@@ -405,11 +421,11 @@ fun DataRowImage(
             if (imageUri.isNullOrEmpty()) {
                 // Mostrar un placeholder si no hay imagen seleccionada
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painterResource(id = drawable.default_image_profile),
                     contentDescription = "Foto de perfil",
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
             } else {
@@ -419,13 +435,14 @@ fun DataRowImage(
                     contentDescription = "Foto de perfil",
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
             }
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataRowWithUnit(
@@ -470,6 +487,7 @@ fun DataRowWithUnit(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun myDataContentPreview() {
