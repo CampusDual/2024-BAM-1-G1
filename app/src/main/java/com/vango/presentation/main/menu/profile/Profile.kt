@@ -171,7 +171,7 @@ fun ProfileScreen(navController: NavController) {
                 // Contenido dinámico según el botón seleccionado
                 when (selectedSection) {
                     "mis_datos" -> MyDataContent(navController = navController)
-                    "premium" -> PremiumContent()
+                    "premium" -> PremiumContent(navController = navController)
                     "aportaciones" -> ContributionsContent()
                 }
             }
