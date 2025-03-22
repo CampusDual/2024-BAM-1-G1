@@ -44,6 +44,9 @@ import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
+import com.vango.presentation.main.menu.changescreens.ChangeEmailScreen
+import com.vango.presentation.main.menu.changescreens.ChangePasswordScreen
+import com.vango.presentation.main.menu.deleteaccount.DeleteAccountScreen
 import com.vango.presentation.main.menu.logout.LogoutScreen
 import com.vango.presentation.main.menu.notification.NotificationScreen
 import com.vango.presentation.main.menu.profile.ProfileScreen
@@ -126,9 +129,8 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                 HomeList(navController)
             }
             composable("menu") {
-                MenuScreen(
-                    navController = navController
-                )
+               MenuScreen(navController
+               )
             }
             // Componentes composables del menu
 
@@ -149,6 +151,18 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             }
             composable("logout") {
                 LogoutScreen(navController)
+            }
+            composable("change_password") {
+                ChangePasswordScreen(navController)
+            }
+            composable("change_email") {
+                ChangeEmailScreen(navController)
+            }
+            composable("log_out") {
+                LogoutScreen( navController)
+            }
+            composable("delete_account") {
+                DeleteAccountScreen(navController)
             }
         }
     }
@@ -266,7 +280,7 @@ fun BottomNavigationBar(
                     ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Menú",
-                    tint = if (currentRoute == "menu") colorMain else iconColorUnselected
+                    tint = if (currentRoute == "menu"||currentRoute == "profile"||currentRoute == "notifications"||currentRoute == "favorites"||currentRoute == "settings"||currentRoute == "support"||currentRoute == "logout") colorMain else iconColorUnselected
                 )
             },
             label = {
@@ -274,7 +288,7 @@ fun BottomNavigationBar(
                     text = "Menú",
                     fontSize = 9.sp,
                     fontWeight = if (currentRoute == "menu") FontWeight.Bold else FontWeight.Normal,
-                    color = if (currentRoute == "menu") colorMain else iconColorUnselected
+                    color = if (currentRoute == "menu"||currentRoute == "profile"||currentRoute == "notifications"||currentRoute == "favorites"||currentRoute == "settings"||currentRoute == "support"||currentRoute == "logout") colorMain else iconColorUnselected
                 )
             },
             selected = currentRoute == "menu",

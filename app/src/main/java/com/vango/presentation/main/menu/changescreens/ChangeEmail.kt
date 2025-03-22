@@ -1,4 +1,4 @@
-package com.vango.presentation.main.menu.settings
+package com.vango.presentation.main.menu.changescreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -34,20 +37,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vango.R
-import com.vango.presentation.main.menu.profile.ContributionsContent
-import com.vango.presentation.main.menu.profile.MyDataContent
-import com.vango.presentation.main.menu.profile.PremiumContent
 import com.vango.presentation.theme.BackgroundButtonColor
+import com.vango.presentation.theme.BackgroundColorCard
 import com.vango.presentation.theme.BackgroundColorList
 import com.vango.presentation.theme.TextColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavHostController,
-                   modifier: Modifier = Modifier
+fun ChangeEmailScreen(
+    navController: NavController,
 ) {
+    var newEmail by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -55,7 +59,7 @@ fun SettingsScreen(navController: NavHostController,
             .heightIn()
             .padding(20.dp, 55.dp, 20.dp, 0.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
         Row(
             Modifier.fillMaxWidth(),
@@ -92,7 +96,7 @@ fun SettingsScreen(navController: NavHostController,
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Ajustes",
+                    text = "Mis Datos:Correo electrónico",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextColor
@@ -123,15 +127,103 @@ fun SettingsScreen(navController: NavHostController,
             }
 
         }
+
         Spacer(modifier = Modifier.height(18.dp))
 
+        // Contenido principal
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(BackgroundColorCard) // Fondo gris claro
+                .padding(vertical = 12.dp, horizontal = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = "Cambiar correo electrónico",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextColor
+            )
+            // Campo para la contraseña anterior
+            Text(
+                text = "Nuevo correo electrónico",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = TextColor
+            )
+            TextField(
+                value = newEmail,
+                onValueChange = { newEmail = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+                    containerColor = Color.White,
+                    focusedTextColor = TextColor,
+                    errorTextColor = Color.Red,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+            )
 
+            // Campo para la nueva contraseña
+            Text(
+                text = "Introduce la Contraseña",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = TextColor
+            )
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+                    containerColor = Color.White,
+                    focusedTextColor = TextColor,
+                    errorTextColor = Color.Red,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+            )
+
+
+
+            // Botón para cambiar la contraseña
+            Spacer(modifier = Modifier.height(24.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    color = BackgroundButtonColor,
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .width(200.dp)
+                        .height(48.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = "Cambiar",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun RoutesScreenPreview() {
+fun ChangeEmailPreview() {
     val navController = rememberNavController()
-    SettingsScreen(navController = navController)
+    ChangeEmailScreen(navController = navController)
 }

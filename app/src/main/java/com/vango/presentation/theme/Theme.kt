@@ -3,13 +3,26 @@ package com.vango.presentation.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.isSelected
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.vango.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -55,4 +68,34 @@ fun VanGOTheme(
         typography = Typography,
         content = content
     )
+}
+
+@Composable
+fun StyledButton(
+    text: String,
+    onClick: () -> Unit,
+    isSelected: Boolean = false,
+    modifier: Modifier = Modifier,
+    selectedBackgroundColor: Color = BackgroundButtonColor, // Color seleccionado
+    unselectedBackgroundColor: Color = BackgroundUnselected, // Color deseleccionado
+    contentColor: Color = Color.White,
+    cornerRadius: Dp = 10.dp,
+    padding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (isSelected) selectedBackgroundColor else unselectedBackgroundColor,
+            contentColor = contentColor
+        ),
+        shape = RoundedCornerShape(cornerRadius),
+        contentPadding = padding
+    ) {
+        Text(
+            text = text,
+            fontSize = 12.sp, // Tamaño del texto
+            fontWeight = FontWeight.Bold // Negrita (peso 700)
+        )
+    }
 }

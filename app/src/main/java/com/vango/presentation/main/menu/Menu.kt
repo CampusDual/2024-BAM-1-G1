@@ -1,6 +1,8 @@
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,92 +13,157 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.vango.R
+import com.vango.presentation.theme.BackgroundButtonColor
+import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 
 @Composable
 fun MenuScreen(
-    navController: NavHostController
+    navController: NavController
 ) {
+    var profilePictureUri by remember { mutableStateOf<String?>(null) }
+    val ImageSelectlauncher = rememberLauncherForActivityResult(
+        contract = androidx.activity.result.contract.ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            profilePictureUri = uri.toString()
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(top = 55.dp, start = 20.dp, end = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Fila con el botón de cerrar y el título
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(
-                onClick = { navController.navigate("home") },
-                modifier = Modifier.size(40.dp)
+            Surface(
+                color = BackgroundButtonColor,
+                modifier = Modifier.size(40.dp),
+                shape = RoundedCornerShape(14.dp),
             ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cerrar",
-                    tint = Color.Black
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ex),
+                        contentDescription = "Cerrar",
+                        modifier = Modifier
+                            .width(18.dp)
+                            .height(18.dp)
+                            .clickable {
+                                navController.navigate("home")
+                            },
+                        tint = Color.White
+                    )
+
+                }
             }
             Text(
-                text = "Perfil de Usuario",
-                fontSize = 20.sp,
+                text = "Menú",
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.width(40.dp)) // Espacio reservado para equilibrar
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Columna central con la foto, nick y tipo de cuenta
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Reemplaza con tu imagen
-                contentDescription = "Foto de perfil",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(180.dp)
-                    .clip(CircleShape)
-            )
+            Box() {
+                if (profilePictureUri.isNullOrEmpty()) {
+                    // Mostrar un placeholder si no hay imagen seleccionada
+                    Image(
+                        painter = painterResource(id = R.drawable.default_image_profile),
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    // Mostrar la imagen cargada desde la URI
+                    AsyncImage(
+                        model = profilePictureUri, // URI de la imagen seleccionada
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                IconButton(
+                    onClick = { ImageSelectlauncher.launch("image/*") },
+                    modifier = Modifier.size(27.dp).align( Alignment.BottomEnd)
+                )
+                {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_change_profile_image),
+                        contentDescription = "Editar",
+                        tint = Color.Unspecified
+
+                    )
+                }
+            }
+
+
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Usuario123", // Nick del usuario
-                fontSize = 24.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 text = "Premium", // O "Cuenta Free" según corresponda
-                fontSize = 18.sp,
-                color = Color.Red
+                fontWeight = FontWeight.ExtraBold,
+                fontStyle = FontStyle.Italic,
+                fontSize = 10.sp,
+                color = BackgroundColorButtonPrincipal
             )
         }
 
@@ -114,13 +181,17 @@ fun MenuScreen(
                 "Soporte" to "support",
                 "Desconectarse" to "logout"
             )
-
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 0.dp),
+                thickness = 1.dp,
+                color = Color.Gray.copy(alpha = 0.2f)
+            )
             options.forEach { (title, route) ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { navController.navigate(route) }
-                        .padding(vertical = 12.dp),
+                        .padding(vertical = 18.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
@@ -135,19 +206,27 @@ fun MenuScreen(
                         },
                         contentDescription = null,
                         colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black), // Opcional: Aplicar un color
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = title,
-                        fontSize = 16.sp,
-                        color = Color.Black
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal
                     )
+
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 0.dp),
+                    thickness = 1.dp,
+                    color = Color.Gray.copy(alpha = 0.2f)
+                )
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
