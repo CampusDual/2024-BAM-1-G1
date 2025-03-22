@@ -69,6 +69,9 @@ class HomeViewModel @Inject constructor(
     private val _selectedAddress = MutableStateFlow<String?>(null)
     val selectedAddress: StateFlow<String?> = _selectedAddress.asStateFlow()
 
+    private val _selectedName = MutableStateFlow<String?>(null)
+    val selectedName: StateFlow<String?> = _selectedName.asStateFlow()
+
     private val _pointName = MutableStateFlow<String?>(null)
     val pointName: StateFlow<String?> = _pointName.asStateFlow()
 
@@ -206,10 +209,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun saveNewPoint(name: String) {
-        selectedPoint.value?.let { point ->
-            println("Punto guardado: $name en ($point)")
-            clearSelectedPoint()
-        }
+
+        _selectedName.value = name
+//        selectedPoint.value?.let { point ->
+//            println("Punto guardado: $name en ($point)")
+//            clearSelectedPoint()
+//        }
     }
 
 }

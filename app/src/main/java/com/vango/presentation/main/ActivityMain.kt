@@ -83,7 +83,6 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
     val currentRoute = navBackStackEntry?.destination?.route ?: "home"
     var showMapLayersMenu by remember { mutableStateOf(false) }
     var showMapNewPointMenu by remember { mutableStateOf(false) }
-
     val navBarOffset = remember { Animatable(0f) }
     val navBarHeightPx = with(LocalDensity.current) { 85.dp.toPx() }
 
@@ -187,7 +186,6 @@ fun BottomNavigationBar(
             .fillMaxWidth()
             .height(85.dp),
         tonalElevation = 0.dp,
-
         containerColor = Color(ContextCompat.getColor(context, R.color.white))
     ) {
         val iconColorUnselected = Color.Black
@@ -196,21 +194,21 @@ fun BottomNavigationBar(
             modifier = Modifier.wrapContentHeight(),
             icon = {
                 Icon(
-                    painter = if (currentRoute == "home") painterResource(id = R.drawable.home_fill) else painterResource(
+                    painter = if (currentRoute == "home" || currentRoute == "results") painterResource(id = R.drawable.home_fill) else painterResource(
                         id = R.drawable.home
                     ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Inicio",
-                    tint = if (currentRoute == "home") colorMain else iconColorUnselected
+                    tint = if (currentRoute == "home" || currentRoute == "results") colorMain else iconColorUnselected
                 )
             },
             label = {
                 Text(
                     text = "Inicio",
                     fontSize = 9.sp,
-                    fontWeight = if (currentRoute == "home") FontWeight.Bold else FontWeight.Normal,
+                    fontWeight = if (currentRoute == "home" || currentRoute == "results") FontWeight.Bold else FontWeight.Normal,
 
-                    color = if (currentRoute == "home") colorMain else iconColorUnselected
+                    color = if (currentRoute == "home" || currentRoute == "results") colorMain else iconColorUnselected
 
                 )
             },

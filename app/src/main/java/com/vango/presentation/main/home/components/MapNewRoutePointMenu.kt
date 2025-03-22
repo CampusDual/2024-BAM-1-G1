@@ -70,6 +70,7 @@ import com.vango.presentation.theme.BlackGray
 import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.WhiteGray
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -203,18 +204,16 @@ fun MapNewRoutePointMenu(
 
 @Composable
 fun MapNewPointMenu(
-    selectedRoutePoint: MapNewPointRoute?,
     selectedPoint: LatLng?,
     selectedAddress: String?,
-    onLayerSelected: (MapNewPointRoute) -> Unit,
     onDismiss: () -> Unit,
     onClearAndDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
     val density = LocalDensity.current
-    val navbarHeight = with(density) { 48.dp.toPx() }
+    with(density) { 48.dp.toPx() }
 
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
@@ -413,16 +412,18 @@ fun MapNewPointMenu(
 
 @Composable
 fun MapNewPointNameMenu(
-    selectedPoint: LatLng?,
-    selectedAddress: String?,
     onNameConfirmed: (String) -> Unit,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    selectedAddress: String?,
+    selectedPoint: LatLng?
 
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
     var nameInput by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
     }
@@ -505,7 +506,10 @@ fun MapNewPointNameMenu(
                     ) {
                         TextField(
                             value = nameInput,
-                            onValueChange = { nameInput = it },
+                            onValueChange = {
+                                nameInput = it
+                                errorMessage = null
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             textStyle = TextStyle(
                                 fontSize = 12.sp,
@@ -527,6 +531,15 @@ fun MapNewPointNameMenu(
                                 unfocusedIndicatorColor = Color.Transparent
                             )
                         )
+
+                        errorMessage?.let {
+                            Text(
+                                text = it,
+                                color = Color.Red,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(12.dp))
 
@@ -583,17 +596,22 @@ fun MapNewPointNameMenu(
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.check),
-                                        contentDescription = "Cerrar",
+                                        contentDescription = "Confirm",
                                         modifier = Modifier
                                             .width(12.5.dp)
                                             .height(14.29.dp)
                                             .clickable {
-                                                scope.launch {
-                                                    offsetY.animateTo(
-                                                        600f,
-                                                        animationSpec = tween(300)
-                                                    )
-                                                    onConfirm()
+                                                if (nameInput.isBlank()) {
+                                                    errorMessage = "El nombre no puede estar vacío"
+                                                } else {
+                                                    onNameConfirmed(nameInput)
+                                                    scope.launch {
+                                                        offsetY.animateTo(
+                                                            600f,
+                                                            animationSpec = tween(300)
+                                                        )
+                                                        onConfirm()
+                                                    }
                                                 }
                                             },
                                         tint = Color.White
@@ -625,7 +643,6 @@ fun MapNewPointTagMenu(
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
-    var nameInput by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
     }
@@ -647,7 +664,7 @@ fun MapNewPointTagMenu(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 40.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Row(
@@ -760,31 +777,31 @@ fun MapNewPointTagMenu(
                                 ) {
 
                                 ButtonCategory(
-                                    text = "Categoría",
-                                    iconRes = R.drawable.ex,
+                                    text = "Campings",
+                                    iconRes = R.drawable.camper_no_fill,
                                     tint = Color.White,
                                     color = MainColor,
                                     onClick = { /*TODO*/ },
 
                                     )
                                 ButtonCategory(
-                                    text = "Categoría",
-                                    iconRes = R.drawable.ex,
+                                    text = "Área de AC",
+                                    iconRes = R.drawable.ac_area,
                                     tint = Color.White,
                                     color = MainColor,
                                     onClick = { /*TODO*/ },
 
                                     )
                                 ButtonCategory(
-                                    text = "Categoría",
-                                    iconRes = R.drawable.ex,
+                                    text = "Puntos de venta",
+                                    iconRes = R.drawable.sell_point,
                                     tint = Color.White,
                                     color = MainColor,
                                     onClick = { /*TODO*/ },
 
                                     )
                                 ButtonCategory(
-                                    text = "Categoría",
+                                    text = "Servicios",
                                     iconRes = R.drawable.ex,
                                     tint = Color.White,
                                     color = MainColor,
@@ -806,7 +823,7 @@ fun MapNewPointTagMenu(
                                 ) {
 
                                 ButtonCategory(
-                                    text = "Categoría",
+                                    text = "Puntos de Interés",
                                     iconRes = R.drawable.ex,
                                     tint = Color.White,
                                     color = MainColor,
@@ -918,7 +935,7 @@ fun MapNewPointTagMenu(
                         shape = RoundedCornerShape(20.dp),
                         color = MainColor,
 
-                    ) {
+                        ) {
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
@@ -950,8 +967,9 @@ fun MapNewPointTagMenu(
 fun MapNewPointConfirmMenu(
     selectedPoint: LatLng?,
     selectedAddress: String?,
-    onNameConfirmed: String?,
-    onDismiss: () -> Unit
+    selectedName: String?,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
@@ -1000,8 +1018,8 @@ fun MapNewPointConfirmMenu(
                                 verticalArrangement = Arrangement.Center,
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ex),
-                                    contentDescription = "Cerrar",
+                                    painter = painterResource(id = R.drawable.arrow_back),
+                                    contentDescription = "volver",
                                     modifier = Modifier
                                         .width(12.5.dp)
                                         .height(14.29.dp)
@@ -1105,12 +1123,14 @@ fun MapNewPointConfirmMenu(
                             verticalArrangement = Arrangement.Center
 
                         ) {
-                            Text(
-                                text = "address",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = Color.Black
-                            )
+                            if (selectedName != null) {
+                                Text(
+                                    text = selectedName,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.Black
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -1143,7 +1163,7 @@ fun MapNewPointConfirmMenu(
                                 modifier = Modifier
                                     .padding(start = 20.dp, end = 20.dp)
                                     .fillMaxWidth()
-                                    .height(53.5.dp)
+                                    .heightIn()
                                     .background(
                                         color = WhiteGray,
                                         shape = RoundedCornerShape(12.dp)
@@ -1153,24 +1173,70 @@ fun MapNewPointConfirmMenu(
 
                             ) {
 
-                                Text(
-                                    text = "address",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.Black
-                                )
+                                if (selectedAddress != null) {
+                                    Text(
+                                        text = selectedAddress,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color.Black
+                                    )
+                                }
                                 Spacer(
                                     modifier = Modifier.height(3.dp),
                                 )
-                                Text(
-                                    text = "coord",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.Black
-                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                var showDMS by remember { mutableStateOf(false) }
+
+                                if (selectedPoint != null) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
+
+                                        ) {
+
+                                        Spacer(modifier = Modifier.width(8.dp))
+
+                                        Text(
+                                            text = if (showDMS) latLngToDMS(selectedPoint) else selectedPoint?.let {
+                                                String.format(
+                                                    "%.4f, %.4f",
+                                                    it.latitude,
+                                                    it.longitude
+                                                )
+                                            } ?: "0.0000, 0.0000",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            color = Color.Black
+                                        )
+
+                                        Surface(
+                                            modifier = Modifier
+                                                .padding(top = 4.dp)
+                                                .height(24.dp)
+                                                .clickable { showDMS = !showDMS },
+                                            shape = RoundedCornerShape(8.dp),
+                                            color = MainColor
+                                        ) {
+                                            Text(
+                                                text = if (showDMS) "Decimal" else "DMS",
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White,
+                                                modifier = Modifier.padding(
+                                                    horizontal = 8.dp,
+                                                    vertical = 4.dp
+                                                )
+                                            )
+                                        }
+
+                                    }
+
+
+                                }
                             }
-
-
                         }
                     }
 
@@ -1184,7 +1250,68 @@ fun MapNewPointConfirmMenu(
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(51.dp),
+                            .height(51.dp)
+                            .clickable {
+                                scope.launch {
+                                    offsetY.animateTo(600f, animationSpec = tween(300))
+                                    onConfirm()
+                                }
+
+                            },
+
+                        shape = RoundedCornerShape(20.dp),
+                        color = MainColor,
+
+
+                        ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+
+                            ) {
+
+                            Icon(
+                                painter = painterResource(id = R.drawable.btn_create_point),
+                                contentDescription = "Cerrar",
+                                tint = Color.Unspecified,
+                                modifier = Modifier
+                                    .width(20.dp)
+                                    .height(23.dp)
+
+                            )
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            Text(
+                                text = "Crear punto",
+                                modifier = Modifier.padding(top = 6.dp),
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 3,
+                                textAlign = TextAlign.Center
+
+                            )
+                        }
+                    }
+
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(51.dp)
+                            .clickable {
+                                scope.launch {
+                                    offsetY.animateTo(600f, animationSpec = tween(300))
+                                    onConfirm()
+                                }
+
+                            },
 
                         shape = RoundedCornerShape(20.dp),
                         color = MainColor,
@@ -1195,9 +1322,20 @@ fun MapNewPointConfirmMenu(
 
                             ) {
 
+                            Icon(
+                                painter = painterResource(id = R.drawable.btn_create_point_lock),
+                                contentDescription = "Cerrar",
+                                tint = Color.Unspecified,
+                                modifier = Modifier
+                                    .width(20.dp)
+                                    .height(23.dp)
+
+                            )
+
+                            Spacer(modifier = Modifier.width(10.dp))
 
                             Text(
-                                text = "Crear punto",
+                                text = "Crear lugar secreto",
                                 modifier = Modifier.padding(top = 6.dp),
                                 fontSize = 14.sp,
                                 color = Color.White,
@@ -1214,6 +1352,28 @@ fun MapNewPointConfirmMenu(
             }
         }
     }
+}
+
+fun latLngToDMS(latLng: LatLng): String {
+    val latDMS = degreesToDMS(latLng.latitude, true)
+    val lngDMS = degreesToDMS(latLng.longitude, false)
+    return "$latDMS, $lngDMS"
+}
+
+fun degreesToDMS(degrees: Double, isLatitude: Boolean): String {
+    val absDegrees = abs(degrees)
+    val deg = absDegrees.toInt()
+    val minutesDouble = (absDegrees - deg) * 60
+    val min = minutesDouble.toInt()
+    val sec = ((minutesDouble - min) * 60).toInt()
+
+    val direction = when {
+        isLatitude && degrees >= 0 -> "N"
+        isLatitude -> "S"
+        degrees >= 0 -> "E"
+        else -> "W"
+    }
+    return "$deg°$min'$sec\"$direction"
 }
 
 @Composable
@@ -2304,7 +2464,7 @@ fun MapNewLastDatesMenu(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
-                        ){
+                        ) {
                             CustomCheckBoxDays(
                                 isChecked = false,
                                 day = "L",
@@ -2362,7 +2522,7 @@ fun MapNewLastDatesMenu(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                        ){
+                        ) {
 
                             CustomDropdownHour()
                             CustomDropdownHour()
@@ -2412,7 +2572,7 @@ fun MapNewLastDatesMenu(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                        ){
+                        ) {
 
                             CustomDropdownHour()
                             CustomDropdownHour()
@@ -3209,11 +3369,33 @@ fun CustomDropdown() {
                     dropdownWidth = layoutCoordinates.size.width
                 }
                 .clickable { expanded = true }
-                .border(1.dp, Color.LightGray,  shape = if(expanded == true)RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp, bottomEnd = 0.dp, bottomStart = 0.dp) else RoundedCornerShape(14.dp))
-                .background(Color.White, shape = if(expanded == true)RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp, bottomEnd = 0.dp, bottomStart = 0.dp) else RoundedCornerShape(14.dp))
+                .border(
+                    1.dp,
+                    Color.LightGray,
+                    shape = if (expanded == true) RoundedCornerShape(
+                        topEnd = 14.dp,
+                        topStart = 14.dp,
+                        bottomEnd = 0.dp,
+                        bottomStart = 0.dp
+                    ) else RoundedCornerShape(14.dp)
+                )
+                .background(
+                    Color.White,
+                    shape = if (expanded == true) RoundedCornerShape(
+                        topEnd = 14.dp,
+                        topStart = 14.dp,
+                        bottomEnd = 0.dp,
+                        bottomStart = 0.dp
+                    ) else RoundedCornerShape(14.dp)
+                )
                 .padding(14.dp),
             color = Color.White,
-            shape = if(expanded == true)RoundedCornerShape(topEnd = 14.dp, topStart = 14.dp, bottomEnd = 0.dp, bottomStart = 0.dp) else RoundedCornerShape(14.dp),
+            shape = if (expanded == true) RoundedCornerShape(
+                topEnd = 14.dp,
+                topStart = 14.dp,
+                bottomEnd = 0.dp,
+                bottomStart = 0.dp
+            ) else RoundedCornerShape(14.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -3321,7 +3503,9 @@ fun CustomDropdownHour() {
     var dropdownWidth by remember { mutableStateOf(0) }
 
     Box(
-        modifier = Modifier.width(135.dp).height(33.dp)
+        modifier = Modifier
+            .width(135.dp)
+            .height(33.dp)
     ) {
         Surface(
             modifier = Modifier
@@ -3375,14 +3559,14 @@ fun CustomDropdownHour() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MapNewImageServiceMenu() {
-    var nameInput by remember { mutableStateOf("Punto de prueba") }
-    MapNewPointTagServicesMenu(
-        selectedPoint = LatLng(42.704, 0.106),
-        selectedAddress = "C. Felipe Coscolla, 11, 22004 Huesca",
-        onNameConfirmed = { "menu" }.toString(),
-        onDismiss = { println("Menú cerrado") }
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MapNewImageServiceMenu() {
+//    var nameInput by remember { mutableStateOf("Punto de prueba") }
+//    MapNewPointConfirmMenu(
+//        selectedPoint = LatLng(42.704, 0.106),
+//        selectedAddress = "C. Felipe Coscolla, 11, 22004 Huesca",
+//        selectedName = "t22est",
+//        onDismiss = { println("Menú cerrado") }
+//    )
+//}

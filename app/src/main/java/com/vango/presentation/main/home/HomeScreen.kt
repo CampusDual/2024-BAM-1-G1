@@ -45,6 +45,7 @@ import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
+import com.vango.presentation.main.home.components.MapNewPointConfirmMenu
 import com.vango.presentation.main.home.components.MapNewPointMenu
 import com.vango.presentation.main.home.components.MapNewPointNameMenu
 import com.vango.presentation.main.home.components.MapNewPointRoute
@@ -92,11 +93,14 @@ fun HomeScreen(
     var showMapNewPointNameMenu by remember { mutableStateOf(false) }
     var showMapNewPointTagMenu by remember { mutableStateOf(false) }
     var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
+    var showMapNewPointConfirmMenu by remember { mutableStateOf(false) }
     var isMapLoaded by remember { mutableStateOf(false) }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
 
     val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
     var selectedFilterTypes by remember { mutableStateOf<Set<Int>>(emptySet()) }
+    
+    
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
     }
@@ -148,23 +152,23 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(showMapLayersMenu) {
-        onMapLayersMenuVisibilityChange(showMapLayersMenu)
-    }
-    LaunchedEffect(showMapCreatePointRouteMenu) {
-        onMapLayersMenuVisibilityChange(showMapCreatePointRouteMenu)
-    }
-    LaunchedEffect(showMapNewPointMenu) {
-        onMapLayersMenuVisibilityChange(showMapNewPointMenu)
-    }
-    LaunchedEffect(showMapNewPointNameMenu) {
-        onMapLayersMenuVisibilityChange(showMapNewPointNameMenu)
-    }
-    LaunchedEffect(showMapNewPointTagMenu) {
-        onMapLayersMenuVisibilityChange(showMapNewPointTagMenu)
-    }
-    LaunchedEffect(showMapNewPointTagServicesMenu) {
-        onMapLayersMenuVisibilityChange(showMapNewPointTagServicesMenu)
+    LaunchedEffect(
+        showMapLayersMenu,
+        showMapCreatePointRouteMenu,
+        showMapNewPointMenu,
+        showMapNewPointNameMenu,
+        showMapNewPointTagMenu,
+        showMapNewPointTagServicesMenu,
+        showMapNewPointConfirmMenu
+    ) {
+        val shouldHideNavigation = showMapLayersMenu ||
+                showMapCreatePointRouteMenu ||
+                showMapNewPointMenu ||
+                showMapNewPointNameMenu ||
+                showMapNewPointTagMenu ||
+                showMapNewPointTagServicesMenu ||
+                showMapNewPointConfirmMenu
+        onMapLayersMenuVisibilityChange(shouldHideNavigation)
     }
 
     LaunchedEffect(viewModel.selectedPoint.collectAsState().value) {
@@ -356,10 +360,8 @@ fun HomeScreen(
 
             if (showMapNewPointMenu) {
                 MapNewPointMenu(
-                    selectedRoutePoint = selectedRoutePoint,
                     selectedPoint = viewModel.selectedPoint.value,
                     selectedAddress = viewModel.selectedAddress.value,
-                    onLayerSelected = { },
                     onDismiss = {
                         showMapNewPointMenu = false
                         showBottomActionButtons = true
@@ -375,7 +377,7 @@ fun HomeScreen(
                     onConfirm = {
                         showMapNewPointMenu = false
                         showMapNewPointNameMenu = true
-                    }
+                    },
                 )
             }
 
@@ -389,15 +391,30 @@ fun HomeScreen(
                         isSelectingPoint = false
                         viewModel.clearSelectedPoint()
                     },
-                    onNameConfirmed = { name ->
-                        viewModel.saveNewPoint(name)
-                        showMapNewPointNameMenu = false
-                        showBottomActionButtons = true
-                    },
                     onConfirm = {
                         showMapNewPointNameMenu = false
-                        showMapNewPointTagMenu = true
+                        showMapNewPointConfirmMenu = true
+                    },
+                    onNameConfirmed = { name ->
+                        viewModel.saveNewPoint(name)
+                    },
+                )
+            }
 
+            if(showMapNewPointConfirmMenu){
+                MapNewPointConfirmMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    selectedAddress = viewModel.selectedAddress.value,
+                    selectedName = viewModel.selectedName.value,
+                    onDismiss = {
+                        showMapNewPointConfirmMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    onConfirm = {
+                        showMapNewPointTagMenu = true
+                        showMapNewPointConfirmMenu = false
                     }
                 )
             }
@@ -416,7 +433,6 @@ fun HomeScreen(
                     onConfirm = {
                         showMapNewPointTagMenu = false
                         showMapNewPointTagServicesMenu = true
-
                     }
                 )
             }

@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -210,11 +209,11 @@ fun MapComponent(
                             title = place.title,
                             snippet = place.address,
                             icon = when (place.type) {
-                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
-                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
-                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
-                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
-                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
+                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping2)
+                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.parking_test)
+                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital2)
+                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station2)
+                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry2)
                                 else -> null
                             },
                             onClick = {
