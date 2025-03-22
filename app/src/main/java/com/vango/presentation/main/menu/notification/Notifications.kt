@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorList
+import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.StyledButton
 import com.vango.presentation.theme.TextColor
 
@@ -48,6 +49,7 @@ fun NotificationScreen(
     var selectedSection by remember { mutableStateOf("todos") }
     Scaffold(
         Modifier.padding(20.dp, 55.dp, 20.dp, 0.dp),
+        containerColor = Color.White,
 
         content = { innerPadding ->
 
@@ -101,7 +103,7 @@ fun NotificationScreen(
                         )
                     }
                     Surface(
-                        color = BackgroundButtonColor,
+                        color = MainColor,
                         modifier = Modifier.size(40.dp),
                         shape = RoundedCornerShape(14.dp),
                     ) {
