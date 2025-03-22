@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -158,13 +159,21 @@ fun ChangePasswordScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
-                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White,
-                        focusedTextColor = TextColor,
-                        errorTextColor = Color.Red,
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = Color.White,
+                        errorTextColor = Color.Red
+                    ),
+//                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+//                        containerColor = Color.White,
+//                        focusedTextColor = TextColor,
+//                        errorTextColor = Color.Red,
+//                        focusedIndicatorColor = Color.Transparent,
+//                        unfocusedIndicatorColor = Color.Transparent
+//                    )
                 )
 
                 // Campo para la nueva contraseña
@@ -180,13 +189,21 @@ fun ChangePasswordScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
-                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White,
-                        focusedTextColor = TextColor,
-                        errorTextColor = Color.Red,
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = Color.White,
+                        errorTextColor = Color.Red
+                    ),
+//                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+//                        containerColor = Color.White,
+//                        focusedTextColor = TextColor,
+//                        errorTextColor = Color.Red,
+//                        focusedIndicatorColor = Color.Transparent,
+//                        unfocusedIndicatorColor = Color.Transparent
+//                    )
                 )
 
                 // Campo para repetir la nueva contraseña
@@ -202,13 +219,21 @@ fun ChangePasswordScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
-                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White,
-                        focusedTextColor = TextColor,
-                        errorTextColor = Color.Red,
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = Color.White,
+                        errorTextColor = Color.Red
+                    ),
+//                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+//                        containerColor = Color.White,
+//                        focusedTextColor = TextColor,
+//                        errorTextColor = Color.Red,
+//                        focusedIndicatorColor = Color.Transparent,
+//                        unfocusedIndicatorColor = Color.Transparent
+//                    )
                 )
 
                 // Botón para cambiar la contraseña

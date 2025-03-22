@@ -149,7 +149,7 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             navController = navController,
             startDestination = "home",
             modifier = Modifier
-                .padding(customPadding(innerPadding, systemBarsPadding))
+//                .padding(customPadding(innerPadding, systemBarsPadding))
                 .fillMaxSize()
         ) {
             composable("home") {

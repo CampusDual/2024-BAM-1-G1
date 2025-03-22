@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -417,13 +418,22 @@ fun DataRow(
                 // Fondo blanco con bordes redondeados
                 singleLine = true,
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
-                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedTextColor = TextColor,
-                    errorTextColor = Color.Red,
+
+                colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    errorTextColor = Color.Red
+                ),
+//                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+//                    containerColor = Color.Transparent,
+//                    focusedTextColor = TextColor,
+//                    errorTextColor = Color.Red,
+//                    focusedIndicatorColor = Color.Transparent,
+//                    unfocusedIndicatorColor = Color.Transparent
+//                )
             )
         } else {
             Text(
@@ -508,12 +518,22 @@ fun DataRowWithUnit(
                     .clip(RoundedCornerShape(8.dp)),
                 singleLine = true,
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
-                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                    containerColor = Color.White,
-                    focusedTextColor = TextColor,
+
+                colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    errorTextColor = Color.Red
+                ),
+
+//                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+//                    containerColor = Color.White,
+//                    focusedTextColor = TextColor,
+//                    focusedIndicatorColor = Color.Transparent,
+//                    unfocusedIndicatorColor = Color.Transparent
+//                )
             )
         } else {
             Text(
