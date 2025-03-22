@@ -10,18 +10,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -34,21 +34,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vango.R
-import com.vango.presentation.theme.StyledButton
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.vango.R
 import com.vango.R.drawable
-import com.vango.R.drawable.ic_edit
 import com.vango.presentation.theme.BackgroundButtonColor
+import com.vango.presentation.theme.BackgroundColorCard
 import com.vango.presentation.theme.BackgroundUnselected
+import com.vango.presentation.theme.StyledButton
+import com.vango.presentation.theme.TextColor
 
 @Composable
 fun MyDataContent(navController: NavController) {
@@ -93,199 +95,245 @@ fun MyDataContent(navController: NavController) {
     ) {
         // Bloque 1: Datos de Cuenta
         item {
-            DataBlock(
-                title = "Datos de Cuenta",
+            DataBlock(title = "Datos de Cuenta",
                 isEditing = isEditingAccount,
                 onEditClick = { isEditingAccount = !isEditingAccount },
                 onSaveClick = {
                     // Guardar cambios aquí
                     isEditingAccount = false
+                }) {
+                HighlightedRow {
+                    DataRowImage(
+                        label = "Foto de perfil",
+                        imageUri = profilePictureUri,
+                        isEditing = isEditingAccount
+                    ) {
+                        ImageSelectlauncher.launch("image/*")
+                    }
                 }
-            ) {
-                DataRowImage(
-                    label = "Foto de perfil",
-                    imageUri = profilePictureUri,
-                    isEditing = isEditingAccount
-                ) {
-                    ImageSelectlauncher.launch("image/*")
+                HighlightedRow {
+                    DataRow(
+                        label = "Usuario", value = username, isEditing = isEditingAccount
+                    ) { newValue ->
+                        username = newValue
+                    }
                 }
-                DataRow(
-                    label = "Usuario",
-                    value = username,
-                    isEditing = isEditingAccount
-                ) { newValue ->
-                    username = newValue
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Contraseña",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = password,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black,
-                        modifier = if (isEditingAccount) {
-                            Modifier.clickable {
-                                navController.navigate("change_password")
+                HighlightedRow {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Contraseña", fontSize = 12.sp, fontWeight = FontWeight.Medium
+                        )
+
+                        if (isEditingAccount) {
+                            Row(
+                                modifier = Modifier.width(100.dp)
+                            )
+                            {
+                                Icon(painter = painterResource(id = R.drawable.ic_edit_password),
+                                    contentDescription = "Editar",
+                                    tint = Color.Unspecified,
+                                    modifier = Modifier.clickable { navController.navigate("change_password") })
                             }
                         } else {
-                            Modifier
+                            Text(
+                                text = password,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = TextColor
+                            )
                         }
-                    )
+                    }
                 }
             }
         }
 
         // Bloque 2: Datos Personales
         item {
-            DataBlock(
-                title = "Datos Personales",
+            DataBlock(title = "Datos Personales",
                 isEditing = isEditingPersonal,
                 onEditClick = { isEditingPersonal = !isEditingPersonal },
                 onSaveClick = {
                     // Guardar cambios aquí
                     isEditingPersonal = false
+                }) {
+                HighlightedRow {
+                    DataRow(
+                        label = "Nombre y Apellidos",
+                        value = fullName,
+                        isEditing = isEditingPersonal
+                    ) { newValue ->
+                        fullName = newValue
+                    }
                 }
-            ) {
-                DataRow(
-                    label = "Nombre y Apellidos",
-                    value = fullName,
-                    isEditing = isEditingPersonal
-                ) { newValue ->
-                    fullName = newValue
+                HighlightedRow {
+                    DataRow(
+                        label = "Fecha de nacimiento",
+                        value = birthDate,
+                        isEditing = isEditingPersonal
+                    ) { newValue ->
+                        birthDate = newValue
+                    }
                 }
-                DataRow(
-                    label = "Fecha de nacimiento",
-                    value = birthDate,
-                    isEditing = isEditingPersonal
-                ) { newValue ->
-                    birthDate = newValue
+                HighlightedRow {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Correo electrónico",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(text = email,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = TextColor,
+                            modifier = if (isEditingPersonal) {
+                                Modifier.clickable {
+                                    navController.navigate("change_email")
+                                }
+                            } else {
+                                Modifier
+                            } )
+                    }
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Correo electrónico",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = email,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black,
-                        modifier = if (isEditingPersonal) {
-                            Modifier.clickable {
-                                navController.navigate("change_email")
-                            }
-                        } else {
-                            Modifier
-                        }
-                    )
+                HighlightedRow {
+                    DataRow(
+                        label = "Teléfono", value = phone, isEditing = isEditingPersonal
+                    ) { newValue ->
+                        phone = newValue
+                    }
                 }
-                DataRow(
-                    label = "Teléfono",
-                    value = phone,
-                    isEditing = isEditingPersonal
-                ) { newValue ->
-                    phone = newValue
+                HighlightedRow {
+                    DataRow(
+                        label = "País", value = country, isEditing = isEditingPersonal
+                    ) { newValue ->
+                        country = newValue
+                    }
                 }
-                DataRow(
-                    label = "País",
-                    value = country,
-                    isEditing = isEditingPersonal
-                ) { newValue ->
-                    country = newValue
-                }
-                DataRow(
-                    label = "Provincia",
-                    value = province,
-                    isEditing = isEditingPersonal
-                ) { newValue ->
-                    province = newValue
+                HighlightedRow {
+                    DataRow(
+                        label = "Provincia", value = province, isEditing = isEditingPersonal
+                    ) { newValue ->
+                        province = newValue
+                    }
                 }
             }
         }
 
         // Bloque 3: Datos de Vehículo
         item {
-            DataBlock(
-                title = "Datos de Vehículo",
+            DataBlock(title = "Datos de Vehículo",
                 isEditing = isEditingVehicle,
                 onEditClick = { isEditingVehicle = !isEditingVehicle },
                 onSaveClick = {
                     // Guardar cambios aquí
                     isEditingVehicle = false
+                }) {
+                HighlightedRow {
+                    DataRow(
+                        label = "Tipo de vehiculo",
+                        value = vehicleType,
+                        isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleType = newValue
+                    }
                 }
-            ) {
-                DataRow(
-                    label = "Tipo de vehiculo",
-                    value = vehicleType,
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleType = newValue
+                HighlightedRow {
+                    DataRow(
+                        label = "Modelo", value = vehicleModel, isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleModel = newValue
+                    }
                 }
-                DataRow(
-                    label = "Modelo",
-                    value = vehicleModel,
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleModel = newValue
+                HighlightedRow {
+                    DataRow(
+                        label = "Año", value = vehicleYear, isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleYear = newValue
+                    }
                 }
-                DataRow(
-                    label = "Año",
-                    value = vehicleYear,
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleYear = newValue
+                HighlightedRow {
+                    DataRowWithUnit(
+                        label = "Largo",
+                        value = vehicleLength,
+                        unit = "m",
+                        isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleLength = newValue
+                    }
                 }
-                DataRowWithUnit(
-                    label = "Largo",
-                    value = vehicleLength,
-                    unit = "m",
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleLength = newValue
+                HighlightedRow {
+                    DataRowWithUnit(
+                        label = "Ancho",
+                        value = vehicleWidth,
+                        unit = "m",
+                        isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleWidth = newValue
+                    }
                 }
-                DataRowWithUnit(
-                    label = "Ancho",
-                    value = vehicleWidth,
-                    unit = "m",
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleWidth = newValue
+                HighlightedRow {
+                    DataRowWithUnit(
+                        label = "Altura",
+                        value = vehicleHeight,
+                        unit = "m",
+                        isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleHeight = newValue
+                    }
                 }
-                DataRowWithUnit(
-                    label = "Altura",
-                    value = vehicleHeight,
-                    unit = "m",
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleHeight = newValue
-                }
-                DataRowWithUnit(
-                    label = "Peso",
-                    value = vehicleWeight,
-                    unit = "kg",
-                    isEditing = isEditingVehicle
-                ) { newValue ->
-                    vehicleWeight = newValue
+                HighlightedRow {
+                    DataRowWithUnit(
+                        label = "Peso",
+                        value = vehicleWeight,
+                        unit = "kg",
+                        isEditing = isEditingVehicle
+                    ) { newValue ->
+                        vehicleWeight = newValue
+                    }
                 }
 
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Eliminar Cuenta",
+                    fontSize = 12.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray,
+                    modifier = Modifier.clickable {
+                        navController.navigate("delete_account")
+                    })
             }
         }
     }
 }
 
+@Composable
+fun HighlightedRow(
+    modifier: Modifier = Modifier, content: @Composable () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn()
+            .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(15.dp))
+            .padding(vertical = 10.dp, horizontal = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        content()
+    }
+}
 
 @Composable
 fun DataBlock(
@@ -298,25 +346,24 @@ fun DataBlock(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.LightGray.copy(alpha = 0.3f)) // Fondo gris claro
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(BackgroundColorCard) // Fondo gris claro
+            .padding(vertical = 12.dp, horizontal = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         // Título y botón de edición
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 6.dp, start = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                text = title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold
             )
             IconButton(
-                onClick = onEditClick,
-                modifier = Modifier.size(24.dp)
+                onClick = onEditClick, modifier = Modifier.size(24.dp)
             ) {
                 Icon(
                     painter = painterResource(id = drawable.ic_edit),
@@ -348,10 +395,7 @@ fun DataBlock(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataRow(
-    label: String,
-    value: String,
-    isEditing: Boolean,
-    onValueChange: (String) -> Unit
+    label: String, value: String, isEditing: Boolean, onValueChange: (String) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -359,21 +403,23 @@ fun DataRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = label,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium
+            text = label, fontSize = 12.sp, fontWeight = FontWeight.Medium
         )
         if (isEditing) {
             TextField(
-                value, onValueChange, Modifier
-                    .width(200.dp)
+                value,
+                onValueChange,
+                Modifier
+                    .fillMaxWidth()
                     .height(48.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .clip(RoundedCornerShape(8.dp))
+                    .padding(0.dp),
                 // Fondo blanco con bordes redondeados
                 singleLine = true,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
                 colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                    containerColor = Color.White,
-                    focusedTextColor = Color.Black,
+                    containerColor = Color.Transparent,
+                    focusedTextColor = TextColor,
                     errorTextColor = Color.Red,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
@@ -381,9 +427,7 @@ fun DataRow(
             )
         } else {
             Text(
-                text = value,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal
+                text = value, fontSize = 12.sp, fontWeight = FontWeight.Normal
             )
         }
     }
@@ -391,10 +435,8 @@ fun DataRow(
 
 @Composable
 fun DataRowImage(
-    label: String,
-    imageUri: String?, // URI de la imagen seleccionada
-    isEditing: Boolean,
-    onImageChange: () -> Unit
+    label: String, imageUri: String?, // URI de la imagen seleccionada
+    isEditing: Boolean, onImageChange: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -402,19 +444,19 @@ fun DataRowImage(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = label,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium
+            text = label, fontSize = 12.sp, fontWeight = FontWeight.Medium
         )
         if (isEditing) {
             IconButton(
-                onClick = onImageChange,
-                modifier = Modifier.size(48.dp)
+                onClick = onImageChange, modifier = Modifier.size(48.dp)
             ) {
                 Icon(
                     painter = painterResource(id = drawable.default_image_profile), // Ícono de edición
                     contentDescription = "Seleccionar imagen",
-                    tint = Color.Unspecified // Mantener el color original del ícono
+                    tint = Color.Unspecified, // Mantener el color original del ícono
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
                 )
             }
         } else {
@@ -446,11 +488,7 @@ fun DataRowImage(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataRowWithUnit(
-    label: String,
-    value: String,
-    unit: String,
-    isEditing: Boolean,
-    onValueChange: (String) -> Unit
+    label: String, value: String, unit: String, isEditing: Boolean, onValueChange: (String) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -458,31 +496,28 @@ fun DataRowWithUnit(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "$label ($unit)",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium
+            text = "$label ($unit)", fontSize = 12.sp, fontWeight = FontWeight.Medium
         )
         if (isEditing) {
             TextField(
                 value = value,
                 onValueChange = onValueChange,
                 modifier = Modifier
-                    .width(200.dp)
+                    .fillMaxWidth()
                     .height(48.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 singleLine = true,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
                 colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
                     containerColor = Color.White,
-                    focusedTextColor = Color.Black,
+                    focusedTextColor = TextColor,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
             )
         } else {
             Text(
-                text = "$value $unit",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal
+                text = "$value $unit", fontSize = 12.sp, fontWeight = FontWeight.Normal
             )
         }
     }

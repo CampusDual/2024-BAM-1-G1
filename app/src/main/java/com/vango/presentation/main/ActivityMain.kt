@@ -46,10 +46,10 @@ import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
 import com.vango.presentation.main.menu.changescreens.ChangeEmailScreen
 import com.vango.presentation.main.menu.changescreens.ChangePasswordScreen
+import com.vango.presentation.main.menu.deleteaccount.DeleteAccountScreen
 import com.vango.presentation.main.menu.logout.LogoutScreen
 import com.vango.presentation.main.menu.notification.NotificationScreen
 import com.vango.presentation.main.menu.profile.ProfileScreen
-import com.vango.presentation.main.menu.profile.ProfileScreenNavHost
 import com.vango.presentation.main.menu.settings.SettingsScreen
 import com.vango.presentation.main.menu.support.SupportScreen
 import com.vango.presentation.main.results.HomeList
@@ -151,6 +151,18 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             }
             composable("logout") {
                 LogoutScreen(navController)
+            }
+            composable("change_password") {
+                ChangePasswordScreen(navController)
+            }
+            composable("change_email") {
+                ChangeEmailScreen(navController)
+            }
+            composable("log_out") {
+                LogoutScreen( navController)
+            }
+            composable("delete_account") {
+                DeleteAccountScreen(navController)
             }
         }
     }
