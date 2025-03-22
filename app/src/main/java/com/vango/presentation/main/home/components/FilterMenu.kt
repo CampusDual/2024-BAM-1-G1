@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +44,8 @@ import com.vango.presentation.theme.BackgroundUnselected
 
 @Composable
 fun FilterMenu(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFiltersChanged: (Set<Int>) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var isCampingSelected by remember { mutableStateOf(false) }
@@ -59,6 +61,21 @@ fun FilterMenu(
         isFuelStationSelected,
         isLaundrySelected
     ).count { it }
+
+    val selectedTypes = remember(isCampingSelected, isParkingSelected, isHospitalSelected, isFuelStationSelected, isLaundrySelected) {
+        buildSet {
+            if (isCampingSelected) add(0)
+            if (isParkingSelected) add(1)
+            if (isHospitalSelected) add(2)
+            if (isFuelStationSelected) add(3)
+            if (isLaundrySelected) add(4)
+        }
+    }
+
+    LaunchedEffect(selectedTypes) {
+        onFiltersChanged(selectedTypes)
+    }
+
 
     Box(
         modifier = modifier
@@ -255,24 +272,24 @@ fun FilterOption(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun FilterMenuPreviewClosed() {
-    FilterMenu(
-        modifier = Modifier.offset(y = 120.dp)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FilterMenuPreviewExpanded() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.LightGray)
-    ) {
-        FilterMenu(
-            modifier = Modifier.offset(y = 120.dp)
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun FilterMenuPreviewClosed() {
+//    FilterMenu(
+//        modifier = Modifier.offset(y = 120.dp)
+//    )
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun FilterMenuPreviewExpanded() {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.LightGray)
+//    ) {
+//        FilterMenu(
+//            modifier = Modifier.offset(y = 120.dp)
+//        )
+//    }
+//}

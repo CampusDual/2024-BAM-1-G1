@@ -12,6 +12,15 @@ class SearchRepositoryImpl @Inject constructor(
         return placesDataSource.searchPlaces(query, currentLocation)
     }
 
+    override suspend fun searchNearby(
+        query: String,
+        location: LatLng,
+        radius: Int,
+        type: String
+    ): List<SearchResult> {
+        return placesDataSource.searchNearby(query, location, radius, type)
+    }
+
     override suspend fun getPlaceDetails(placeId: String): SearchResult {
         return placesDataSource.getPlaceDetails(placeId)
     }
@@ -20,4 +29,10 @@ class SearchRepositoryImpl @Inject constructor(
 interface SearchRepository {
     suspend fun searchPlaces(query: String, currentLocation: LatLng): List<SearchResult>
     suspend fun getPlaceDetails(placeId: String): SearchResult
+    suspend fun searchNearby(
+        query: String,
+        location: LatLng,
+        radius: Int,
+        type: String
+    ): List<SearchResult>
 }

@@ -1,7 +1,14 @@
 package com.vango.presentation.main.home
 
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.test.core.app.ApplicationProvider
 import com.google.android.gms.maps.model.LatLng
 import com.vango.domain.model.SearchResult
 import com.vango.domain.usecase.location.GetUserLocationUseCase
@@ -9,17 +16,23 @@ import com.vango.domain.usecase.places.SearchPlacesUseCase
 import com.vango.presentation.main.home.components.MapLayer
 import com.vango.presentation.main.home.components.MapNewPointRoute
 import com.vango.presentation.main.home.components.MapOption
+import com.vango.shared.dtos.places.PlacesRequestDto
+import com.vango.shared.dtos.places.PlacesResponseDto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getUserLocationUseCase: GetUserLocationUseCase,
-    private val searchPlacesUseCase: SearchPlacesUseCase
+    private val searchPlacesUseCase: SearchPlacesUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _currentLocation = MutableStateFlow(LatLng(40.416775, -3.703790))
@@ -50,9 +63,72 @@ class HomeViewModel @Inject constructor(
     var isLocationActive: Boolean = false
         private set
 
+    private val _selectedPoint = MutableStateFlow<LatLng?>(null)
+    val selectedPoint: StateFlow<LatLng?> = _selectedPoint.asStateFlow()
+
+    private val _selectedAddress = MutableStateFlow<String?>(null)
+    val selectedAddress: StateFlow<String?> = _selectedAddress.asStateFlow()
+
+    private val _selectedName = MutableStateFlow<String?>(null)
+    val selectedName: StateFlow<String?> = _selectedName.asStateFlow()
+
+    private val _pointName = MutableStateFlow<String?>(null)
+    val pointName: StateFlow<String?> = _pointName.asStateFlow()
+
+    private val _nearbyPlaces = MutableStateFlow<List<PlacesResponseDto>>(emptyList())
+    val nearbyPlaces: StateFlow<List<PlacesResponseDto>> = _nearbyPlaces.asStateFlow()
+
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         performSearch(query)
+    }
+
+    fun searchNearbyPlaces(latLng: LatLng, radius: Int, placeType: Int) {
+        viewModelScope.launch {
+            try {
+                val request = PlacesRequestDto(
+                    lat = latLng.latitude,
+                    lng = latLng.longitude,
+                    radius = radius,
+                    placeType = placeType
+                )
+
+                val results = searchPlacesUseCase.searchNearby(request)
+                _nearbyPlaces.value = results
+                Log.d("HomeViewModel", "Lugares cercanos encontrados: ${results.size}")
+            } catch (e: Exception) {
+                _errorMessage.value = "Error al buscar lugares cercanos: ${e.message}"
+                _nearbyPlaces.value = emptyList()
+            }
+        }
+    }
+
+
+
+    fun selectPoint(latLng: LatLng) {
+        viewModelScope.launch {
+            _selectedPoint.value = latLng
+            getAddressFromLatLng(latLng)
+        }
+    }
+
+    private suspend fun getAddressFromLatLng(latLng: LatLng) {
+        try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            } else {
+                @Suppress("DEPRECATION")
+                geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            }
+            if (!addresses.isNullOrEmpty()) {
+                _selectedAddress.value = addresses[0].getAddressLine(0) ?: "Unknown address"
+            } else {
+                _errorMessage.value = "No address found for this location"
+            }
+        } catch (e: Exception) {
+            _errorMessage.value = "Error getting address: ${e.message}"
+        }
     }
 
     fun performSearch(query: String) {
@@ -63,7 +139,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val results = searchPlacesUseCase(query, _currentLocation.value).map {
-                    SearchResult(it.name, it.latitude, it.longitude, it.placeId, it.secondaryText, it.distanceMeters)
+                    SearchResult(it.name, it.latitude, it.longitude, it.placeId, it.secondaryText, it.types,it.distanceMeters)
                 }
                 _searchResults.value = results
             } catch (e: Exception) {
@@ -126,5 +202,19 @@ class HomeViewModel @Inject constructor(
         isLocationActive = isActive
     }
 
+    fun clearSelectedPoint() {
+        _selectedPoint.value = null
+        _selectedAddress.value = null
+        _pointName.value = null
+    }
+
+    fun saveNewPoint(name: String) {
+
+        _selectedName.value = name
+//        selectedPoint.value?.let { point ->
+//            println("Punto guardado: $name en ($point)")
+//            clearSelectedPoint()
+//        }
+    }
 
 }

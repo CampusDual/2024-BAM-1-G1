@@ -4,6 +4,9 @@ import MenuScreen
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -11,6 +14,8 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -23,10 +28,15 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +66,7 @@ import com.vango.presentation.main.results.HomeList
 import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -80,7 +91,36 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "home"
-    val systemBarsPadding = WindowInsets.systemBars.asPaddingValues()
+    var showMapLayersMenu by remember { mutableStateOf(false) }
+    var showMapNewPointMenu by remember { mutableStateOf(false) }
+    val navBarOffset = remember { Animatable(0f) }
+    val navBarHeightPx = with(LocalDensity.current) { 85.dp.toPx() }
+
+    LaunchedEffect(showMapLayersMenu || showMapNewPointMenu) {
+        if (showMapLayersMenu || showMapNewPointMenu) {
+            launch {
+                navBarOffset.animateTo(
+                    targetValue = navBarHeightPx,
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = EaseInOut
+                    )
+                )
+            }
+
+        } else {
+            launch {
+                navBarOffset.animateTo(
+                    targetValue = 0f,
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = EaseInOut
+                    )
+                )
+            }
+
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -98,6 +138,7 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                     }
                 },
                 modifier = Modifier
+                    .offset(y = navBarOffset.value.dp)
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets(0, 0, 0, 0))
             )
@@ -115,7 +156,12 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
                 HomeScreen(
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
-                    isPreview = false
+                    isPreview = false,
+                    onMapLayersMenuVisibilityChange = { isVisible ->
+                        showMapLayersMenu = isVisible
+                        showMapNewPointMenu = isVisible
+
+                    }
                 )
             }
             composable("routes") {
@@ -179,9 +225,8 @@ fun BottomNavigationBar(
     NavigationBar(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .height(85.dp),
         tonalElevation = 0.dp,
-
         containerColor = Color(ContextCompat.getColor(context, R.color.white))
     ) {
         val iconColorUnselected = Color.Black
@@ -190,21 +235,21 @@ fun BottomNavigationBar(
             modifier = Modifier.wrapContentHeight(),
             icon = {
                 Icon(
-                    painter = if (currentRoute == "home") painterResource(id = R.drawable.home_fill) else painterResource(
+                    painter = if (currentRoute == "home" || currentRoute == "results") painterResource(id = R.drawable.home_fill) else painterResource(
                         id = R.drawable.home
                     ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Inicio",
-                    tint = if (currentRoute == "home") colorMain else iconColorUnselected
+                    tint = if (currentRoute == "home" || currentRoute == "results") colorMain else iconColorUnselected
                 )
             },
             label = {
                 Text(
                     text = "Inicio",
                     fontSize = 9.sp,
-                    fontWeight = if (currentRoute == "home") FontWeight.Bold else FontWeight.Normal,
+                    fontWeight = if (currentRoute == "home" || currentRoute == "results") FontWeight.Bold else FontWeight.Normal,
 
-                    color = if (currentRoute == "home") colorMain else iconColorUnselected
+                    color = if (currentRoute == "home" || currentRoute == "results") colorMain else iconColorUnselected
 
                 )
             },

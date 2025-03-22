@@ -36,15 +36,25 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.presentation.main.home.components.BottomActionButtons
+import com.vango.presentation.main.home.components.BottomCoordButton
 import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
+import com.vango.presentation.main.home.components.MapNewPointConfirmMenu
+import com.vango.presentation.main.home.components.MapNewPointMenu
+import com.vango.presentation.main.home.components.MapNewPointNameMenu
+import com.vango.presentation.main.home.components.MapNewPointRoute
+import com.vango.presentation.main.home.components.MapNewPointTagMenu
+import com.vango.presentation.main.home.components.MapNewPointTagServicesMenu
 import com.vango.presentation.main.home.components.MapNewRoutePointMenu
 import com.vango.presentation.main.home.components.SearchBar
 import com.vango.presentation.main.home.components.TopCenterButton
+import com.vango.shared.dtos.places.PlacesResponseDto
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -54,7 +64,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel(),
-    isPreview: Boolean = false
+    isPreview: Boolean = false,
+    onMapLayersMenuVisibilityChange: (Boolean) -> Unit = {}
 ) {
     val locationPermission = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val currentLocation by viewModel.currentLocation.collectAsState()
@@ -76,8 +87,20 @@ fun HomeScreen(
     val selectedRoutePoint by viewModel.selectedRoutePoint.collectAsState()
     var showMapCreatePointRouteMenu by remember { mutableStateOf(false) }
 
+    var showBottomActionButtons by remember { mutableStateOf(true) }
+    var isSelectingPoint by remember { mutableStateOf(false) }
+    var showMapNewPointMenu by remember { mutableStateOf(false) }
+    var showMapNewPointNameMenu by remember { mutableStateOf(false) }
+    var showMapNewPointTagMenu by remember { mutableStateOf(false) }
+    var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
+    var showMapNewPointConfirmMenu by remember { mutableStateOf(false) }
+    var isMapLoaded by remember { mutableStateOf(false) }
+    var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
 
-
+    val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
+    var selectedFilterTypes by remember { mutableStateOf<Set<Int>>(emptySet()) }
+    
+    
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
     }
@@ -90,6 +113,25 @@ fun HomeScreen(
 
     LaunchedEffect(currentLocation) {
         cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f), 1000)
+
+    }
+
+    LaunchedEffect(isMapLoaded, currentLocation) {
+        if (isMapLoaded && currentLocation != LatLng(40.416775, -3.703790) && nearbyPlaces.isEmpty()) {
+            viewModel.searchNearbyPlaces(radius = 5000, placeType = 5, latLng = currentLocation)
+        }
+    }
+
+    LaunchedEffect(nearbyPlaces) {
+        if (nearbyPlaces.isNotEmpty()) {
+            val boundsBuilder = LatLngBounds.Builder()
+            nearbyPlaces.forEach { place ->
+                place.toLatLng()?.let { boundsBuilder.include(it) }
+            }
+            boundsBuilder.include(currentLocation)
+            val bounds = boundsBuilder.build()
+            cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 100), 1000)
+        }
     }
 
     LaunchedEffect(errorMessage) {
@@ -107,6 +149,31 @@ fun HomeScreen(
                 showPermissionDialog = true
             }
             viewModel.clearPermissionRequest()
+        }
+    }
+
+    LaunchedEffect(
+        showMapLayersMenu,
+        showMapCreatePointRouteMenu,
+        showMapNewPointMenu,
+        showMapNewPointNameMenu,
+        showMapNewPointTagMenu,
+        showMapNewPointTagServicesMenu,
+        showMapNewPointConfirmMenu
+    ) {
+        val shouldHideNavigation = showMapLayersMenu ||
+                showMapCreatePointRouteMenu ||
+                showMapNewPointMenu ||
+                showMapNewPointNameMenu ||
+                showMapNewPointTagMenu ||
+                showMapNewPointTagServicesMenu ||
+                showMapNewPointConfirmMenu
+        onMapLayersMenuVisibilityChange(shouldHideNavigation)
+    }
+
+    LaunchedEffect(viewModel.selectedPoint.collectAsState().value) {
+        viewModel.selectedPoint.value?.let { latLng ->
+            val address = viewModel.selectedAddress.value ?: "No address available"
         }
     }
 
@@ -150,15 +217,36 @@ fun HomeScreen(
         }
     } else {
         Box(modifier = Modifier.fillMaxSize()) {
+
             MapComponent(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 currentLocation = currentLocation,
                 isLocationEnabled = locationPermission.status.isGranted,
                 selectedLayer = selectedLayer,
+                nearbyPlaces = nearbyPlaces,
+                selectedFilterTypes = selectedFilterTypes,
                 onLocationVisibilityChanged = { visible ->
                     isLocationVisible = visible
+                },
+                isSelectingPoint = isSelectingPoint,
+                isShowingRoutePoint = showMapNewPointMenu,
+                onMapClick = {
+                    if (isSelectingPoint) {
+                        val centerLatLng = cameraPositionState.position.target
+                        viewModel.selectPoint(centerLatLng)
+                        isSelectingPoint = false
+                        showBottomActionButtons = true
+                        showMapNewPointMenu = true
+                    }
+                },
+                onMapLoadedCallback = {
+                    isMapLoaded = true
+                },
+                onPlaceSelected = { place ->
+                    selectedPlace = place
                 }
+
             )
 
             LocationActionButtons(
@@ -166,7 +254,12 @@ fun HomeScreen(
                     scope.launch {
                         viewModel.fetchUserLocation()
                         delay(100)
-                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f), 1000)
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(
+                                currentLocation,
+                                15f
+                            ), 1000
+                        )
                     }
                 },
                 onMapLayerClick = { showMapLayersMenu = true },
@@ -180,23 +273,47 @@ fun HomeScreen(
             FilterMenu(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .offset(y = 120.dp, x = 20.dp)
+                    .offset(y = 120.dp, x = 20.dp),
+                onFiltersChanged = { filters ->
+                    selectedFilterTypes = filters
+                }
             )
 
             TopCenterButton(
                 onNavigateToResults = { navController.navigate("results") },
+                viewModel = viewModel,
+                cameraPositionState = cameraPositionState,
+                selectedFilterTypes = selectedFilterTypes,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 120.dp, start = 5.5.dp)
             )
 
-            BottomActionButtons(
-                onNavigateToResults = { navController.navigate("results") },
-                onAddAction = { showMapCreatePointRouteMenu = true },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
-            )
+            if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
+                BottomActionButtons(
+                    onNavigateToResults = { navController.navigate("results") },
+                    onAddAction = {
+                        showBottomActionButtons = false
+                        showMapCreatePointRouteMenu = true
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 101.dp)
+                )
+            } else if (selectedPlace == null){
+                BottomCoordButton(
+                    onNavigateToResults = { navController.navigate("results") },
+                    onAddAction = {
+                        showBottomActionButtons = true
+                        showMapCreatePointRouteMenu = false
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 300.dp)
+                )
+            }
+
+
 
 
             SearchBar(
@@ -207,30 +324,132 @@ fun HomeScreen(
                 onResultSelected = viewModel::selectSearchResult,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(start = 20.dp, end = 20.dp)
             )
 
-
-            //bottomsheetscaffold
             if (showMapLayersMenu) {
+
                 MapLayersMenu(
                     selectedLayer = selectedLayer,
                     selectedOption = selectedOption,
                     onLayerSelected = { layer -> viewModel.updateMapLayer(layer) },
                     onOptionSelected = { option -> viewModel.updateMapOption(option) },
                     onDismiss = { showMapLayersMenu = false }
+
                 )
             }
 
-            if(showMapCreatePointRouteMenu){
+            if (showMapCreatePointRouteMenu) {
                 MapNewRoutePointMenu(
                     selectedRoutePoint = selectedRoutePoint,
-                    onLayerSelected = { layer -> viewModel.selectRoutePoint(layer)},
-                    onDismiss = { showMapCreatePointRouteMenu = false }
+                    onLayerSelected = { routePoint ->
+                        viewModel.selectRoutePoint(routePoint)
+                        if (routePoint == MapNewPointRoute.CREATE_POINT) {
+                            println("DEBUG: Seleccionando CREATE_POINT")
+                            showMapCreatePointRouteMenu = false
+                            showMapNewPointMenu = true
+                            isSelectingPoint = true
+                            println("DEBUG: isSelectingPoint = $isSelectingPoint")
+                        }
+                    },
+                    onDismiss = {
+                        showMapCreatePointRouteMenu = false
+                        showBottomActionButtons = true
+                    }
                 )
-
             }
 
+            if (showMapNewPointMenu) {
+                MapNewPointMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onDismiss = {
+                        showMapNewPointMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    onClearAndDismiss = {
+                        viewModel.clearSelectedPoint()
+                        showBottomActionButtons = false
+                        isSelectingPoint = true
+
+                    },
+                    onConfirm = {
+                        showMapNewPointMenu = false
+                        showMapNewPointNameMenu = true
+                    },
+                )
+            }
+
+            if (showMapNewPointNameMenu) {
+                MapNewPointNameMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onDismiss = {
+                        showMapNewPointNameMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    onConfirm = {
+                        showMapNewPointNameMenu = false
+                        showMapNewPointConfirmMenu = true
+                    },
+                    onNameConfirmed = { name ->
+                        viewModel.saveNewPoint(name)
+                    },
+                )
+            }
+
+            if(showMapNewPointConfirmMenu){
+                MapNewPointConfirmMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    selectedAddress = viewModel.selectedAddress.value,
+                    selectedName = viewModel.selectedName.value,
+                    onDismiss = {
+                        showMapNewPointConfirmMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    onConfirm = {
+                        showMapNewPointTagMenu = true
+                        showMapNewPointConfirmMenu = false
+                    }
+                )
+            }
+
+            if(showMapNewPointTagMenu){
+                MapNewPointTagMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewPointTagMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = viewModel.selectedAddress.value,
+                    onConfirm = {
+                        showMapNewPointTagMenu = false
+                        showMapNewPointTagServicesMenu = true
+                    }
+                )
+            }
+
+            if(showMapNewPointTagServicesMenu){
+                MapNewPointTagServicesMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewPointTagServicesMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                        viewModel.clearSelectedPoint()
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = viewModel.selectedAddress.value
+                )
+            }
         }
     }
 }

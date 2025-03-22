@@ -16,5 +16,11 @@ val BackgroundColorList = Color(0xFF484848)
 val BackgroundColorButtonPrincipal = Color(0xFFFF5670)
 val BackgroundColorCard = Color(0xFFF8F8F8)
 val BackgroundUnselected = Color(0xFF8A9E9E)
+val MainColor = Color(0xFF32788C)
+val BlackGray = Color(0xFF484848)
+val WhiteGray = Color(0xFFF8F8F8)
+val BackgroundColorImage = Color(0xFFD9D9D9)
+
+
 
 val TextColor = Color(0xFF484848)

@@ -34,17 +34,17 @@ class ActivityOnboarding : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        if (isReinstalled(this)) {
-            firebaseAuth.signOut()
-            onboardingPreferences.resetOnboarding()
-        }
-
-        if (isFirstLaunch(this)) {
-            FirebaseAuth.getInstance().apply {
-                signOut()
-            }
-
-        }
+//        if (isReinstalled(this)) {
+//            firebaseAuth.signOut()
+//            onboardingPreferences.resetOnboarding()
+//        }
+//
+//        if (isFirstLaunch(this)) {
+//            FirebaseAuth.getInstance().apply {
+//                signOut()
+//            }
+//
+//        }
 
         if (firebaseAuth.currentUser != null) {
             startActivity(Intent(this, ActivityMain::class.java))

@@ -20,10 +20,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.maps.android.compose.CameraPositionState
 import com.vango.R
+import com.vango.presentation.main.home.HomeViewModel
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 import com.vango.presentation.theme.BackgroundColorList
@@ -208,13 +210,67 @@ fun BottomActionButtons(
     }
 }
 
+
+@Composable
+fun BottomCoordButton(
+    onNavigateToResults: () -> Unit,
+    onAddAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(
+            modifier = Modifier
+                .width(50.dp)
+                .height(0.dp)
+        )
+
+        Surface(
+            onClick = onAddAction,
+            modifier = Modifier
+                .size(60.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+            shape = RoundedCornerShape(13.dp),
+            color = BackgroundColorButtonPrincipal
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.coord),
+                    contentDescription = "Agregar",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.Unspecified
+                )
+                Text(
+                    text = "Buscar por coord.",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Light,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun TopCenterButton(
     onNavigateToResults: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cameraPositionState: CameraPositionState,
+    selectedFilterTypes: Set<Int>,
+    viewModel: HomeViewModel,
 ) {
     Surface(
-        onClick = onNavigateToResults,
+        onClick = {
+            val centerLatLng = cameraPositionState.position.target
+            viewModel.searchNearbyPlaces(centerLatLng, radius = 5000, placeType = 5)
+        },
         modifier = modifier
             .width(128.dp)
             .height(40.dp)
@@ -235,16 +291,4 @@ fun TopCenterButton(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomActionButtonsPreview() {
-    BottomActionButtons(
-        onNavigateToResults = {},
-        onAddAction = {},
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    )
 }

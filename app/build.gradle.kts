@@ -142,6 +142,8 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.google.places)
+    implementation(libs.coil.compose)
+
 
     //AsyncImage
 

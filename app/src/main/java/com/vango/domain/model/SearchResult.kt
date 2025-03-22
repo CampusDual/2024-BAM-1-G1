@@ -6,5 +6,6 @@ data class SearchResult(
     val longitude: Double,
     val placeId: String? = null,
     val secondaryText: String? = null,
+    val types: List<String> = emptyList(),
     val distanceMeters: Int? = null
 )

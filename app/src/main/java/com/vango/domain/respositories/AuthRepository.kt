@@ -17,4 +17,6 @@ interface AuthRepository {
     fun logout()
     suspend fun verifyUserEmail(verifyUserEmailRequestDto: AuthVerifyUserEmailUpUserRequestDto): Response<AuthVerifyUserEmailUpUserResponseDto>
     suspend fun logInWhitToken(token: String): Response<AuthWhitTokenResponseDto>
+    fun getCurrentIdToken(): String?
+    suspend fun refreshIdToken(): String?
 }
