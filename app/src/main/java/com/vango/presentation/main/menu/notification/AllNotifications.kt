@@ -1,4 +1,4 @@
-package com.vango.presentation.main.favorites
+package com.vango.presentation.main.menu.notification
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,8 +14,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun FavoritesScreen(navController: NavHostController,
-                    modifier: Modifier = Modifier
+fun AllNotificationsScreen(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -24,15 +25,9 @@ fun FavoritesScreen(navController: NavHostController,
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Pantalla de Favoritos",
+            "Todas las notificaciones",
             style = MaterialTheme.typography.headlineMedium
         )
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RoutesScreenPreview() {
-    val navController = rememberNavController()
-    FavoritesScreen(navController = navController)
-}

@@ -1,4 +1,4 @@
-package com.vango.presentation.main.favorites
+package com.vango.presentation.main.menu.support
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,13 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun FavoritesScreen(navController: NavHostController,
-                    modifier: Modifier = Modifier
+fun HelpScreen(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -24,15 +23,9 @@ fun FavoritesScreen(navController: NavHostController,
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Pantalla de Favoritos",
+            "Ayuda",
             style = MaterialTheme.typography.headlineMedium
         )
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RoutesScreenPreview() {
-    val navController = rememberNavController()
-    FavoritesScreen(navController = navController)
-}

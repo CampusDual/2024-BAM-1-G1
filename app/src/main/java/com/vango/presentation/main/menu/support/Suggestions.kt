@@ -1,4 +1,4 @@
-package com.vango.presentation.main.profile
+package com.vango.presentation.main.menu.support
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,10 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 
 @Composable
-fun ProfileScreen(
+fun SuggestionsScreen(
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -22,14 +23,8 @@ fun ProfileScreen(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Pantalla de Perfil",
+            "Sugerencias",
             style = MaterialTheme.typography.headlineMedium
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RoutesScreenPreview() {
-    ProfileScreen()
 }

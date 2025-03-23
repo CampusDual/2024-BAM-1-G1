@@ -23,3 +23,5 @@ val BackgroundColorImage = Color(0xFFD9D9D9)
 val YellowMelow = Color(0xFFFFD9A8)
 
 
+
+val TextColor = Color(0xFF484848)

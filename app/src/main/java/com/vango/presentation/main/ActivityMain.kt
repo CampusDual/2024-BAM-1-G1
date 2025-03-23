@@ -1,5 +1,6 @@
 package com.vango.presentation.main
 
+import MenuScreen
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +9,7 @@ import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
@@ -51,7 +54,14 @@ import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.main.favorites.FavoritesScreen
 import com.vango.presentation.main.home.HomeScreen
-import com.vango.presentation.main.profile.ProfileScreen
+import com.vango.presentation.main.menu.changescreens.ChangeEmailScreen
+import com.vango.presentation.main.menu.changescreens.ChangePasswordScreen
+import com.vango.presentation.main.menu.deleteaccount.DeleteAccountScreen
+import com.vango.presentation.main.menu.logout.LogoutScreen
+import com.vango.presentation.main.menu.notification.NotificationScreen
+import com.vango.presentation.main.menu.profile.ProfileScreen
+import com.vango.presentation.main.menu.settings.SettingsScreen
+import com.vango.presentation.main.menu.support.SupportScreen
 import com.vango.presentation.main.results.HomeList
 import com.vango.presentation.main.routes.RoutesScreen
 import com.vango.presentation.main.travels.TravelsScreen
@@ -139,7 +149,7 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             navController = navController,
             startDestination = "home",
             modifier = Modifier
-
+//                .padding(customPadding(innerPadding, systemBarsPadding))
                 .fillMaxSize()
         ) {
             composable("home") {
@@ -160,14 +170,45 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             composable("travels") {
                 TravelsScreen()
             }
-            composable("favorites") {
-                FavoritesScreen()
-            }
-            composable("menu") {
-                ProfileScreen()
-            }
+
             composable("results") {
                 HomeList(navController)
+            }
+            composable("menu") {
+               MenuScreen(navController
+               )
+            }
+            // Componentes composables del menu
+
+            composable("profile") {
+                ProfileScreen(navController)
+            }
+            composable("notifications") {
+                NotificationScreen(navController)
+            }
+            composable("favorites") {
+                FavoritesScreen(navController)
+            }
+            composable("settings") {
+                SettingsScreen(navController)
+            }
+            composable("support") {
+                SupportScreen(navController)
+            }
+            composable("logout") {
+                LogoutScreen(navController)
+            }
+            composable("change_password") {
+                ChangePasswordScreen(navController)
+            }
+            composable("change_email") {
+                ChangeEmailScreen(navController)
+            }
+            composable("log_out") {
+                LogoutScreen( navController)
+            }
+            composable("delete_account") {
+                DeleteAccountScreen(navController)
             }
         }
     }
@@ -284,7 +325,7 @@ fun BottomNavigationBar(
                     ),
                     modifier = Modifier.size(25.dp),
                     contentDescription = "Menú",
-                    tint = if (currentRoute == "menu") colorMain else iconColorUnselected
+                    tint = if (currentRoute == "menu"||currentRoute == "profile"||currentRoute == "notifications"||currentRoute == "favorites"||currentRoute == "settings"||currentRoute == "support"||currentRoute == "logout") colorMain else iconColorUnselected
                 )
             },
             label = {
@@ -292,7 +333,7 @@ fun BottomNavigationBar(
                     text = "Menú",
                     fontSize = 9.sp,
                     fontWeight = if (currentRoute == "menu") FontWeight.Bold else FontWeight.Normal,
-                    color = if (currentRoute == "menu") colorMain else iconColorUnselected
+                    color = if (currentRoute == "menu"||currentRoute == "profile"||currentRoute == "notifications"||currentRoute == "favorites"||currentRoute == "settings"||currentRoute == "support"||currentRoute == "logout") colorMain else iconColorUnselected
                 )
             },
             selected = currentRoute == "menu",
@@ -314,7 +355,7 @@ fun HomeContentPreview() {
         bottomBar = {
             BottomNavigationBar(
                 currentRoute = "home",
-                onItemSelected = { },
+                onItemSelected = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets(0, 0, 0, 0))
