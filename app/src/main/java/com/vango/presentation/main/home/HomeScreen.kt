@@ -45,6 +45,8 @@ import com.vango.presentation.main.home.components.FilterMenu
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
+import com.vango.presentation.main.home.components.MapNewImageServiceMenu
+import com.vango.presentation.main.home.components.MapNewImageServiceUploadMenu
 import com.vango.presentation.main.home.components.MapNewPointConfirmMenu
 import com.vango.presentation.main.home.components.MapNewPointMenu
 import com.vango.presentation.main.home.components.MapNewPointNameMenu
@@ -94,12 +96,15 @@ fun HomeScreen(
     var showMapNewPointTagMenu by remember { mutableStateOf(false) }
     var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
     var showMapNewPointConfirmMenu by remember { mutableStateOf(false) }
+    var showMapNewImageServiceMenu by remember { mutableStateOf(false) }
     var isMapLoaded by remember { mutableStateOf(false) }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
 
     val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
     var selectedFilterTypes by remember { mutableStateOf<Set<Int>>(emptySet()) }
-    
+
+    var images by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    var showMapNewImageServiceUploadMenu by remember { mutableStateOf(false) }
     
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
@@ -159,7 +164,9 @@ fun HomeScreen(
         showMapNewPointNameMenu,
         showMapNewPointTagMenu,
         showMapNewPointTagServicesMenu,
-        showMapNewPointConfirmMenu
+        showMapNewPointConfirmMenu,
+        showMapNewImageServiceMenu,
+        showMapNewImageServiceUploadMenu
     ) {
         val shouldHideNavigation = showMapLayersMenu ||
                 showMapCreatePointRouteMenu ||
@@ -167,7 +174,9 @@ fun HomeScreen(
                 showMapNewPointNameMenu ||
                 showMapNewPointTagMenu ||
                 showMapNewPointTagServicesMenu ||
-                showMapNewPointConfirmMenu
+                showMapNewPointConfirmMenu ||
+                showMapNewImageServiceMenu ||
+                showMapNewImageServiceUploadMenu
         onMapLayersMenuVisibilityChange(shouldHideNavigation)
     }
 
@@ -446,8 +455,53 @@ fun HomeScreen(
                         isSelectingPoint = false
                         viewModel.clearSelectedPoint()
                     },
+                    onConfirm = {
+                        showMapNewPointTagServicesMenu = false
+                        showMapNewImageServiceMenu = true
+
+                    },
                     selectedAddress = viewModel.selectedAddress.value,
                     onNameConfirmed = viewModel.selectedAddress.value
+                )
+            }
+
+            if(showMapNewImageServiceMenu)
+            {
+                MapNewImageServiceMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewImageServiceMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = viewModel.selectedAddress.value,
+                    onConfirm = {
+                        showMapNewImageServiceMenu = false
+                    },
+                    onImagesSelected = { selectedImages ->
+                        images = selectedImages
+                        showMapNewImageServiceUploadMenu = true
+                    }
+                )
+            }
+
+            if(showMapNewImageServiceUploadMenu)
+            {
+                MapNewImageServiceUploadMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewImageServiceUploadMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = viewModel.selectedAddress.value,
+                    onConfirm = { updatedImages ->
+                        images = updatedImages
+                        showMapNewImageServiceMenu = false
+                    },
+                    initialImages = images
                 )
             }
         }
