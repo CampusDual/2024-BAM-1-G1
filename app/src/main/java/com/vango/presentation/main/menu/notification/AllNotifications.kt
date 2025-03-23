@@ -30,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.vango.R
 import com.vango.presentation.theme.BlackGray
 import com.vango.presentation.theme.TextColor
@@ -37,8 +39,7 @@ import com.vango.presentation.theme.TextColor
 
 @Composable
 fun AllNotificationsScreen(
-    notifications: List<Notification> = emptyList(),
-    alertas: List<Alertas> = emptyList()
+    notifications: List<Notification> = emptyList()
 ) {
     // Si no hay notificaciones, muestra un mensaje centralizado
     if (notifications.isEmpty()) {
@@ -148,22 +149,19 @@ fun NotificationItem(notification: Notification) {
 // Modelo de datos para las notificaciones
 data class Notification(
     val sender: String,
+    val alert: Boolean,
     val title: String
 )
 
-data class Alertas(
-    val sender: String,
-    val title: String
-)
 
 // Vista previa para pruebas
 @Preview(showBackground = true)
 @Composable
 fun NotificationsScreenPreview() {
     val notifications = listOf(
-        Notification("Alice", "Nueva actualización disponible"),
-        Notification("Bob", "Recordatorio: Reunión a las 3 PM"),
-        Notification("Charlie", "Tu pedido ha sido enviado")
+        Notification("Alice", true,"Nueva actualización disponible"),
+        Notification("Bob", false,"Recordatorio: Reunión a las 3 PM"),
+        Notification("Charlie", true,"Tu pedido ha sido enviado")
     )
     AllNotificationsScreen(notifications)
 }
@@ -171,6 +169,9 @@ fun NotificationsScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun EmptyNotificationsScreenPreview() {
-    AllNotificationsScreen()
+    val notifications = emptyList<Notification>()
+    AllNotificationsScreen(
+        notifications
+    )
 }
 

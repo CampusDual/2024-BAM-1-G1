@@ -15,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun AlertsScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Box(

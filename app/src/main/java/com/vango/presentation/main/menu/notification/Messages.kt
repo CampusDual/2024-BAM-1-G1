@@ -15,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun MessagesScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -25,7 +24,7 @@ fun MessagesScreen(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Mensajes",
+            "Mensajes Privados",
             style = MaterialTheme.typography.headlineMedium
         )
     }
