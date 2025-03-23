@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:paddingHorizontal="20dp"
-    tools:context=".presentation.auth.profile.ActivityProfile">
+    tools:context=".presentation.auth.completeProfile.ActivityCompleteProfile">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

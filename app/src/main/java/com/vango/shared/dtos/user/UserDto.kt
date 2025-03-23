@@ -1,4 +1,4 @@
-package com.vango.shared.dtos
+package com.vango.shared.dtos.user
 
 import com.google.firebase.firestore.Exclude
 
