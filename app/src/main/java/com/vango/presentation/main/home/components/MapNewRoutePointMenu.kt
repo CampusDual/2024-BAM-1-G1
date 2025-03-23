@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -661,37 +663,129 @@ fun MapNewPointTagMenu(
     val subcategories = remember {
         mapOf(
             "Campings" to mapOf(
-                "Camping" to "De corta estancia, abierto generalmente por temporada. Destinada al turismo vacacional. Cuenta con muchos servicios, que pueden ser de pago.",
-                "Gampling" to "De corta estancia, abierto generalmente por temporada. Destinada al turismo vacacional. Puede tener parte camping normal, pero al menos tiene una zona de bungalows o tiendas de diseño.",
-                "Camping residencial" to "Abierto todo el año. Puede ser para estancias vacacionales o de vivienda habitual. Son privados, y no suelen admitir alquiler por temporada. Las parcelas son compradas o arrendadas para largas estancias."
+                "Camping" to Triple(
+                    "Camping Estacional",
+                    "De corta estancia, abierto generalmente por temporada. Destinada al turismo vacacional. Cuenta con muchos servicios, que pueden ser de pago.",
+                    R.drawable.camper_no_fill
+                ),
+                "Gampling" to Triple(
+                    "Gampling de Lujo",
+                    "De corta estancia, abierto generalmente por temporada. Destinada al turismo vacacional. Puede tener parte camping normal, pero al menos tiene una zona de bungalows o tiendas de diseño.",
+                    R.drawable.gampling
+                ),
+                "Camping residencial" to Triple(
+                    "Residencial Permanente",
+                    "Abierto todo el año. Puede ser para estancias vacacionales o de vivienda habitual. Son privados, y no suelen admitir alquiler por temporada. Las parcelas son compradas o arrendadas para largas estancias.",
+                    R.drawable.residencial_camping
+                )
             ),
             "Área de AC" to mapOf(
-                "Área AC pública" to "Espacio gratuito gestionado por entidades públicas para autocaravanas.",
-                "Área AC " to "Zona de pago gestionada por empresas o particulares para autocaravanas.",
-                "Área AC sin servicios" to "Espacio básico sin agua, electricidad ni vertederos.",
-                "Área AC no oficial" to "Lugar no regulado usado informalmente por autocaravanistas."
+                "Área AC pública" to Triple(
+                    "Área Pública Gratuita",
+                    "Espacio gratuito gestionado por entidades públicas para autocaravanas.",
+                    R.drawable.ac_area
+                ),
+                "Área AC " to Triple(
+                    "Área de Pago",
+                    "Zona de pago gestionada por empresas o particulares para autocaravanas.",
+                    R.drawable.private_area
+                ),
+                "Área AC sin servicios" to Triple(
+                    "Área Básica",
+                    "Espacio básico sin agua, electricidad ni vertederos.",
+                    R.drawable.sn_area
+                ),
+                "Área AC no oficial" to Triple(
+                    "Área Informal",
+                    "Lugar no regulado usado informalmente por autocaravanistas.",
+                    R.drawable.no_oficial_area
+                )
             ),
             "Puntos de venta" to mapOf(
-                "Accesorios camping" to "Tienda especializada en equipamiento para camping y autocaravanas.",
-                "Tienda de comestibles" to "Establecimiento con alimentos y productos básicos para viajeros.",
-                "Punto venta GLP" to "Lugar para recargar gas licuado de petróleo para vehículos o cocinas.",
-                "Otros puntos de venta" to "Comercios diversos para necesidades de los campistas."
+                "Accesorios camping" to Triple(
+                    "Tienda de Accesorios",
+                    "Tienda especializada en equipamiento para camping y autocaravanas.",
+                    R.drawable.ex
+                ),
+                "Tienda de comestibles" to Triple(
+                    "Comestibles Básicos",
+                    "Establecimiento con alimentos y productos básicos para viajeros.",
+                    R.drawable.ex
+                ),
+                "Punto venta GLP" to Triple(
+                    "Recarga de GLP",
+                    "Lugar para recargar gas licuado de petróleo para vehículos o cocinas.",
+                    R.drawable.ex
+                ),
+                "Otros puntos de venta" to Triple(
+                    "Venta Variada",
+                    "Comercios diversos para necesidades de los campistas.",
+                    R.drawable.ex
+                )
             ),
             "Servicios" to mapOf(
-                "Lavandería" to "Servicio para lavar y secar ropa durante el viaje.",
-                "Farmacia" to "Establecimiento para medicamentos y productos de salud.",
-                "Gasolinera" to "Punto de repostaje de combustible para vehículos.",
-                "Área de servicio" to "Zona con múltiples servicios como agua, electricidad y vertederos.",
-                "Centro de salud" to "Instalación médica para emergencias o consultas.",
-                "Punto de carga" to "Estación para recargar vehículos eléctricos.",
-                "Taller" to "Servicio de reparación y mantenimiento de vehículos.",
-                "Supermercado" to "Tienda grande con variedad de productos para campistas."
+                "Lavandería" to Triple(
+                    "Servicio de Lavandería",
+                    "Servicio para lavar y secar ropa durante el viaje.",
+                    R.drawable.ex
+                ),
+                "Farmacia" to Triple(
+                    "Farmacia de Viaje",
+                    "Establecimiento para medicamentos y productos de salud.",
+                    R.drawable.ex
+                ),
+                "Gasolinera" to Triple(
+                    "Estación de Combustible",
+                    "Punto de repostaje de combustible para vehículos.",
+                    R.drawable.ex
+                ),
+                "Área de servicio" to Triple(
+                    "Área Multiservicio",
+                    "Zona con múltiples servicios como agua, electricidad y vertederos.",
+                    R.drawable.ex
+                ),
+                "Centro de salud" to Triple(
+                    "Atención Médica",
+                    "Instalación médica para emergencias o consultas.",
+                    R.drawable.ex
+                ),
+                "Punto de carga" to Triple(
+                    "Carga Eléctrica",
+                    "Estación para recargar vehículos eléctricos.",
+                    R.drawable.ex
+                ),
+                "Taller" to Triple(
+                    "Reparación de Vehículos",
+                    "Servicio de reparación y mantenimiento de vehículos.",
+                    R.drawable.ex
+                ),
+                "Supermercado" to Triple(
+                    "Supermercado Completo",
+                    "Tienda grande con variedad de productos para campistas.",
+                    R.drawable.ex
+                )
             ),
             "Puntos de Interés" to mapOf(
-                "Tienda" to "Comercio local de interés para visitantes.",
-                "Mercadillo" to "Mercado al aire libre con productos variados.",
-                "Online" to "Servicio o recurso accesible por internet.",
-                "Feria" to "Evento temporal con actividades y ventas."
+                "Tienda" to Triple(
+                    "Tienda Local",
+                    "Comercio local de interés para visitantes.",
+                    R.drawable.ex
+                ),
+                "Mercadillo" to Triple(
+                    "Mercado al Aire Libre",
+                    "Mercado al aire libre con productos variados.",
+                    R.drawable.ex
+                ),
+                "Online" to Triple(
+                    "Recurso Online",
+                    "Servicio o recurso accesible por internet.",
+                    R.drawable.ex
+                ),
+                "Feria" to Triple(
+                    "Feria Temporal",
+                    "Evento temporal con actividades y ventas.",
+                    R.drawable.ex
+                )
             )
         )
     }
@@ -700,8 +794,8 @@ fun MapNewPointTagMenu(
         "Campings" to R.drawable.camper_no_fill,
         "Área de AC" to R.drawable.ac_area,
         "Puntos de venta" to R.drawable.sell_point,
-        "Servicios" to R.drawable.ex,
-        "Puntos de Interés" to R.drawable.ex
+        "Servicios" to R.drawable.services,
+        "Puntos de Interés" to R.drawable.interest_point
     )
 
     LaunchedEffect(Unit) {
@@ -887,7 +981,7 @@ fun MapNewPointTagMenu(
                                     verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     selectedSubcategory?.let { selected ->
-                                        val description = currentSubcategories[selected] ?: ""
+                                        val (title, description, iconRes) = currentSubcategories[selected] ?: Triple("", "", R.drawable.ex)
                                         Column {
                                             Row(
                                                 modifier = Modifier.fillMaxWidth(),
@@ -895,14 +989,14 @@ fun MapNewPointTagMenu(
                                             ) {
                                                 ButtonCategory(
                                                     text = selected,
-                                                    iconRes = R.drawable.ex,
+                                                    iconRes = iconRes,
                                                     isSelected = true,
                                                     onClick = { selectedSubcategory = null }
                                                 )
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Column {
                                                     Text(
-                                                        text = selected,
+                                                        text = title,
                                                         fontSize = 12.sp,
                                                         fontWeight = FontWeight.Bold,
                                                         color = Color.Black
@@ -919,17 +1013,17 @@ fun MapNewPointTagMenu(
                                         }
                                     }
 
-                                    val remainingSubcategories =
-                                        currentSubcategories.keys.filter { it != selectedSubcategory }
+                                    val remainingSubcategories = currentSubcategories.keys.filter { it != selectedSubcategory }
                                     remainingSubcategories.chunked(4).forEach { chunk ->
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
                                             horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
                                             chunk.forEach { subcategory ->
+                                                val (title, description, iconRes) = currentSubcategories[subcategory] ?: Triple("", "", R.drawable.ex)
                                                 ButtonCategory(
-                                                    text = subcategory,
-                                                    iconRes = R.drawable.ex,
+                                                    text = title,
+                                                    iconRes = iconRes,
                                                     isSelected = false,
                                                     onClick = { selectedSubcategory = subcategory }
                                                 )
@@ -1446,7 +1540,7 @@ fun MapNewPointTagServicesMenu(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Row(
@@ -1574,56 +1668,56 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Agua potable",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.water,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Electricidad",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.electricity,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Baños públicos",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.public_wc,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Duchas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.shower,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Internet",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.internet,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Lavandería",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.laundry_no_fill,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Buena cobertura",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.high_coberture,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Mala Cobertura",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.low_coberture,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1654,28 +1748,28 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Aguas grises",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.grey_water,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Aguas negras",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.black_water,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Parcelas con sombra",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.shadow_location,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Suministro de gas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.gas_supply,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1708,14 +1802,14 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Se admiten mascotas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.dog,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Instalacioens para perros",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.dog_friendly,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1753,7 +1847,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Piscina",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.pool,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1761,7 +1855,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Zona Infantil",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.infantil_zone,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1769,7 +1863,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Cafetería",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.bar,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1777,21 +1871,21 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Restaurante",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.restaurant,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Zona de barbacoa",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.barbacoa,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
                                     )
                                     ButtonService(
                                         text = "Supermercado",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.supermarket,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1823,7 +1917,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Parcelas de larga estancia",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.long_stance,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1831,7 +1925,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Bungalows",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.bungalow,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1839,7 +1933,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Cabañas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.cabain,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1847,7 +1941,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Zona de acampada",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.camping_zone,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1880,7 +1974,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Alquiler de bicicletas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.bike_rent,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1888,7 +1982,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Actividades infantiles",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.infantil_activities,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1896,7 +1990,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Actividades acuáticas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.acuatic_activities,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -1904,7 +1998,7 @@ fun MapNewPointTagServicesMenu(
 
                                     ButtonService(
                                         text = "Excursiones guiadas",
-                                        iconRes = R.drawable.ex,
+                                        iconRes = R.drawable.guide_excursions,
                                         tint = Color.White,
                                         color = MainColor,
                                         onClick = { /*TODO*/ },
@@ -2078,7 +2172,7 @@ fun MapNewImageServiceMenu(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Row(
@@ -2118,6 +2212,19 @@ fun MapNewImageServiceMenu(
                             }
                         }
 
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Sube fotos de este punto",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                        }
+
+
                         Surface(
                             color = MainColor,
                             modifier = Modifier.size(32.dp),
@@ -2148,17 +2255,6 @@ fun MapNewImageServiceMenu(
 
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Sube fotos de este punto",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -2320,7 +2416,7 @@ fun MapNewLastDatesMenu(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Row(
@@ -2793,7 +2889,6 @@ fun MapNewImageServiceUploadMenu(
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
-    var nameInput by remember { mutableStateOf("") }
     val context = LocalContext.current
     var images by remember { mutableStateOf(initialImages) }
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
@@ -2812,17 +2907,14 @@ fun MapNewImageServiceUploadMenu(
             }
         }
     }
-
     val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
             val file = File(context.cacheDir, "camera_photo_${System.currentTimeMillis()}.jpg")
             val uri = FileProvider.getUriForFile(context, "com.vango.fileprovider", file)
             cameraUri = uri
             cameraLauncher.launch(uri)
-        } else {
         }
     }
-
 
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
@@ -2836,27 +2928,23 @@ fun MapNewImageServiceUploadMenu(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn()
+                .fillMaxHeight()
                 .align(Alignment.TopStart)
                 .offset(y = offsetY.value.dp),
             shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
-            color = Color.White,
+            color = Color.White
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
+                    .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Surface(
                             color = BackgroundColorList,
@@ -2884,7 +2972,6 @@ fun MapNewImageServiceUploadMenu(
 
                             }
                         }
-
                         Surface(
                             color = MainColor,
                             modifier = Modifier.size(32.dp),
@@ -2912,52 +2999,60 @@ fun MapNewImageServiceUploadMenu(
                             }
                         }
                     }
-
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Sube fotos de este punto",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Sube fotos de este punto",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Sería de gran ayuda para la comunidad, que pudieras subir algunas fotos de este punto.",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black,
-                        textAlign = TextAlign.Center
-                    )
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Sería de gran ayuda para la comunidad, que pudieras subir algunas fotos de este punto.",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .background(BackgroundColorImage, shape = RoundedCornerShape(20.dp))
-                        .fillMaxWidth()
-                        .height(244.dp),
-                    contentAlignment = Alignment.TopStart
-
-                ) {
-                    Column {
-
+                item {
+                    Box(
+                        modifier = Modifier
+                            .background(BackgroundColorImage, shape = RoundedCornerShape(20.dp))
+                            .fillMaxWidth()
+                            .height(244.dp)
+                    ) {
+                        if (images.isNotEmpty()) {
+                            Image(
+                                painter = rememberAsyncImagePainter(images[0]),
+                                contentDescription = "Foto de portada",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(BackgroundColorImage, shape = RoundedCornerShape(20.dp))
+                            )
+                        }
                         Row(
                             modifier = Modifier
-                                .padding(start = 12.dp, end = 12.dp, top = 10.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                                .fillMaxWidth()
+                                .padding(start = 12.dp, end = 12.dp, top = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-
                             Surface(
                                 modifier = Modifier
                                     .width(100.dp)
@@ -2986,17 +3081,13 @@ fun MapNewImageServiceUploadMenu(
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.points_more),
-                                        contentDescription = "Cerrar",
+                                        contentDescription = "Eliminar",
                                         modifier = Modifier
                                             .width(12.5.dp)
                                             .height(14.29.dp)
                                             .clickable {
-                                                scope.launch {
-                                                    offsetY.animateTo(
-                                                        600f,
-                                                        animationSpec = tween(300)
-                                                    )
-                                                    onDismiss()
+                                                if (images.isNotEmpty()) {
+                                                    images = images.drop(1)
                                                 }
                                             },
                                         tint = Color.Black
@@ -3004,368 +3095,229 @@ fun MapNewImageServiceUploadMenu(
                                 }
                             }
                         }
-                        if (images.isNotEmpty()) {
-                            Image(
-                                painter = rememberAsyncImagePainter(images[0]),
-                                contentDescription = "Foto de portada",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(206.dp)
-                                    .padding(top = 38.dp)
-                            )
-                        }
                     }
-
-
                 }
 
+                items(images.drop(1).chunked(2)) { pair ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        pair.forEach { uri ->
+                            Box(
+                                modifier = Modifier
+                                    .background(BackgroundColorImage, shape = RoundedCornerShape(20.dp))
+                                    .width(170.dp)
+                                    .height(132.dp)
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(uri),
+                                    contentDescription = "Foto adicional",
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                                Surface(
+                                    color = Color.White,
+                                    modifier = Modifier.size(32.dp).align(Alignment.TopEnd).padding(top = 10.dp, end = 10.dp),
+                                    shape = RoundedCornerShape(6.dp),
 
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(top = 16.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    images.drop(1).chunked(2).forEach { pair ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            pair.forEach { uri ->
-                                Box(
-                                    modifier = Modifier
-                                        .background(
-                                            BackgroundColorImage,
-                                            shape = RoundedCornerShape(20.dp)
-                                        )
-                                        .width(170.dp)
-                                        .height(132.dp)
                                 ) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(uri),
-                                        contentDescription = "Foto adicional",
-                                        modifier = Modifier.fillMaxSize()
-                                    )
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center,
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.points_more),
+                                            contentDescription = "Cerrar",
+                                            modifier = Modifier
+                                                .width(12.5.dp)
+                                                .height(14.29.dp)
+                                                .clickable {
+                                                    val index = images.indexOf(uri)
+                                                    if (index != -1) {
+                                                        images = images.toMutableList().apply { removeAt(index) }
+                                                    }
+                                                },
+                                            tint = Color.Black
+                                        )
+                                    }
                                 }
                             }
 
-                            if (pair.size < 2) {
-                                Spacer(modifier = Modifier.width(170.dp))
-                            }
+                        }
+                        if (pair.size < 2) {
+                            Spacer(modifier = Modifier.width(170.dp))
                         }
                     }
                 }
 
                 if (images.size < 10) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(170.dp)
-                                .height(132.dp)
-                                .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
-                                .drawBehind {
-                                    val strokeWidth = 1.dp.toPx()
-                                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
-                                    drawRoundRect(
-                                        color = Color.Gray,
-                                        size = size,
-                                        cornerRadius = CornerRadius(20.dp.toPx()),
-                                        style = Stroke(width = strokeWidth, pathEffect = pathEffect)
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Surface(color = Color.White) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.camera),
-                                        contentDescription = "Hacer fotos",
-                                        modifier = Modifier
-                                            .width(28.dp)
-                                            .height(28.dp)
-                                            .clickable {
-                                                cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                                            },
-                                        tint = BlackGray
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Hacer fotos",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = BlackGray,
-                                        textAlign = TextAlign.Center
-                                    )
+                            Box(
+                                modifier = Modifier
+                                    .width(170.dp)
+                                    .height(132.dp)
+                                    .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
+                                    .drawBehind {
+                                        val strokeWidth = 1.dp.toPx()
+                                        val pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
+                                        drawRoundRect(
+                                            color = Color.Gray,
+                                            size = size,
+                                            cornerRadius = CornerRadius(20.dp.toPx()),
+                                            style = Stroke(width = strokeWidth, pathEffect = pathEffect)
+                                        )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Surface(color = Color.White) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.camera),
+                                            contentDescription = "Hacer fotos",
+                                            modifier = Modifier
+                                                .width(28.dp)
+                                                .height(28.dp)
+                                                .clickable {
+                                                    cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                                                },
+                                            tint = BlackGray
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text(
+                                            text = "Hacer fotos",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            color = BlackGray,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                 }
                             }
-                        }
 
-                        Box(
-                            modifier = Modifier
-                                .width(170.dp)
-                                .height(132.dp)
-                                .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
-                                .drawBehind {
-                                    val strokeWidth = 1.dp.toPx()
-                                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
-                                    drawRoundRect(
-                                        color = Color.Gray,
-                                        size = size,
-                                        cornerRadius = CornerRadius(20.dp.toPx()),
-                                        style = Stroke(width = strokeWidth, pathEffect = pathEffect)
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Surface(color = Color.White) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.plus),
-                                        contentDescription = "Añadir fotos",
-                                        modifier = Modifier
-                                            .width(28.dp)
-                                            .height(28.dp)
-                                            .clickable {
-                                                galleryLauncher.launch("image/*")
-                                            },
-                                        tint = BlackGray
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Añadir fotos",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = BlackGray,
-                                        textAlign = TextAlign.Center
-                                    )
+                            Box(
+                                modifier = Modifier
+                                    .width(170.dp)
+                                    .height(132.dp)
+                                    .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
+                                    .drawBehind {
+                                        val strokeWidth = 1.dp.toPx()
+                                        val pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
+                                        drawRoundRect(
+                                            color = Color.Gray,
+                                            size = size,
+                                            cornerRadius = CornerRadius(20.dp.toPx()),
+                                            style = Stroke(width = strokeWidth, pathEffect = pathEffect)
+                                        )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Surface(color = Color.White) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.plus),
+                                            contentDescription = "Añadir fotos",
+                                            modifier = Modifier
+                                                .width(28.dp)
+                                                .height(28.dp)
+                                                .clickable {
+                                                    galleryLauncher.launch("image/*")
+                                                },
+                                            tint = BlackGray
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text(
+                                            text = "Añadir fotos",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            color = BlackGray,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-//                Row(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Box(
-//                        modifier = Modifier
-//                            .width(170.dp)
-//                            .height(132.dp)
-//                            .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
-//                            .drawBehind {
-//                                val strokeWidth = 1.dp.toPx()
-//                                val pathEffect =
-//                                    PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
-//
-//                                drawRoundRect(
-//                                    color = Color.Gray,
-//                                    size = size,
-//                                    cornerRadius = CornerRadius(20.dp.toPx()),
-//                                    style = Stroke(width = strokeWidth, pathEffect = pathEffect)
-//                                )
-//                            },
-//                        contentAlignment = Alignment.TopStart
-//                    ) {
-//                        Row(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .fillMaxHeight(),
-//                            horizontalArrangement = Arrangement.Center,
-//                            verticalAlignment = Alignment.CenterVertically
-//                        ) {
-//                            Surface(
-//                                color = Color.White,
-//                            ) {
-//                                Column(
-//                                    horizontalAlignment = Alignment.CenterHorizontally,
-//                                    verticalArrangement = Arrangement.Center,
-//                                ) {
-//                                    Icon(
-//                                        painter = painterResource(id = R.drawable.camera),
-//                                        contentDescription = "Cerrar",
-//                                        modifier = Modifier
-//                                            .width(28.dp)
-//                                            .height(28.dp)
-//                                            .clickable {
-//                                                scope.launch {
-//                                                    offsetY.animateTo(
-//                                                        600f,
-//                                                        animationSpec = tween(300)
-//                                                    )
-//                                                    onDismiss()
-//                                                }
-//                                            },
-//                                        tint = BlackGray
-//                                    )
-//                                    Spacer(modifier = Modifier.height(4.dp))
-//                                    Text(
-//                                        text = "Hacer fotos",
-//                                        fontSize = 12.sp,
-//                                        fontWeight = FontWeight.Normal,
-//                                        color = BlackGray,
-//                                        textAlign = TextAlign.Center
-//                                    )
-//
-//                                }
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                    Box(
-//                        modifier = Modifier
-//                            .width(170.dp)
-//                            .height(132.dp)
-//                            .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
-//                            .drawBehind {
-//                                val strokeWidth = 1.dp.toPx()
-//                                val pathEffect =
-//                                    PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
-//
-//                                drawRoundRect(
-//                                    color = Color.Gray,
-//                                    size = size,
-//                                    cornerRadius = CornerRadius(20.dp.toPx()),
-//                                    style = Stroke(width = strokeWidth, pathEffect = pathEffect)
-//                                )
-//                            },
-//                        contentAlignment = Alignment.TopStart
-//                    ) {
-//                        Row(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .fillMaxHeight(),
-//                            horizontalArrangement = Arrangement.Center,
-//                            verticalAlignment = Alignment.CenterVertically
-//                        ) {
-//                            Surface(
-//                                color = Color.White,
-//                            ) {
-//                                Column(
-//                                    horizontalAlignment = Alignment.CenterHorizontally,
-//                                    verticalArrangement = Arrangement.Center,
-//                                ) {
-//                                    Icon(
-//                                        painter = painterResource(id = R.drawable.plus),
-//                                        contentDescription = "Cerrar",
-//                                        modifier = Modifier
-//                                            .width(28.dp)
-//                                            .height(28.dp)
-//                                            .clickable {
-//                                                scope.launch {
-//                                                    offsetY.animateTo(
-//                                                        600f,
-//                                                        animationSpec = tween(300)
-//                                                    )
-//                                                    onDismiss()
-//                                                }
-//                                            },
-//                                        tint = BlackGray
-//                                    )
-//                                    Spacer(modifier = Modifier.height(4.dp))
-//                                    Text(
-//                                        text = "Añadir fotos",
-//                                        fontSize = 12.sp,
-//                                        fontWeight = FontWeight.Normal,
-//                                        color = BlackGray,
-//                                        textAlign = TextAlign.Center
-//                                    )
-//
-//                                }
-//                            }
-//
-//                        }
-//
-//                    }
-//                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "¿Tienes dudas de qué fotos subir?",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Echa un vistazo a nusetras normas y\nrecomendaciones",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MainColor,
-                        textAlign = TextAlign.Center,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(51.dp),
-
-                    shape = RoundedCornerShape(20.dp),
-                    color = MainColor,
-                ) {
+                item {
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-
-                        ) {
-
-
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = "Subir imágenes",
-                            modifier = Modifier.padding(top = 6.dp),
-                            fontSize = 14.sp,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 3,
+                            text = "¿Tienes dudas de qué fotos subir?",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Black,
                             textAlign = TextAlign.Center
                         )
                     }
                 }
 
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Echa un vistazo a nuestras normas y\nrecomendaciones",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MainColor,
+                            textAlign = TextAlign.Center,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    }
+                }
+
+                item {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(51.dp)
+                            .clickable {
+                                scope.launch {
+                                    offsetY.animateTo(600f, animationSpec = tween(300))
+                                    onConfirm(images)
+                                    onDismiss()
+                                }
+                            },
+                        shape = RoundedCornerShape(20.dp),
+                        color = MainColor
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Subir imágenes",
+                                modifier = Modifier.padding(top = 6.dp),
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 3,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
-
 
 @Composable
 fun MapNewRoutePointButton(

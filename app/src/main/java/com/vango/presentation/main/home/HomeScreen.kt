@@ -47,6 +47,7 @@ import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
 import com.vango.presentation.main.home.components.MapNewImageServiceMenu
 import com.vango.presentation.main.home.components.MapNewImageServiceUploadMenu
+import com.vango.presentation.main.home.components.MapNewLastDatesMenu
 import com.vango.presentation.main.home.components.MapNewPointConfirmMenu
 import com.vango.presentation.main.home.components.MapNewPointMenu
 import com.vango.presentation.main.home.components.MapNewPointNameMenu
@@ -97,6 +98,7 @@ fun HomeScreen(
     var showMapNewPointTagServicesMenu by remember { mutableStateOf(false) }
     var showMapNewPointConfirmMenu by remember { mutableStateOf(false) }
     var showMapNewImageServiceMenu by remember { mutableStateOf(false) }
+    var showMapNewLastDatesMenu by remember { mutableStateOf(false) }
     var isMapLoaded by remember { mutableStateOf(false) }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
 
@@ -105,7 +107,7 @@ fun HomeScreen(
 
     var images by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showMapNewImageServiceUploadMenu by remember { mutableStateOf(false) }
-    
+    var isFullScreenOpen by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
     }
@@ -166,7 +168,8 @@ fun HomeScreen(
         showMapNewPointTagServicesMenu,
         showMapNewPointConfirmMenu,
         showMapNewImageServiceMenu,
-        showMapNewImageServiceUploadMenu
+        showMapNewImageServiceUploadMenu,
+        showMapNewLastDatesMenu
     ) {
         val shouldHideNavigation = showMapLayersMenu ||
                 showMapCreatePointRouteMenu ||
@@ -176,7 +179,8 @@ fun HomeScreen(
                 showMapNewPointTagServicesMenu ||
                 showMapNewPointConfirmMenu ||
                 showMapNewImageServiceMenu ||
-                showMapNewImageServiceUploadMenu
+                showMapNewImageServiceUploadMenu ||
+                showMapNewLastDatesMenu
         onMapLayersMenuVisibilityChange(shouldHideNavigation)
     }
 
@@ -254,86 +258,93 @@ fun HomeScreen(
                 },
                 onPlaceSelected = { place ->
                     selectedPlace = place
-                }
-
-            )
-
-            LocationActionButtons(
-                onMoveToLocation = {
-                    scope.launch {
-                        viewModel.fetchUserLocation()
-                        delay(100)
-                        cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(
-                                currentLocation,
-                                15f
-                            ), 1000
-                        )
-                    }
                 },
-                onMapLayerClick = { showMapLayersMenu = true },
-                selectedOption = selectedOption,
-                isLocationVisible = isLocationVisible,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(end = 20.dp, top = 120.dp)
-            )
+                onFullScreenChanged = { isFullScreenOpen = it }
 
-            FilterMenu(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(y = 120.dp, x = 20.dp),
-                onFiltersChanged = { filters ->
-                    selectedFilterTypes = filters
-                }
             )
-
-            TopCenterButton(
-                onNavigateToResults = { navController.navigate("results") },
-                viewModel = viewModel,
-                cameraPositionState = cameraPositionState,
-                selectedFilterTypes = selectedFilterTypes,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 120.dp, start = 5.5.dp)
-            )
-
-            if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
-                BottomActionButtons(
-                    onNavigateToResults = { navController.navigate("results") },
-                    onAddAction = {
-                        showBottomActionButtons = false
-                        showMapCreatePointRouteMenu = true
+            if(!isFullScreenOpen)
+            {
+                LocationActionButtons(
+                    onMoveToLocation = {
+                        scope.launch {
+                            viewModel.fetchUserLocation()
+                            delay(100)
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    currentLocation,
+                                    15f
+                                ), 1000
+                            )
+                        }
                     },
+                    onMapLayerClick = { showMapLayersMenu = true },
+                    selectedOption = selectedOption,
+                    isLocationVisible = isLocationVisible,
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 101.dp)
+                        .align(Alignment.TopEnd)
+                        .padding(end = 20.dp, top = 120.dp)
                 )
-            } else if (selectedPlace == null){
-                BottomCoordButton(
-                    onNavigateToResults = { navController.navigate("results") },
-                    onAddAction = {
-                        showBottomActionButtons = true
-                        showMapCreatePointRouteMenu = false
-                    },
+
+                FilterMenu(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 300.dp)
+                        .align(Alignment.TopStart)
+                        .offset(y = 120.dp, x = 20.dp),
+                    onFiltersChanged = { filters ->
+                        selectedFilterTypes = filters
+                    }
+                )
+
+                TopCenterButton(
+                    onNavigateToResults = { navController.navigate("results") },
+                    viewModel = viewModel,
+                    cameraPositionState = cameraPositionState,
+                    selectedFilterTypes = selectedFilterTypes,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 120.dp, start = 5.5.dp)
+                )
+
+                if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
+                    BottomActionButtons(
+                        onNavigateToResults = { navController.navigate("results") },
+                        onAddAction = {
+                            showBottomActionButtons = false
+                            showMapCreatePointRouteMenu = true
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 101.dp)
+                    )
+                } else if (selectedPlace == null){
+                    BottomCoordButton(
+                        onNavigateToResults = { navController.navigate("results") },
+                        onAddAction = {
+                            showBottomActionButtons = true
+                            showMapCreatePointRouteMenu = false
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 300.dp)
+                    )
+                }
+
+                SearchBar(
+                    searchQuery = searchQuery,
+                    onSearchQueryChange = viewModel::updateSearchQuery,
+                    performSearch = viewModel::performSearch,
+                    searchResults = searchResults,
+                    onResultSelected = viewModel::selectSearchResult,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
                 )
             }
 
 
 
 
-            SearchBar(
-                searchQuery = searchQuery,
-                onSearchQueryChange = viewModel::updateSearchQuery,
-                performSearch = viewModel::performSearch,
-                searchResults = searchResults,
-                onResultSelected = viewModel::selectSearchResult,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-            )
+
+
+
 
             if (showMapLayersMenu) {
 
@@ -500,8 +511,25 @@ fun HomeScreen(
                     onConfirm = { updatedImages ->
                         images = updatedImages
                         showMapNewImageServiceMenu = false
+                        showMapNewLastDatesMenu = true
                     },
                     initialImages = images
+                )
+            }
+
+            if(showMapNewLastDatesMenu)
+            {
+                MapNewLastDatesMenu(
+                    selectedPoint = viewModel.selectedPoint.value,
+                    onDismiss = {
+                        showMapNewLastDatesMenu = false
+                        showBottomActionButtons = true
+                        isSelectingPoint = false
+                    },
+                    selectedAddress = viewModel.selectedAddress.value,
+                    onNameConfirmed = {
+                        showMapNewLastDatesMenu = false
+                    }
                 )
             }
         }
