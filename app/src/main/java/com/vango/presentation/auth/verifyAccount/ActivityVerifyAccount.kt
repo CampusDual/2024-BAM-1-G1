@@ -33,13 +33,14 @@ class ActivityVerifyAccount : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ActivityVerifyAccountViewModel::class.java]
 
         initListeners()
-        initObservers()
+        initObservers(firebaseIdReceived)
     }
 
-    private fun initObservers() {
+    private fun initObservers(firebaseId: String?) {
         viewModel?.isAccountVerified?.observe(this) { isSuccess ->
             if (isSuccess) {
                 val intentActivityHome = Intent(this, ActivityCompleteProfile::class.java)
+                intentActivityHome.putExtra("firebaseId", firebaseId)
                     //ActivityMain::class.java)
                 intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)

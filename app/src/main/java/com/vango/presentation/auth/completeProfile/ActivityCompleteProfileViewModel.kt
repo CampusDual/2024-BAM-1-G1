@@ -3,8 +3,14 @@ package com.vango.presentation.auth.completeProfile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.vango.domain.usecase.user.UserUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ActivityCompleteProfileViewModel() : ViewModel() {
+@HiltViewModel
+class ActivityCompleteProfileViewModel @Inject constructor(private val user: UserUseCase) : ViewModel() {
 
     // Datos del perfil
     private var profilenick: String = ""
@@ -83,10 +89,22 @@ class ActivityCompleteProfileViewModel() : ViewModel() {
 
     //Funciones de validación
 
-    fun checkValius() {
+    fun saveValues(firebaseId: String) {
         val errProfileNick: Boolean = checkProfileNick()
         val errProfileAge: Boolean = checkProfileAge()
         _checkValius.value = errProfileNick && errProfileAge
+
+        if (errProfileNick && errProfileAge) {
+            viewModelScope.launch {
+                user.saveProfile(
+                    firebaseId,
+                    profilenick,
+                    profileage.toIntOrNull() ?: 0,
+                    profilecountry,
+                    profileprovince
+                )
+            }
+        }
     }
 
     fun checkProfileNick(): Boolean {

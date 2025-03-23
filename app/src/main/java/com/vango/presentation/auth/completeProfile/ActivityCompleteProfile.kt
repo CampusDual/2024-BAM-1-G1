@@ -24,13 +24,15 @@ class ActivityCompleteProfile : AppCompatActivity() {
     private lateinit var viewModel: ActivityCompleteProfileViewModel
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityCompleteProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[ActivityCompleteProfileViewModel::class.java]
-
+        var firebaseIdReceived = intent.getStringExtra("firebaseId") ?: ""
         val countryPicker = findViewById<CountryCodePicker>(binding.ccpProfileInputCountry.id)
         countryPicker.setOnCountryChangeListener {
             viewModel.updateCountry(countryPicker.selectedCountryCode)
@@ -55,7 +57,7 @@ class ActivityCompleteProfile : AppCompatActivity() {
 
         updateProvinces(countryPicker.selectedCountryNameCode)
 
-        initListeners()
+        initListeners(firebaseIdReceived)
         initObservers()
 
         binding.spinnerProfileProvince.onItemSelectedListener =
@@ -150,7 +152,7 @@ class ActivityCompleteProfile : AppCompatActivity() {
         }
     }
 
-    private fun initListeners() {
+    private fun initListeners(firebaseIdReceived : String) {
         binding?.etProfileInputNick?.doOnTextChanged { text, _, _, _ ->
             viewModel?.updateNick(text.toString())
             viewModel.checkProfileNick()
@@ -161,7 +163,8 @@ class ActivityCompleteProfile : AppCompatActivity() {
             viewModel.checkProfileAge()
         }
         binding?.btSabeButton?.setOnClickListener {
-            viewModel.checkValius()
+
+            viewModel.saveValues(firebaseIdReceived)
         }
     }
 
