@@ -28,7 +28,6 @@ class ActivityForgottenPasswordViewModel @Inject constructor(private val authUse
 
     }
 
-
     fun resetPassword(){
 
         viewModelScope.launch {

@@ -51,9 +51,11 @@
             android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
+            android:name=".presentation.auth.completeProfile.ActivityCompleteProfile"
+            android:exported="false" />
+        <activity
             android:name=".presentation.onboarding.ActivityOnboarding"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
