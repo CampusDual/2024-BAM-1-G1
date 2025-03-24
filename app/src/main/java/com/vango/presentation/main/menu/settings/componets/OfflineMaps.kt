@@ -1,4 +1,4 @@
-package com.vango.presentation.main.menu.support
+package com.vango.presentation.main.menu.settings.componets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,20 +12,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 
 @Composable
-fun SuggestionsScreen(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
+fun OfflineMapsScreen() {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color.LightGray),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Sugerencias",
+            "Offline Maps",
             style = MaterialTheme.typography.headlineMedium
         )
     }
 }
-

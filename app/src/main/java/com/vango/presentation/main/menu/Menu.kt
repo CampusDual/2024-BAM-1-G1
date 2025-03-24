@@ -1,5 +1,6 @@
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,12 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorButtonPrincipal
+import com.vango.presentation.theme.MainColor
+import com.vango.presentation.theme.TextColor
 
 @Composable
 fun MenuScreen(
@@ -60,8 +60,9 @@ fun MenuScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 55.dp, start = 20.dp, end = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(top = 55.dp, start = 20.dp, end = 20.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // Fila con el botón de cerrar y el título
         Row(
@@ -71,7 +72,7 @@ fun MenuScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Surface(
-                color = BackgroundButtonColor,
+                color = MainColor,
                 modifier = Modifier.size(40.dp),
                 shape = RoundedCornerShape(14.dp),
             ) {
@@ -96,7 +97,8 @@ fun MenuScreen(
             Text(
                 text = "Menú",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = TextColor
             )
             Spacer(modifier = Modifier.width(40.dp)) // Espacio reservado para equilibrar
         }
@@ -133,7 +135,9 @@ fun MenuScreen(
 
                 IconButton(
                     onClick = { ImageSelectlauncher.launch("image/*") },
-                    modifier = Modifier.size(27.dp).align( Alignment.BottomEnd)
+                    modifier = Modifier
+                        .size(27.dp)
+                        .align(Alignment.BottomEnd)
                 )
                 {
                     Icon(
@@ -153,7 +157,8 @@ fun MenuScreen(
             Text(
                 text = "Usuario123", // Nick del usuario
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = TextColor
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -212,7 +217,7 @@ fun MenuScreen(
                     Text(
                         text = title,
                         fontSize = 14.sp,
-                        color = Color.Black,
+                        color = TextColor,
                         fontWeight = FontWeight.Normal
                     )
 

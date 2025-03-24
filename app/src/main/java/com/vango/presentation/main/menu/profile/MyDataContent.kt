@@ -91,7 +91,7 @@ fun MyDataContent(navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(0.dp),
+            .padding(0.dp).background(Color.White),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Bloque 1: Datos de Cuenta
@@ -311,10 +311,11 @@ fun MyDataContent(navController: NavController) {
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Normal,
-                    color = Color.Gray,
+                    color = BackgroundUnselected,
                     modifier = Modifier.clickable {
                         navController.navigate("delete_account")
-                    })
+                    }
+                )
             }
         }
     }
@@ -348,7 +349,7 @@ fun DataBlock(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
-            .background(BackgroundColorCard) // Fondo gris claro
+            .background(BackgroundColorCard)
             .padding(vertical = 12.dp, horizontal = 6.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -427,17 +428,11 @@ fun DataRow(
                     focusedContainerColor = Color.White,
                     errorTextColor = Color.Red
                 ),
-//                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-//                    containerColor = Color.Transparent,
-//                    focusedTextColor = TextColor,
-//                    errorTextColor = Color.Red,
-//                    focusedIndicatorColor = Color.Transparent,
-//                    unfocusedIndicatorColor = Color.Transparent
-//                )
+
             )
         } else {
             Text(
-                text = value, fontSize = 12.sp, fontWeight = FontWeight.Normal
+                text = value, fontSize = 12.sp, fontWeight = FontWeight.Normal,color = TextColor
             )
         }
     }
@@ -528,16 +523,10 @@ fun DataRowWithUnit(
                     errorTextColor = Color.Red
                 ),
 
-//                colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-//                    containerColor = Color.White,
-//                    focusedTextColor = TextColor,
-//                    focusedIndicatorColor = Color.Transparent,
-//                    unfocusedIndicatorColor = Color.Transparent
-//                )
             )
         } else {
             Text(
-                text = "$value $unit", fontSize = 12.sp, fontWeight = FontWeight.Normal
+                text = "$value $unit", fontSize = 12.sp, fontWeight = FontWeight.Normal,color = TextColor
             )
         }
     }
