@@ -42,6 +42,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.presentation.main.home.components.BottomActionButtons
 import com.vango.presentation.main.home.components.BottomCoordButton
 import com.vango.presentation.main.home.components.FilterMenu
+import com.vango.presentation.main.home.components.FullScreenPlaceList
 import com.vango.presentation.main.home.components.LocationActionButtons
 import com.vango.presentation.main.home.components.MapComponent
 import com.vango.presentation.main.home.components.MapLayersMenu
@@ -108,6 +109,8 @@ fun HomeScreen(
     var images by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showMapNewImageServiceUploadMenu by remember { mutableStateOf(false) }
     var isFullScreenOpen by remember { mutableStateOf(false) }
+    var showPlaceList by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
     }
@@ -306,7 +309,7 @@ fun HomeScreen(
 
                 if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
                     BottomActionButtons(
-                        onNavigateToResults = { navController.navigate("results") },
+                        onNavigateToResults = { showPlaceList = true },
                         onAddAction = {
                             showBottomActionButtons = false
                             showMapCreatePointRouteMenu = true
@@ -529,6 +532,17 @@ fun HomeScreen(
                     selectedAddress = viewModel.selectedAddress.value,
                     onNameConfirmed = {
                         showMapNewLastDatesMenu = false
+                    }
+                )
+            }
+
+            if (showPlaceList) {
+                FullScreenPlaceList(
+                    places = nearbyPlaces,
+                    onDismiss = { showPlaceList = false },
+                    onPlaceSelected = { place ->
+                        selectedPlace = place
+                        showPlaceList = false
                     }
                 )
             }

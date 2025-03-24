@@ -10,9 +10,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,20 +27,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,11 +57,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -379,19 +392,18 @@ fun PlaceCard(
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(if (photoUrls.size == 1 && photoUrls[0] == R.drawable.noimage) 229.dp else 177.dp)
+                        .height(162.dp)
                 ) { page ->
                     AsyncImage(
                         model = photoUrls[page],
                         contentDescription = "Imagen ${page + 1} de ${place.title}",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(if (photoUrls[page] == R.drawable.noimage) 229.dp else 177.dp),
+                            .height(229.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
 
-                // Corazón y tipo de lugar superpuestos
                 Row(
                     modifier = Modifier
                         .padding(top = 10.dp, start = 16.dp, end = 16.dp)
@@ -441,7 +453,9 @@ fun PlaceCard(
                                     .size(12.dp)
                                     .padding(2.dp)
                                     .background(
-                                        color = if (isSelected) Color.White else Color.Gray.copy(alpha = 0.5f),
+                                        color = if (isSelected) Color.White else Color.Gray.copy(
+                                            alpha = 0.5f
+                                        ),
                                         shape = CircleShape
                                     )
                             )
@@ -450,68 +464,12 @@ fun PlaceCard(
                 }
             }
 
-//            Box {
-//                place.photoUrls?.firstOrNull()?.let { photoUrl ->
-//                    AsyncImage(
-//                        model = photoUrl,
-//                        contentDescription = "Imagen de ${place.title}",
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(177.dp),
-//                        contentScale = ContentScale.Crop
-//                    )
-//                } ?: AsyncImage(
-//                    model = R.drawable.noimage,
-//                    contentDescription = "Imagen por defecto para ${place.title}",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(229.dp),
-//                    contentScale = ContentScale.Crop
-//                )
-//
-//                Row(
-//                    modifier = Modifier
-//                        .padding(top = 10.dp, start = 16.dp, end = 16.dp)
-//                        .height(17.5.dp)
-//                        .fillMaxWidth(),
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.SpaceBetween
-//                ) {
-//                    Surface(
-//                        modifier = Modifier
-//                            .height(17.5.dp)
-//                            .wrapContentWidth(),
-//                        color = Color.White.copy(alpha = 0.54f),
-//                        shape = RoundedCornerShape(10.dp)
-//                    ) {
-//                        Column(
-//                            verticalArrangement = Arrangement.Center
-//                        ) {
-//                            Text(
-//                                text = "#${place.type?.let { PlaceType.fromValue(it) } ?: "desconocido"}",
-//                                fontSize = 8.sp,
-//                                textAlign = TextAlign.Center,
-//                                color = BackgroundUnselected,
-//                                modifier = Modifier
-//                                    .padding(horizontal = 8.dp)
-//                            )
-//                        }
-//                    }
-//
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.heart),
-//                        tint = Color.Black,
-//                        contentDescription = "favorite"
-//                    )
-//                }
-//            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp),
+                    .padding(start = 10.dp, end = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -526,7 +484,7 @@ fun PlaceCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
 
                     Text(
                         text = place.address ?: "Sin dirección",
@@ -538,9 +496,208 @@ fun PlaceCard(
                     )
 
                 }
-                Column() {
+                Column(
+                    horizontalAlignment = Alignment.End
+
+                ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.start),
+                            contentDescription = "Rating",
+                            tint = MainColor,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Text(
+                            text = "${place.rating ?: 0.0}",
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.End,
+                            color = Color.Black
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.width(70.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            text = "${place.userVotes ?: 0} votos",
+                            fontSize = 9.7.sp,
+                            textAlign = TextAlign.End,
+                            color = Color.Gray,
+                        )
+                    }
+
+
+                }
+
+
+            }
+
+//            if(place.type != PlaceType.CAMPING ))
+
+            Row(
+                modifier = Modifier.padding(start = 10.dp, top = 0.dp)
+            ) {
+                Text(
+                    text = "Entrada gratuita",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = BackgroundButtonColor
+
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+        }
+    }
+}
+
+
+@Composable
+fun PlaceCardList(
+    place: PlacesResponseDto,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .width(329.dp)
+            .heightIn()
+            .padding(start = 20.dp, end = 20.dp),
+
+        shape = RoundedCornerShape(15.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+        ) {
+
+            val photoUrls = place.photoUrls ?: listOf(R.drawable.noimage)
+            val pagerState = rememberPagerState(pageCount = { photoUrls.size })
+
+            Box {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(229.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                ) { page ->
+                    AsyncImage(
+                        model = photoUrls[page],
+                        contentDescription = "Imagen ${page + 1} de ${place.title}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(229.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 16.dp, end = 16.dp)
+                        .height(17.5.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .height(17.5.dp)
+                            .wrapContentWidth(),
+                        color = Color.White.copy(alpha = 0.54f),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "#${place.type?.let { PlaceType.fromValue(it) } ?: "desconocido"}",
+                                fontSize = 8.sp,
+                                textAlign = TextAlign.Center,
+                                color = BackgroundUnselected,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+                        }
+                    }
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.heart),
+                        tint = Color.Black,
+                        contentDescription = "favorite"
+                    )
+                }
+
+                if (photoUrls.size > 1) {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        repeat(photoUrls.size) { index ->
+                            val isSelected = pagerState.currentPage == index
+                            Box(
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .padding(2.dp)
+                                    .background(
+                                        color = if (isSelected) Color.White else Color.Gray.copy(
+                                            alpha = 0.5f
+                                        ),
+                                        shape = CircleShape
+                                    )
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 50.dp)
+                ) {
+                    Text(
+                        text = place.title ?: "Sin título",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = place.address ?: "Sin dirección",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                }
+                Column(
+                    horizontalAlignment = Alignment.End
+
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.start),
@@ -552,16 +709,24 @@ fun PlaceCard(
                         Text(
                             text = "${place.rating ?: 0.0}",
                             fontSize = 19.4.sp,
+                            textAlign = TextAlign.End,
                             color = Color.Black
                         )
-
                     }
-                    Spacer(modifier = Modifier.width(18.dp))
-                    Text(
-                        text = "${place.userVotes ?: 0} votos",
-                        fontSize = 9.7.sp,
-                        color = Color.Gray
-                    )
+
+                    Row(
+                        modifier = Modifier.width(70.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            text = "${place.userVotes ?: 0} votos",
+                            fontSize = 9.7.sp,
+                            textAlign = TextAlign.End,
+                            color = Color.Gray,
+                        )
+                    }
+
+
                 }
 
 
@@ -569,9 +734,9 @@ fun PlaceCard(
 
 //            if(place.type != PlaceType.CAMPING ))
 
-            Row (
-                modifier = Modifier.padding(start = 20.dp)
-            ){
+            Row(
+                modifier = Modifier.padding(top = 18.dp)
+            ) {
                 Text(
                     text = "Entrada gratuita",
                     fontSize = 12.sp,
@@ -623,7 +788,6 @@ fun FullScreenPlaceCard(
                 .fillMaxHeight()
                 .align(Alignment.BottomCenter)
                 .offset(y = offsetY.value.dp),
-//            shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
             color = Color.White
         ) {
             Column(
@@ -631,72 +795,6 @@ fun FullScreenPlaceCard(
                     .fillMaxWidth()
                     .verticalScroll(scrollState)
             ) {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(start = 20.dp, end = 20.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween
-//                ) {
-//                    Surface(
-//                        color = MainColor,
-//                        modifier = Modifier.size(32.dp),
-//                        shape = RoundedCornerShape(11.dp),
-//                    ) {
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally,
-//                            verticalArrangement = Arrangement.Center,
-//                        ) {
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.ex),
-//                                contentDescription = "Cerrar",
-//                                modifier = Modifier
-//                                    .width(12.5.dp)
-//                                    .height(14.29.dp)
-//                                    .clickable {
-//                                        scope.launch {
-//                                            offsetY.animateTo(600f, animationSpec = tween(300))
-//                                            onDismiss()
-//                                        }
-//                                    },
-//                                tint = Color.White
-//                            )
-//
-//                        }
-//                    }
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.ex),
-//                        contentDescription = "Cerrar",
-//                        modifier = Modifier
-//                            .size(32.dp)
-//                            .clickable {
-//                                scope.launch {
-//                                    offsetY.animateTo(600f, animationSpec = tween(300))
-//                                    onDismiss()
-//                                }
-//                            }
-//                    )
-//                }
-//
-//                Spacer(modifier = Modifier.height(16.dp))
-//
-//                place.photoUrls?.firstOrNull()?.let { photoUrl ->
-//                    AsyncImage(
-//                        model = photoUrl,
-//                        contentDescription = "Imagen de ${place.title}",
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(300.dp),
-//                        contentScale = ContentScale.Crop
-//                    )
-//                } ?: AsyncImage(
-//                    model = R.drawable.noimage,
-//                    contentDescription = "Imagen por defecto",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(300.dp),
-//                    contentScale = ContentScale.Crop
-//                )
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1135,14 +1233,14 @@ fun FullScreenPlaceCard(
                                 )
                                 Spacer(modifier = Modifier.width(16.dp))
 
-                                    Text(
-                                        text = "Lunes a Domingo\n" +
-                                                "9am a 9pm",
-                                        fontSize = 12.sp,
-                                        color = Color.Black,
-                                        overflow = TextOverflow.Ellipsis
+                                Text(
+                                    text = "Lunes a Domingo\n" +
+                                            "9am a 9pm",
+                                    fontSize = 12.sp,
+                                    color = Color.Black,
+                                    overflow = TextOverflow.Ellipsis
 
-                                    )
+                                )
 
                             }
 
@@ -1161,13 +1259,13 @@ fun FullScreenPlaceCard(
                                 )
                                 Spacer(modifier = Modifier.width(16.dp))
 
-                                    Text(
-                                        text = "Abierto todo el año",
-                                        fontSize = 12.sp,
-                                        color = Color.Black,
-                                        overflow = TextOverflow.Ellipsis
+                                Text(
+                                    text = "Abierto todo el año",
+                                    fontSize = 12.sp,
+                                    color = Color.Black,
+                                    overflow = TextOverflow.Ellipsis
 
-                                    )
+                                )
 
                             }
 
@@ -1200,13 +1298,13 @@ fun FullScreenPlaceCard(
                                 )
                                 Spacer(modifier = Modifier.width(16.dp))
 
-                                    Text(
-                                        text = "+34 658 587 254",
-                                        fontSize = 12.sp,
-                                        color = Color.Black,
-                                        overflow = TextOverflow.Ellipsis
+                                Text(
+                                    text = "+34 658 587 254",
+                                    fontSize = 12.sp,
+                                    color = Color.Black,
+                                    overflow = TextOverflow.Ellipsis
 
-                                    )
+                                )
 
                             }
 
@@ -1270,13 +1368,13 @@ fun FullScreenPlaceCard(
                                 )
                                 Spacer(modifier = Modifier.width(16.dp))
 
-                                    Text(
-                                        text = "www.jabaliblanco.es",
-                                        fontSize = 12.sp,
-                                        color = Color.Black,
-                                        overflow = TextOverflow.Ellipsis
+                                Text(
+                                    text = "www.jabaliblanco.es",
+                                    fontSize = 12.sp,
+                                    color = Color.Black,
+                                    overflow = TextOverflow.Ellipsis
 
-                                    )
+                                )
 
                             }
 
@@ -1284,16 +1382,16 @@ fun FullScreenPlaceCard(
                         }
 
 
-
-
                     }
 
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp, bottom = 150.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp, bottom = 150.dp),
                     horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     Surface(
                         modifier = Modifier
                             .width(156.dp)
@@ -1306,7 +1404,7 @@ fun FullScreenPlaceCard(
                                 .fillMaxSize(),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
-                        ){
+                        ) {
                             Text(
                                 text = "Navegador",
                                 fontSize = 12.sp,
@@ -1314,7 +1412,7 @@ fun FullScreenPlaceCard(
                                 color = Color.White,
                                 overflow = TextOverflow.Ellipsis
 
-                                )
+                            )
                         }
 
                     }
@@ -1333,7 +1431,7 @@ fun FullScreenPlaceCard(
                                 .fillMaxSize(),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
-                        ){
+                        ) {
                             Text(
                                 text = "Reservar",
                                 fontSize = 12.sp,
@@ -1347,8 +1445,6 @@ fun FullScreenPlaceCard(
 
                     }
                 }
-
-
 
 
             }
@@ -1431,7 +1527,7 @@ fun PlaceCardPreview() {
         location = "42.5624343,0.0425323",
         rating = 4.3f,
         userVotes = 108,
-        photoUrls = listOf("https://gratisography.com/wp-content/uploads/2025/02/gratisography-when-pigs-fly-1170x780.jpg"), // Imagen real
+        photoUrls = listOf("https://gratisography.com/wp-content/uploads/2025/02/gratisography-when-pigs-fly-1170x780.jpg"),
         type = 1,
         placeId = "ChIJc-IaFVwBqBIRl6QdE2o8gu8",
         currentOpeningHours = null,
@@ -1443,11 +1539,442 @@ fun PlaceCardPreview() {
         source = 1
     )
 
-    PlaceCard(
+    PlaceCardList(
         place = samplePlace,
         modifier = Modifier
             .fillMaxWidth()
     )
+}
+
+
+@Composable
+fun FullScreenPlaceList(
+    places: List<PlacesResponseDto>,
+    onDismiss: () -> Unit,
+    onPlaceSelected: (PlacesResponseDto) -> Unit = {}
+) {
+    val offsetY = remember { Animatable(600f) }
+    val scope = rememberCoroutineScope()
+    var searchQuery by remember { mutableStateOf("") }
+    val searchResults = remember { mutableStateListOf<SearchResult>() }
+
+    LaunchedEffect(Unit) {
+        offsetY.animateTo(0f, animationSpec = tween(300))
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+    ) {
+
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .align(Alignment.BottomCenter)
+                .offset(y = offsetY.value.dp),
+            color = Color.White,
+            shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 55.dp)
+            ) {
+
+                SearchBarHomeList(
+                    searchQuery = searchQuery,
+                    onSearchQueryChange = { newQuery ->
+                        searchQuery = newQuery
+                        if (newQuery.isNotEmpty()) {
+                            searchResults.clear()
+                            searchResults.addAll(
+                                places.map { place ->
+                                    SearchResult(
+                                        name = place.title ?: "",
+                                        secondaryText = place.address,
+                                        distanceMeters = 0f
+                                    )
+                                }.filter { it.name.contains(newQuery, ignoreCase = true) }
+                            )
+                        } else {
+                            searchResults.clear()
+                        }
+                    },
+                    performSearch = { query ->
+                        searchResults.clear()
+                        searchResults.addAll(
+                            places.map { place ->
+                                SearchResult(
+                                    name = place.title ?: "",
+                                    secondaryText = place.address,
+                                    distanceMeters = 0f
+                                )
+                            }.filter { it.name.contains(query, ignoreCase = true) }
+                        )
+                    },
+                    searchResults = searchResults,
+                    onResultSelected = { result ->
+                        val selectedPlace = places.find { it.title == result.name }
+                        selectedPlace?.let { onPlaceSelected(it) }
+                        searchQuery = result.name
+                    },
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top=20.dp, bottom = 20.dp,
+                        start = 20.dp, end = 20.dp,
+                    ),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Surface(
+                        color = BackgroundUnselected,
+                        modifier = Modifier.size(60.dp),
+                        shape = RoundedCornerShape(11.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(text = "Camping", fontSize = 10.sp, color = Color.White)
+                            Icon(
+                                painter = painterResource(id = R.drawable.camper_no_fill),
+                                contentDescription = "Cerrar",
+                                modifier = Modifier
+                                    .width(33.dp)
+                                    .height(33.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+                                tint = Color.White
+                            )
+
+                        }
+                    }
+                    Surface(
+                        color = BackgroundUnselected,
+                        modifier = Modifier.size(60.dp),
+                        shape = RoundedCornerShape(11.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(text = "Parking", fontSize = 10.sp, color = Color.White)
+                            Icon(
+                                painter = painterResource(id = R.drawable.parking_no_fill),
+                                contentDescription = "Cerrar",
+                                modifier = Modifier
+                                    .width(33.dp)
+                                    .height(33.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+                                tint = Color.White
+                            )
+
+                        }
+                    }
+                    Surface(
+                        color = BackgroundUnselected,
+                        modifier = Modifier.size(60.dp),
+                        shape = RoundedCornerShape(11.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(text = "Lavanderia", fontSize = 10.sp, color = Color.White)
+                            Icon(
+                                painter = painterResource(id = R.drawable.laundry_no_fill),
+                                contentDescription = "Cerrar",
+                                modifier = Modifier
+                                    .width(33.dp)
+                                    .height(33.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+                                tint = Color.White
+                            )
+
+                        }
+                    }
+                    Surface(
+                        color = BackgroundUnselected,
+                        modifier = Modifier.size(60.dp),
+                        shape = RoundedCornerShape(11.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(text = "Gasolinera", fontSize = 10.sp, color = Color.White)
+                            Icon(
+                                painter = painterResource(id = R.drawable.fuel_station_no_fill),
+                                contentDescription = "Cerrar",
+                                modifier = Modifier
+                                    .width(33.dp)
+                                    .height(33.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+                                tint = Color.White
+                            )
+
+                        }
+                    }
+                    Surface(
+                        color = BackgroundUnselected,
+                        modifier = Modifier.size(60.dp),
+                        shape = RoundedCornerShape(11.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(text = "Hospital", fontSize = 10.sp, color = Color.White)
+                            Icon(
+                                painter = painterResource(id = R.drawable.hospital_no_fill),
+                                contentDescription = "Cerrar",
+                                modifier = Modifier
+                                    .width(33.dp)
+                                    .height(33.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+                                tint = Color.White
+                            )
+
+                        }
+                    }
+                }
+
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(places) { place ->
+                        PlaceCardList(
+                            place = place,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onPlaceSelected(place) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+data class SearchResult(
+    val name: String,
+    val secondaryText: String?,
+    val distanceMeters: Float
+)
+
+fun formatDistance(distanceMeters: Float): String {
+    return if (distanceMeters < 1000) {
+        "${distanceMeters.toInt()} m"
+    } else {
+        String.format("%.1f km", distanceMeters / 1000)
+    }
+}
+
+
+@Composable
+fun SearchBarHomeList(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    performSearch: (String) -> Unit,
+    searchResults: List<SearchResult>,
+    onResultSelected: (SearchResult) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val focusManager = LocalFocusManager.current
+
+    TextField(
+        value = searchQuery,
+        shape = RoundedCornerShape(100.dp),
+        onValueChange = { onSearchQueryChange(it) },
+        modifier = modifier
+            .padding(start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .background(Color.Transparent, RoundedCornerShape(100.dp))
+            .shadow(4.dp, RoundedCornerShape(100.dp)),
+        placeholder = {
+            if (!isFocused) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.search),
+                        contentDescription = "Buscar",
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clickable { performSearch(searchQuery) },
+                        tint = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Empieza a buscar",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        },
+        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+        singleLine = true,
+        leadingIcon = {
+            if (isFocused) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ex),
+                    contentDescription = "Borrar",
+                    modifier = Modifier
+                        .size(18.dp)
+                        .padding(start = 8.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onSearchQueryChange("")
+                            focusManager.clearFocus()
+                        },
+                    tint = Color.Black
+                )
+            }
+        },
+        trailingIcon = {
+            if (isFocused) {
+                Icon(
+                    painter = painterResource(id = R.drawable.filter_search),
+                    contentDescription = "Filtro",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp)
+                        .clickable { },
+                    tint = Color.Black
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                performSearch(searchQuery)
+                focusManager.clearFocus()
+            }
+        ),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            unfocusedContainerColor = Color.White,
+            focusedContainerColor = Color.White
+        ),
+        interactionSource = interactionSource
+    )
+
+    if (searchResults.isNotEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 40.dp, end = 40.dp, top = 110.dp)
+                .background(Color.White, RoundedCornerShape(16.dp))
+                .fillMaxWidth()
+                .heightIn(max = 600.dp)
+                .clip(RoundedCornerShape(16.dp)),
+            verticalArrangement = Arrangement.Top
+        ) {
+            items(searchResults) { result ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onResultSelected(result)
+                            focusManager.clearFocus()
+                        }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.mark),
+                            contentDescription = "Ícono del lugar",
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.Black
+                        )
+                        Text(
+                            text = formatDistance(result.distanceMeters),
+                            fontSize = 9.sp,
+                            color = Color.Gray,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 6.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column {
+                        Text(
+                            text = result.name,
+                            fontSize = 14.sp,
+                            color = Color.Black,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        result.secondaryText?.let {
+                            Text(
+                                text = it,
+                                fontSize = 12.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(top = 6.dp)
+                            )
+                        }
+                    }
+                }
+
+                if (searchResults.last() != result) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        thickness = 1.dp,
+                        color = Color.Gray.copy(alpha = 0.2f)
+                    )
+                }
+            }
+        }
+    }
 }
 
 
@@ -1478,9 +2005,11 @@ fun PlaceCardFullScreenPreview() {
             .height(1200.dp)
             .background(Color.Gray)
     ) {
-        FullScreenPlaceCard(
-            place = samplePlace,
-            onDismiss = {}
+        FullScreenPlaceList(
+            places = listOf(samplePlace),
+            onDismiss = {},
+            onPlaceSelected = {}
+
         )
     }
 }
