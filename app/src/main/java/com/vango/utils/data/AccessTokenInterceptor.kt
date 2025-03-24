@@ -13,16 +13,42 @@ class AccessTokenInterceptor @Inject constructor(
     private val firebase: FirebaseAuth
 ) : Interceptor {
 
+//    override fun intercept(chain: Interceptor.Chain): Response {
+//        val accessToken = runBlocking { getAccessToken() }
+//
+//        val request = if (accessToken != null) {
+//            newRequestWithAccessToken(chain.request(), accessToken)
+//        } else {
+//            chain.request().newBuilder().build()
+//        }
+//
+//        return chain.proceed(request)
+//    }
+
+
     override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val url = request.url.toString()
+
+        val noTokenEndpoints = listOf(
+            "/api/Auth/signup",
+            "/api/Auth/login",
+            "/api/Auth/verify-code"
+        )
+
+        if (noTokenEndpoints.any { url.contains(it) }) {
+            return chain.proceed(request)
+        }
+
         val accessToken = runBlocking { getAccessToken() }
 
-        val request = if (accessToken != null) {
-            newRequestWithAccessToken(chain.request(), accessToken)
+        val newRequest = if (accessToken != null) {
+            newRequestWithAccessToken(request, accessToken)
         } else {
             chain.request().newBuilder().build()
         }
 
-        return chain.proceed(request)
+        return chain.proceed(newRequest)
     }
 
 

@@ -11,18 +11,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import com.hbb20.CountryCodePicker
 import com.vango.R
 import com.vango.databinding.ActivityCompleteProfileBinding
 import com.vango.presentation.main.ActivityMain
+import dagger.hilt.android.AndroidEntryPoint
+import androidx.activity.viewModels
 
+@AndroidEntryPoint
 class ActivityCompleteProfile : AppCompatActivity() {
 
     private lateinit var binding: ActivityCompleteProfileBinding
-    private lateinit var viewModel: ActivityCompleteProfileViewModel
-
+    private val viewModel: ActivityCompleteProfileViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +32,8 @@ class ActivityCompleteProfile : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityCompleteProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[ActivityCompleteProfileViewModel::class.java]
-        var firebaseIdReceived = intent.getStringExtra("firebaseId") ?: ""
+
+        val firebaseIdReceived = intent.getStringExtra("firebaseId") ?: ""
         val countryPicker = findViewById<CountryCodePicker>(binding.ccpProfileInputCountry.id)
         countryPicker.setOnCountryChangeListener {
             viewModel.updateCountry(countryPicker.selectedCountryCode)

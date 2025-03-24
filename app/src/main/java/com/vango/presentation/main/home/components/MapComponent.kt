@@ -25,7 +25,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -70,6 +73,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.vango.R
+import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorButtonPrincipal
 import com.vango.presentation.theme.BackgroundUnselected
 import com.vango.presentation.theme.BlackGray
@@ -246,11 +250,11 @@ fun MapComponent(
                             title = place.title,
                             snippet = place.address,
                             icon = when (place.type) {
-                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping2)
-                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.parking_test)
-                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital2)
-                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station2)
-                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry2)
+                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
                                 else -> null
                             },
                             onClick = {
@@ -366,7 +370,28 @@ fun PlaceCard(
             modifier = Modifier
                 .background(Color.White)
         ) {
-            Column {
+
+            val photoUrls = place.photoUrls ?: listOf(R.drawable.noimage)
+            val pagerState = rememberPagerState(pageCount = { photoUrls.size })
+
+            Box {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(if (photoUrls.size == 1 && photoUrls[0] == R.drawable.noimage) 229.dp else 177.dp)
+                ) { page ->
+                    AsyncImage(
+                        model = photoUrls[page],
+                        contentDescription = "Imagen ${page + 1} de ${place.title}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(if (photoUrls[page] == R.drawable.noimage) 229.dp else 177.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                // Corazón y tipo de lugar superpuestos
                 Row(
                     modifier = Modifier
                         .padding(top = 10.dp, start = 16.dp, end = 16.dp)
@@ -374,7 +399,6 @@ fun PlaceCard(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
-
                 ) {
                     Surface(
                         modifier = Modifier
@@ -391,40 +415,96 @@ fun PlaceCard(
                                 fontSize = 8.sp,
                                 textAlign = TextAlign.Center,
                                 color = BackgroundUnselected,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
+                                modifier = Modifier.padding(horizontal = 8.dp)
                             )
                         }
-
                     }
 
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
                         tint = Color.Black,
                         contentDescription = "favorite"
-
                     )
-
                 }
 
-                place.photoUrls?.firstOrNull()?.let { photoUrl ->
-                    AsyncImage(
-                        model = photoUrl,
-                        contentDescription = "Imagen de ${place.title}",
+                if (photoUrls.size > 1) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(177.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                } ?: AsyncImage(
-                    model = R.drawable.noimage,
-                    contentDescription = "Imagen por defecto para ${place.title}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(229.dp),
-                    contentScale = ContentScale.Crop
-                )
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        repeat(photoUrls.size) { index ->
+                            val isSelected = pagerState.currentPage == index
+                            Box(
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .padding(2.dp)
+                                    .background(
+                                        color = if (isSelected) Color.White else Color.Gray.copy(alpha = 0.5f),
+                                        shape = CircleShape
+                                    )
+                            )
+                        }
+                    }
+                }
             }
+
+//            Box {
+//                place.photoUrls?.firstOrNull()?.let { photoUrl ->
+//                    AsyncImage(
+//                        model = photoUrl,
+//                        contentDescription = "Imagen de ${place.title}",
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(177.dp),
+//                        contentScale = ContentScale.Crop
+//                    )
+//                } ?: AsyncImage(
+//                    model = R.drawable.noimage,
+//                    contentDescription = "Imagen por defecto para ${place.title}",
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(229.dp),
+//                    contentScale = ContentScale.Crop
+//                )
+//
+//                Row(
+//                    modifier = Modifier
+//                        .padding(top = 10.dp, start = 16.dp, end = 16.dp)
+//                        .height(17.5.dp)
+//                        .fillMaxWidth(),
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.SpaceBetween
+//                ) {
+//                    Surface(
+//                        modifier = Modifier
+//                            .height(17.5.dp)
+//                            .wrapContentWidth(),
+//                        color = Color.White.copy(alpha = 0.54f),
+//                        shape = RoundedCornerShape(10.dp)
+//                    ) {
+//                        Column(
+//                            verticalArrangement = Arrangement.Center
+//                        ) {
+//                            Text(
+//                                text = "#${place.type?.let { PlaceType.fromValue(it) } ?: "desconocido"}",
+//                                fontSize = 8.sp,
+//                                textAlign = TextAlign.Center,
+//                                color = BackgroundUnselected,
+//                                modifier = Modifier
+//                                    .padding(horizontal = 8.dp)
+//                            )
+//                        }
+//                    }
+//
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.heart),
+//                        tint = Color.Black,
+//                        contentDescription = "favorite"
+//                    )
+//                }
+//            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -459,18 +539,46 @@ fun PlaceCard(
 
                 }
                 Column() {
-                    Text(
-                        text = "${place.rating ?: 0.0} ★",
-                        fontSize = 19.4.sp,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.start),
+                            contentDescription = "Rating",
+                            tint = MainColor
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Text(
+                            text = "${place.rating ?: 0.0}",
+                            fontSize = 19.4.sp,
+                            color = Color.Black
+                        )
+
+                    }
+                    Spacer(modifier = Modifier.width(18.dp))
                     Text(
                         text = "${place.userVotes ?: 0} votos",
                         fontSize = 9.7.sp,
                         color = Color.Gray
                     )
                 }
+
+
+            }
+
+//            if(place.type != PlaceType.CAMPING ))
+
+            Row (
+                modifier = Modifier.padding(start = 20.dp)
+            ){
+                Text(
+                    text = "Entrada gratuita",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = BackgroundButtonColor
+
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -642,7 +750,7 @@ fun FullScreenPlaceCard(
                             }
                         }
                         Icon(
-                            painter = painterResource(id = R.drawable.ex),
+                            painter = painterResource(id = R.drawable.heart),
                             contentDescription = "Cerrar",
                             modifier = Modifier
                                 .size(32.dp)
@@ -676,11 +784,11 @@ fun FullScreenPlaceCard(
                             verticalArrangement = Arrangement.Center,
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ex),
+                                painter = painterResource(id = R.drawable.water),
                                 tint = Color.Black,
                                 modifier = Modifier
-                                    .width(12.5.dp)
-                                    .height(14.29.dp)
+                                    .width(25.dp)
+                                    .height(25.dp)
                                     .clickable {
                                         scope.launch {
                                             offsetY.animateTo(600f, animationSpec = tween(300))
@@ -706,11 +814,147 @@ fun FullScreenPlaceCard(
                             verticalArrangement = Arrangement.Center,
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ex),
+                                painter = painterResource(id = R.drawable.electricity),
                                 tint = Color.Black,
                                 modifier = Modifier
-                                    .width(12.5.dp)
-                                    .height(14.29.dp)
+                                    .width(25.dp)
+                                    .height(25.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+
+                                contentDescription = "favorite"
+                            )
+                        }
+                    }
+
+                    Surface(
+                        modifier = Modifier.size(41.86.dp),
+                        border = BorderStroke(0.5.dp, BlackGray),
+                        shape = RoundedCornerShape(15.dp),
+                        color = Color.White
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.shower),
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .width(25.dp)
+                                    .height(25.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+
+                                contentDescription = "favorite"
+                            )
+                        }
+                    }
+                    Surface(
+                        modifier = Modifier.size(41.86.dp),
+                        border = BorderStroke(0.5.dp, BlackGray),
+                        shape = RoundedCornerShape(15.dp),
+                        color = Color.White
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.public_wc),
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .width(25.dp)
+                                    .height(25.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+
+                                contentDescription = "favorite"
+                            )
+                        }
+                    }
+                    Surface(
+                        modifier = Modifier.size(41.86.dp),
+                        border = BorderStroke(0.5.dp, BlackGray),
+                        shape = RoundedCornerShape(15.dp),
+                        color = Color.White
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.pool),
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .width(25.dp)
+                                    .height(25.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+
+                                contentDescription = "favorite"
+                            )
+                        }
+                    }
+                    Surface(
+                        modifier = Modifier.size(41.86.dp),
+                        border = BorderStroke(0.5.dp, BlackGray),
+                        shape = RoundedCornerShape(15.dp),
+                        color = Color.White
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.high_coberture),
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .width(25.dp)
+                                    .height(25.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            offsetY.animateTo(600f, animationSpec = tween(300))
+                                            onDismiss()
+                                        }
+                                    },
+
+                                contentDescription = "favorite"
+                            )
+                        }
+                    }
+                    Surface(
+                        modifier = Modifier.size(41.86.dp),
+                        border = BorderStroke(0.5.dp, BlackGray),
+                        shape = RoundedCornerShape(15.dp),
+                        color = Color.White
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.long_stance),
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .width(25.dp)
+                                    .height(25.dp)
                                     .clickable {
                                         scope.launch {
                                             offsetY.animateTo(600f, animationSpec = tween(300))
@@ -809,11 +1053,11 @@ fun FullScreenPlaceCard(
                                 state = MarkerState(position = latLng),
                                 title = place.title,
                                 icon = when (place.type) {
-                                    0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping2)
-                                    1 -> BitmapDescriptorFactory.fromResource(R.drawable.parking_test)
-                                    2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital2)
-                                    3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station2)
-                                    4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry2)
+                                    0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+                                    1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+                                    2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+                                    3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+                                    4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
                                     else -> null
                                 }
                             )
@@ -828,6 +1072,8 @@ fun FullScreenPlaceCard(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
                     modifier = Modifier
@@ -1144,11 +1390,11 @@ fun FullScreenPlaceCard(
                         state = MarkerState(position = place.toLatLng()!!),
                         title = place.title,
                         icon = when (place.type) {
-                            0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping2)
-                            1 -> BitmapDescriptorFactory.fromResource(R.drawable.parking_test)
-                            2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital2)
-                            3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station2)
-                            4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry2)
+                            0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+                            1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+                            2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+                            3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+                            4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
                             else -> null
                         }
                     )
@@ -1205,12 +1451,12 @@ fun PlaceCardPreview() {
 }
 
 
-@Preview(showBackground = true, heightDp = 1200) // Aumentamos la altura de la vista previa
+@Preview(showBackground = true, heightDp = 1200)
 @Composable
 fun PlaceCardFullScreenPreview() {
     val samplePlace = PlacesResponseDto(
         title = "Parking de La Tella Parking de La Tella Parking de La Tella",
-        address = "HU-631", // Dirección más larga para simular más contenido
+        address = "HU-631",
         location = "42.5624343,0.0425323",
         rating = 4.3f,
         userVotes = 108,
