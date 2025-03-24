@@ -110,7 +110,6 @@ fun HomeScreen(
     var showMapNewImageServiceUploadMenu by remember { mutableStateOf(false) }
     var isFullScreenOpen by remember { mutableStateOf(false) }
     var showPlaceList by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
         locationPermission.launchPermissionRequest()
     }
@@ -307,29 +306,7 @@ fun HomeScreen(
                         .padding(top = 120.dp, start = 5.5.dp)
                 )
 
-                if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
-                    BottomActionButtons(
-                        onNavigateToResults = { showPlaceList = true },
-                        onAddAction = {
-                            showBottomActionButtons = false
-                            showMapCreatePointRouteMenu = true
-                        },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 101.dp)
-                    )
-                } else if (selectedPlace == null){
-                    BottomCoordButton(
-                        onNavigateToResults = { navController.navigate("results") },
-                        onAddAction = {
-                            showBottomActionButtons = true
-                            showMapCreatePointRouteMenu = false
-                        },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 300.dp)
-                    )
-                }
+
 
                 SearchBar(
                     searchQuery = searchQuery,
@@ -544,6 +521,31 @@ fun HomeScreen(
                         selectedPlace = place
                         showPlaceList = false
                     }
+                )
+            }
+
+            if (showBottomActionButtons && !isSelectingPoint && selectedPlace == null) {
+                BottomActionButtons(
+                    isListOpen = showPlaceList,
+                    onToggleList = { showPlaceList = !showPlaceList },
+                    onAddAction = {
+                        showBottomActionButtons = false
+                        showMapCreatePointRouteMenu = true
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 101.dp)
+                )
+            } else if (selectedPlace == null){
+                BottomCoordButton(
+                    onNavigateToResults = { navController.navigate("results") },
+                    onAddAction = {
+                        showBottomActionButtons = true
+                        showMapCreatePointRouteMenu = false
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 300.dp)
                 )
             }
         }

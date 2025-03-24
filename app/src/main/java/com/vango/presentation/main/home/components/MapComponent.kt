@@ -150,7 +150,6 @@ fun MapComponent(
         )
     }
 
-//    var firstLoadMarkers by remember { mutableStateOf(true) }
     val markerStatesMap = remember { mutableStateMapOf<String, MarkerState>() }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
     var showFullScreen by remember { mutableStateOf(false) }
@@ -176,19 +175,6 @@ fun MapComponent(
         filtered
     }
 
-//    LaunchedEffect(nearbyPlaces) {
-//        if (firstLoadMarkers && nearbyPlaces.isNotEmpty()) {
-//            markerStates.clear()
-//            nearbyPlaces.forEach { place ->
-//                place.toLatLng()?.let { latLng ->
-//                    Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
-//                    markerStates.add(MarkerState(position = latLng))
-//                } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
-//            }
-//            firstLoadMarkers = false
-//        }
-//    }
-
     LaunchedEffect(filteredPlaces) {
         val currentPlaceIds = filteredPlaces.map { it.placeId }.toSet()
         markerStatesMap.keys.retainAll(currentPlaceIds)
@@ -206,18 +192,9 @@ fun MapComponent(
     }
 
     LaunchedEffect(showFullScreen) {
-        onFullScreenChanged(showFullScreen) // Notifica al HomeScreen
+        onFullScreenChanged(showFullScreen)
     }
 
-//    LaunchedEffect(nearbyPlaces) {
-//        markerStates.clear()
-//        nearbyPlaces.forEach { place ->
-//            place.toLatLng()?.let { latLng ->
-//                Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
-//                markerStates.add(MarkerState(position = latLng))
-//            } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
-//        }
-//    }
 
     Box(modifier = modifier.fillMaxSize()) {
         GoogleMap(
@@ -280,30 +257,6 @@ fun MapComponent(
                 }
             }
 
-
-//            markerStates.forEachIndexed { index, markerState ->
-//                val place = nearbyPlaces[index]
-//                Marker(
-//                    state = markerState,
-//                    title = place.title,
-//                    snippet = place.address,
-//                    icon = when (place.type) {
-//
-//                        0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
-//                        1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
-//                        2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
-//                        3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
-//                        4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
-//                        else -> null
-//                    },
-//                    onClick = {
-//                        selectedPlace = place
-//                        onPlaceSelected(place)
-//                        true
-//                    }
-//                )
-//            }
-
             if (isSelectingPoint) {
                 Marker(
                     state = MarkerState(position = cameraPositionState.position.target),
@@ -319,8 +272,6 @@ fun MapComponent(
                     snippet = "Toca el mapa para confirmar",
                 )
             }
-
-
         }
 
         selectedPlace?.let { place ->
@@ -1567,8 +1518,6 @@ fun FullScreenPlaceList(
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.5f))
     ) {
-
-
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1578,17 +1527,34 @@ fun FullScreenPlaceList(
             color = Color.White,
             shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 55.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 16.dp, top = 55.dp)
             ) {
-
-                SearchBarHomeList(
-                    searchQuery = searchQuery,
-                    onSearchQueryChange = { newQuery ->
-                        searchQuery = newQuery
-                        if (newQuery.isNotEmpty()) {
+                item {
+                    SearchBarHomeList(
+                        searchQuery = searchQuery,
+                        onSearchQueryChange = { newQuery ->
+                            searchQuery = newQuery
+                            if (newQuery.isNotEmpty()) {
+                                searchResults.clear()
+                                searchResults.addAll(
+                                    places.map { place ->
+                                        SearchResult(
+                                            name = place.title ?: "",
+                                            secondaryText = place.address,
+                                            distanceMeters = 0f
+                                        )
+                                    }.filter { it.name.contains(newQuery, ignoreCase = true) }
+                                )
+                            } else {
+                                searchResults.clear()
+                            }
+                        },
+                        performSearch = { query ->
                             searchResults.clear()
                             searchResults.addAll(
                                 places.map { place ->
@@ -1597,196 +1563,168 @@ fun FullScreenPlaceList(
                                         secondaryText = place.address,
                                         distanceMeters = 0f
                                     )
-                                }.filter { it.name.contains(newQuery, ignoreCase = true) }
+                                }.filter { it.name.contains(query, ignoreCase = true) }
                             )
-                        } else {
-                            searchResults.clear()
-                        }
-                    },
-                    performSearch = { query ->
-                        searchResults.clear()
-                        searchResults.addAll(
-                            places.map { place ->
-                                SearchResult(
-                                    name = place.title ?: "",
-                                    secondaryText = place.address,
-                                    distanceMeters = 0f
+                        },
+                        searchResults = searchResults,
+                        onResultSelected = { result ->
+                            val selectedPlace = places.find { it.title == result.name }
+                            selectedPlace?.let { onPlaceSelected(it) }
+                            searchQuery = result.name
+                        },
+                        modifier = Modifier.padding(top = 16.dp) // Padding superior para la barra
+                    )
+                }
+
+                // Filtros como segundo elemento del LazyColumn
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Surface(
+                            color = BackgroundUnselected,
+                            modifier = Modifier.size(60.dp),
+                            shape = RoundedCornerShape(11.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Camping", fontSize = 10.sp, color = Color.White)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.camper_no_fill),
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .width(33.dp)
+                                        .height(33.dp)
+                                        .clickable {
+                                            scope.launch {
+                                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                                onDismiss()
+                                            }
+                                        },
+                                    tint = Color.White
                                 )
-                            }.filter { it.name.contains(query, ignoreCase = true) }
-                        )
-                    },
-                    searchResults = searchResults,
-                    onResultSelected = { result ->
-                        val selectedPlace = places.find { it.title == result.name }
-                        selectedPlace?.let { onPlaceSelected(it) }
-                        searchQuery = result.name
-                    },
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(top=20.dp, bottom = 20.dp,
-                        start = 20.dp, end = 20.dp,
-                    ),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Surface(
-                        color = BackgroundUnselected,
-                        modifier = Modifier.size(60.dp),
-                        shape = RoundedCornerShape(11.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Text(text = "Camping", fontSize = 10.sp, color = Color.White)
-                            Icon(
-                                painter = painterResource(id = R.drawable.camper_no_fill),
-                                contentDescription = "Cerrar",
-                                modifier = Modifier
-                                    .width(33.dp)
-                                    .height(33.dp)
-                                    .clickable {
-                                        scope.launch {
-                                            offsetY.animateTo(600f, animationSpec = tween(300))
-                                            onDismiss()
-                                        }
-                                    },
-                                tint = Color.White
-                            )
-
+                            }
                         }
-                    }
-                    Surface(
-                        color = BackgroundUnselected,
-                        modifier = Modifier.size(60.dp),
-                        shape = RoundedCornerShape(11.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                        Surface(
+                            color = BackgroundUnselected,
+                            modifier = Modifier.size(60.dp),
+                            shape = RoundedCornerShape(11.dp)
                         ) {
-                            Text(text = "Parking", fontSize = 10.sp, color = Color.White)
-                            Icon(
-                                painter = painterResource(id = R.drawable.parking_no_fill),
-                                contentDescription = "Cerrar",
-                                modifier = Modifier
-                                    .width(33.dp)
-                                    .height(33.dp)
-                                    .clickable {
-                                        scope.launch {
-                                            offsetY.animateTo(600f, animationSpec = tween(300))
-                                            onDismiss()
-                                        }
-                                    },
-                                tint = Color.White
-                            )
-
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Parking", fontSize = 10.sp, color = Color.White)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.parking_no_fill),
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .width(33.dp)
+                                        .height(33.dp)
+                                        .clickable {
+                                            scope.launch {
+                                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                                onDismiss()
+                                            }
+                                        },
+                                    tint = Color.White
+                                )
+                            }
                         }
-                    }
-                    Surface(
-                        color = BackgroundUnselected,
-                        modifier = Modifier.size(60.dp),
-                        shape = RoundedCornerShape(11.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                        Surface(
+                            color = BackgroundUnselected,
+                            modifier = Modifier.size(60.dp),
+                            shape = RoundedCornerShape(11.dp)
                         ) {
-                            Text(text = "Lavanderia", fontSize = 10.sp, color = Color.White)
-                            Icon(
-                                painter = painterResource(id = R.drawable.laundry_no_fill),
-                                contentDescription = "Cerrar",
-                                modifier = Modifier
-                                    .width(33.dp)
-                                    .height(33.dp)
-                                    .clickable {
-                                        scope.launch {
-                                            offsetY.animateTo(600f, animationSpec = tween(300))
-                                            onDismiss()
-                                        }
-                                    },
-                                tint = Color.White
-                            )
-
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Lavanderia", fontSize = 10.sp, color = Color.White)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.laundry_no_fill),
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .width(33.dp)
+                                        .height(33.dp)
+                                        .clickable {
+                                            scope.launch {
+                                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                                onDismiss()
+                                            }
+                                        },
+                                    tint = Color.White
+                                )
+                            }
                         }
-                    }
-                    Surface(
-                        color = BackgroundUnselected,
-                        modifier = Modifier.size(60.dp),
-                        shape = RoundedCornerShape(11.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                        Surface(
+                            color = BackgroundUnselected,
+                            modifier = Modifier.size(60.dp),
+                            shape = RoundedCornerShape(11.dp)
                         ) {
-                            Text(text = "Gasolinera", fontSize = 10.sp, color = Color.White)
-                            Icon(
-                                painter = painterResource(id = R.drawable.fuel_station_no_fill),
-                                contentDescription = "Cerrar",
-                                modifier = Modifier
-                                    .width(33.dp)
-                                    .height(33.dp)
-                                    .clickable {
-                                        scope.launch {
-                                            offsetY.animateTo(600f, animationSpec = tween(300))
-                                            onDismiss()
-                                        }
-                                    },
-                                tint = Color.White
-                            )
-
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Gasolinera", fontSize = 10.sp, color = Color.White)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.fuel_station_no_fill),
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .width(33.dp)
+                                        .height(33.dp)
+                                        .clickable {
+                                            scope.launch {
+                                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                                onDismiss()
+                                            }
+                                        },
+                                    tint = Color.White
+                                )
+                            }
                         }
-                    }
-                    Surface(
-                        color = BackgroundUnselected,
-                        modifier = Modifier.size(60.dp),
-                        shape = RoundedCornerShape(11.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                        Surface(
+                            color = BackgroundUnselected,
+                            modifier = Modifier.size(60.dp),
+                            shape = RoundedCornerShape(11.dp)
                         ) {
-                            Text(text = "Hospital", fontSize = 10.sp, color = Color.White)
-                            Icon(
-                                painter = painterResource(id = R.drawable.hospital_no_fill),
-                                contentDescription = "Cerrar",
-                                modifier = Modifier
-                                    .width(33.dp)
-                                    .height(33.dp)
-                                    .clickable {
-                                        scope.launch {
-                                            offsetY.animateTo(600f, animationSpec = tween(300))
-                                            onDismiss()
-                                        }
-                                    },
-                                tint = Color.White
-                            )
-
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "Hospital", fontSize = 10.sp, color = Color.White)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.hospital_no_fill),
+                                    contentDescription = "Cerrar",
+                                    modifier = Modifier
+                                        .width(33.dp)
+                                        .height(33.dp)
+                                        .clickable {
+                                            scope.launch {
+                                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                                onDismiss()
+                                            }
+                                        },
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 }
 
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
-                ) {
-                    items(places) { place ->
-                        PlaceCardList(
-                            place = place,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onPlaceSelected(place) }
-                        )
-                    }
+                // Lista de lugares
+                items(places) { place ->
+                    PlaceCardList(
+                        place = place,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onPlaceSelected(place) }
+                    )
                 }
             }
         }
