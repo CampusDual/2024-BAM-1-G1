@@ -1,6 +1,7 @@
 package com.vango.presentation.main.home.components
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
@@ -72,6 +73,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.vango.R
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorCard
@@ -82,6 +85,7 @@ import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.WhiteGray
 import com.vango.presentation.theme.YellowMelow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.File
 import kotlin.math.abs
 
@@ -2885,13 +2889,18 @@ fun MapNewImageServiceUploadMenu(
     onNameConfirmed: String?,
     initialImages: List<Uri> = emptyList(),
     onDismiss: () -> Unit,
-    onConfirm: (List<Uri>) -> Unit
+    onConfirm: (List<String>) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
     val context = LocalContext.current
     var images by remember { mutableStateOf(initialImages) }
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
+    var imageUrls by remember { mutableStateOf<List<String>>(emptyList()) }
+    var isUploading by remember { mutableStateOf(false) }
+
+    val storage = FirebaseStorage.getInstance()
+    val storageRef = storage.reference
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
         uris?.let {
@@ -2914,6 +2923,22 @@ fun MapNewImageServiceUploadMenu(
             cameraUri = uri
             cameraLauncher.launch(uri)
         }
+    }
+
+    suspend fun uploadImagesToFirebase(images: List<Uri>): List<String> {
+        val urls = mutableListOf<String>()
+        images.forEach { uri ->
+            val fileName = "point_${selectedPoint?.latitude}_${selectedPoint?.longitude}_${System.currentTimeMillis()}.jpg"
+            val imageRef: StorageReference = storageRef.child("images/$fileName")
+            try {
+                imageRef.putFile(uri).await()
+                val downloadUrl = imageRef.downloadUrl.await().toString()
+                urls.add(downloadUrl)
+            } catch (e: Exception) {
+                Log.e("FirebaseUpload", "Error uploading image: ${e.message}")
+            }
+        }
+        return urls
     }
 
     LaunchedEffect(Unit) {
@@ -3289,10 +3314,15 @@ fun MapNewImageServiceUploadMenu(
                             .fillMaxWidth()
                             .height(51.dp)
                             .clickable {
-                                scope.launch {
-                                    offsetY.animateTo(600f, animationSpec = tween(300))
-                                    onConfirm(images)
-                                    onDismiss()
+                                if (!isUploading) {
+                                    isUploading = true
+                                    scope.launch {
+                                        imageUrls = uploadImagesToFirebase(images)
+                                        offsetY.animateTo(600f, animationSpec = tween(300))
+                                        onConfirm(imageUrls)
+                                        onDismiss()
+                                        isUploading = false
+                                    }
                                 }
                             },
                         shape = RoundedCornerShape(20.dp),

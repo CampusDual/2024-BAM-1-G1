@@ -489,7 +489,7 @@ fun HomeScreen(
                     selectedAddress = viewModel.selectedAddress.value,
                     onNameConfirmed = viewModel.selectedAddress.value,
                     onConfirm = { updatedImages ->
-                        images = updatedImages
+                        images = emptyList()
                         showMapNewImageServiceMenu = false
                         showMapNewLastDatesMenu = true
                     },

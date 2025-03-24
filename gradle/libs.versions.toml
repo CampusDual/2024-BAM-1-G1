@@ -55,6 +55,7 @@ google-places = "4.2.0"
 coil = "2.7.0"
 uiTestAndroid = "1.7.8"
 foundationAndroid = "1.7.2"
+firebaseStorageKtx = "21.0.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -137,6 +138,7 @@ androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-andr
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 
 coil-compose = {group="io.coil-kt", name="coil-compose", version.ref = "coil"}
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
