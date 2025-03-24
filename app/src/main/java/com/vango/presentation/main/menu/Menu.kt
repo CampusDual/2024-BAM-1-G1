@@ -60,8 +60,9 @@ fun MenuScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 55.dp, start = 20.dp, end = 20.dp).background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(top = 55.dp, start = 20.dp, end = 20.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // Fila con el botón de cerrar y el título
         Row(
@@ -134,7 +135,9 @@ fun MenuScreen(
 
                 IconButton(
                     onClick = { ImageSelectlauncher.launch("image/*") },
-                    modifier = Modifier.size(27.dp).align( Alignment.BottomEnd)
+                    modifier = Modifier
+                        .size(27.dp)
+                        .align(Alignment.BottomEnd)
                 )
                 {
                     Icon(

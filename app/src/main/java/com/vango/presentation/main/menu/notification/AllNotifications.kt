@@ -1,7 +1,6 @@
 package com.vango.presentation.main.menu.notification
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,16 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.vango.R
+import com.vango.presentation.main.menu.notification.components.Notification
 import com.vango.presentation.theme.BlackGray
 import com.vango.presentation.theme.TextColor
 
@@ -147,11 +144,7 @@ fun NotificationItem(notification: Notification) {
 }
 
 // Modelo de datos para las notificaciones
-data class Notification(
-    val sender: String,
-    val alert: Boolean,
-    val title: String
-)
+
 
 
 // Vista previa para pruebas

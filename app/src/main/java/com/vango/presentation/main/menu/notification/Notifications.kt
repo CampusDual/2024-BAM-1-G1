@@ -34,12 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.vango.R
-import com.vango.presentation.main.menu.notification.components.alerts
 import com.vango.presentation.main.menu.notification.components.notifications
-import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorList
 import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.StyledButton
@@ -164,8 +161,8 @@ fun NotificationScreen(
                 // Contenido dinámico según el botón seleccionado
                 when (selectedSection) {
                     "todos" -> AllNotificationsScreen(notifications = notifications)
-                    "alertas" -> AlertsScreen()
-                    "mensajes" -> MessagesScreen()
+                    "alertas" -> AlertsScreen(notifications = notifications)
+                    "mensajes" -> MessagesScreen(notifications = notifications)
                 }
             }
         }
