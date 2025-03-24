@@ -21,7 +21,5 @@ val BlackGray = Color(0xFF484848)
 val WhiteGray = Color(0xFFF8F8F8)
 val BackgroundColorImage = Color(0xFFD9D9D9)
 val WarningColor = Color(0xFFFF0026)
-
-
-
+val YellowMelow = Color(0xFFFFD9A8)
 val TextColor = Color(0xFF484848)

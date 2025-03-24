@@ -1,7 +1,6 @@
 package com.vango.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.vango.data.dataSource.remote.api.UserApi
 import com.vango.data.dataSource.remote.auth.AuthRemoteDataSource
 import com.vango.data.dataSource.remote.auth.AuthRemoteDataSourceImpl

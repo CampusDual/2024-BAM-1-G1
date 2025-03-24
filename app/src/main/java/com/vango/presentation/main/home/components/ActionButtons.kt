@@ -143,23 +143,30 @@ fun LocationActionButtons(
 
 @Composable
 fun BottomActionButtons(
-    onNavigateToResults: () -> Unit,
+    isListOpen: Boolean,
+    onToggleList: () -> Unit,
     onAddAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(
-            modifier = Modifier
-                .width(50.dp)
-                .height(0.dp)
-        )
+        if (!isListOpen) {
+            Spacer(
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(0.dp)
+            )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
         Surface(
-            onClick = onNavigateToResults,
+            onClick = onToggleList,
             modifier = Modifier
                 .width(120.dp)
                 .height(50.dp)
@@ -172,14 +179,14 @@ fun BottomActionButtons(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.list),
-                    contentDescription = "Lista",
+                    painter = if(!isListOpen) painterResource(id = R.drawable.list) else painterResource(id = R.drawable.map),
+                    contentDescription = if(!isListOpen)"Lista" else "Mapa",
                     modifier = Modifier.size(25.dp),
                     tint = Color.White
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Lista",
+                    text = if(!isListOpen)"Lista" else "Mapa",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -187,25 +194,30 @@ fun BottomActionButtons(
             }
         }
 
-        Surface(
-            onClick = onAddAction,
-            modifier = Modifier
-                .size(50.dp)
-                .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
-            shape = RoundedCornerShape(13.dp),
-            color = BackgroundColorButtonPrincipal
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+
+        if (!isListOpen) {
+            Surface(
+                onClick = onAddAction,
+                modifier = Modifier
+                    .size(50.dp)
+                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+                shape = RoundedCornerShape(13.dp),
+                color = BackgroundColorButtonPrincipal
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.add_btn),
-                    contentDescription = "Agregar",
-                    modifier = Modifier.size(25.dp),
-                    tint = Color.Unspecified
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.add_btn),
+                        contentDescription = "Agregar",
+                        modifier = Modifier.size(25.dp),
+                        tint = Color.Unspecified
+                    )
+                }
             }
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -266,25 +278,57 @@ fun TopCenterButton(
     selectedFilterTypes: Set<Int>,
     viewModel: HomeViewModel,
 ) {
+    val currentZoom = cameraPositionState.position.zoom
+    val buttonText = if (currentZoom < 11f) "Acércate más" else "Buscar aquí"
     Surface(
-        onClick = {
-            val centerLatLng = cameraPositionState.position.target
-            viewModel.searchNearbyPlaces(centerLatLng, radius = 5000, placeType = 5)
-        },
+        onClick = onNavigateToResults,
         modifier = modifier
             .width(128.dp)
             .height(40.dp)
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
         shape = RoundedCornerShape(13.dp),
         color = BackgroundColorList
-    ) {
+    ){
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Buscar aquí",
+                text = buttonText,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun TopCenterButtonSelectedPoint(
+    onNavigateToResults: () -> Unit,
+    modifier: Modifier = Modifier,
+    cameraPositionState: CameraPositionState,
+    selectedFilterTypes: Set<Int>,
+    viewModel: HomeViewModel,
+) {
+    val currentZoom = cameraPositionState.position.zoom
+    Surface(
+        onClick = onNavigateToResults,
+        modifier = modifier
+            .width(128.dp)
+            .height(40.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+        shape = RoundedCornerShape(13.dp),
+        color = BackgroundColorList
+    ){
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Acércate más",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
