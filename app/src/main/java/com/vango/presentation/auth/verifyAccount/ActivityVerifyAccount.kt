@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.vango.databinding.ActivityVerifyAccountBinding
-import com.vango.presentation.main.ActivityMain
+import com.vango.presentation.auth.completeProfile.ActivityCompleteProfile
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,13 +33,15 @@ class ActivityVerifyAccount : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ActivityVerifyAccountViewModel::class.java]
 
         initListeners()
-        initObservers()
+        initObservers(firebaseIdReceived)
     }
 
-    private fun initObservers() {
+    private fun initObservers(firebaseId: String?) {
         viewModel?.isAccountVerified?.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intentActivityHome = Intent(this, ActivityMain::class.java)
+                val intentActivityHome = Intent(this, ActivityCompleteProfile::class.java)
+                intentActivityHome.putExtra("firebaseId", firebaseId)
+                    //ActivityMain::class.java)
                 intentActivityHome.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intentActivityHome)
                 finish()
