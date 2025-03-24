@@ -78,6 +78,54 @@ class HomeViewModel @Inject constructor(
     private val _nearbyPlaces = MutableStateFlow<List<PlacesResponseDto>>(emptyList())
     val nearbyPlaces: StateFlow<List<PlacesResponseDto>> = _nearbyPlaces.asStateFlow()
 
+    private var photoUrls = mutableListOf<String>()
+
+    fun setPhotoUrls(urls: List<String>) {
+        photoUrls.clear()
+        photoUrls.addAll(urls)
+        Log.d("HomeViewModel", "Photo URLs set: $urls")
+    }
+
+    fun saveNewPointToApi(
+        latitude: Double,
+        longitude: Double,
+        address: String,
+        pricePerDay: Double? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                val locationString = "$latitude,$longitude"
+                Log.d("HomeViewModel", "Creando punto con photoUrls: $photoUrls")
+                val newPoint = PlacesResponseDto(
+                    title = _selectedName.value ?: "Unnamed Point",
+                    address = address,
+                    location = locationString,
+                    rating = null,
+                    userVotes = null,
+                    photoUrls = photoUrls.takeIf { it.isNotEmpty() }?.toList(),
+                    type = null,
+                    placeId = null,
+                    currentOpeningHours = null,
+                    opening_hours = null,
+                    international_phone_number = null,
+                    formattedPhoneNumber = null,
+                    website = null,
+                    reviews = null,
+                    source = null
+                )
+                _nearbyPlaces.value = _nearbyPlaces.value + newPoint
+                Log.d("HomeViewModel", "Punto creado: $newPoint")
+                Log.d("HomeViewModel", "NearbyPlaces actualizado: ${_nearbyPlaces.value}")
+
+                clearSelectedPoint()
+                photoUrls.clear()
+                Log.d("HomeViewModel", "PhotoUrls limpiado: $photoUrls")
+            } catch (e: Exception) {
+                _errorMessage.value = "Error al guardar el punto: ${e.message}"
+            }
+        }
+    }
+
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         performSearch(query)

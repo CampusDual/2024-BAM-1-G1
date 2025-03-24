@@ -278,25 +278,57 @@ fun TopCenterButton(
     selectedFilterTypes: Set<Int>,
     viewModel: HomeViewModel,
 ) {
+    val currentZoom = cameraPositionState.position.zoom
+    val buttonText = if (currentZoom < 11f) "Acércate más" else "Buscar aquí"
     Surface(
-        onClick = {
-            val centerLatLng = cameraPositionState.position.target
-            viewModel.searchNearbyPlaces(centerLatLng, radius = 5000, placeType = 5)
-        },
+        onClick = onNavigateToResults,
         modifier = modifier
             .width(128.dp)
             .height(40.dp)
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
         shape = RoundedCornerShape(13.dp),
         color = BackgroundColorList
-    ) {
+    ){
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Buscar aquí",
+                text = buttonText,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun TopCenterButtonSelectedPoint(
+    onNavigateToResults: () -> Unit,
+    modifier: Modifier = Modifier,
+    cameraPositionState: CameraPositionState,
+    selectedFilterTypes: Set<Int>,
+    viewModel: HomeViewModel,
+) {
+    val currentZoom = cameraPositionState.position.zoom
+    Surface(
+        onClick = onNavigateToResults,
+        modifier = modifier
+            .width(128.dp)
+            .height(40.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(13.dp)),
+        shape = RoundedCornerShape(13.dp),
+        color = BackgroundColorList
+    ){
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Acércate más",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White

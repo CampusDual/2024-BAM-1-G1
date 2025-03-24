@@ -76,6 +76,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.vango.R
+import com.vango.presentation.main.home.HomeViewModel
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorCard
 import com.vango.presentation.theme.BackgroundColorImage
@@ -985,7 +986,8 @@ fun MapNewPointTagMenu(
                                     verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     selectedSubcategory?.let { selected ->
-                                        val (title, description, iconRes) = currentSubcategories[selected] ?: Triple("", "", R.drawable.ex)
+                                        val (title, description, iconRes) = currentSubcategories[selected]
+                                            ?: Triple("", "", R.drawable.ex)
                                         Column {
                                             Row(
                                                 modifier = Modifier.fillMaxWidth(),
@@ -1017,14 +1019,16 @@ fun MapNewPointTagMenu(
                                         }
                                     }
 
-                                    val remainingSubcategories = currentSubcategories.keys.filter { it != selectedSubcategory }
+                                    val remainingSubcategories =
+                                        currentSubcategories.keys.filter { it != selectedSubcategory }
                                     remainingSubcategories.chunked(4).forEach { chunk ->
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
                                             horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
                                             chunk.forEach { subcategory ->
-                                                val (title, description, iconRes) = currentSubcategories[subcategory] ?: Triple("", "", R.drawable.ex)
+                                                val (title, description, iconRes) = currentSubcategories[subcategory]
+                                                    ?: Triple("", "", R.drawable.ex)
                                                 ButtonCategory(
                                                     text = title,
                                                     iconRes = iconRes,
@@ -2392,13 +2396,13 @@ fun MapNewLastDatesMenu(
     selectedPoint: LatLng?,
     selectedAddress: String?,
     onNameConfirmed: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    viewModel: HomeViewModel
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
-    var nameInput by remember { mutableStateOf("") }
-
     var textValue by remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
     }
@@ -2824,7 +2828,21 @@ fun MapNewLastDatesMenu(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(51.dp),
+                        .height(51.dp)
+                        .clickable {
+                            scope.launch {
+                                selectedPoint?.let { point ->
+                                    viewModel.saveNewPointToApi(
+                                        latitude = point.latitude,
+                                        longitude = point.longitude,
+                                        address = selectedAddress ?: "Unknown address"
+                                    )
+//                                    viewModel.updateCurrentLocation(point)
+                                }
+                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                onDismiss()
+                            }
+                        },
 
                     shape = RoundedCornerShape(20.dp),
                     color = MainColor,
@@ -2832,10 +2850,7 @@ fun MapNewLastDatesMenu(
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
-
-                        ) {
-
-
+                    ) {
                         Text(
                             text = "Saltar y crear punto",
                             modifier = Modifier.padding(top = 6.dp),
@@ -2852,7 +2867,22 @@ fun MapNewLastDatesMenu(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(51.dp),
+                        .height(51.dp)
+                        .clickable {
+                            scope.launch {
+                                selectedPoint?.let { point ->
+                                    viewModel.saveNewPointToApi(
+                                        latitude = point.latitude,
+                                        longitude = point.longitude,
+                                        address = selectedAddress ?: "Unknown address",
+                                        pricePerDay = textValue.takeIf { it.isNotEmpty() }?.toDoubleOrNull()
+                                    )
+//                                    viewModel.updateCurrentLocation(point)
+                                }
+                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                onDismiss()
+                            }
+                        },
 
                     shape = RoundedCornerShape(20.dp),
                     color = MainColor,
@@ -2889,7 +2919,8 @@ fun MapNewImageServiceUploadMenu(
     onNameConfirmed: String?,
     initialImages: List<Uri> = emptyList(),
     onDismiss: () -> Unit,
-    onConfirm: (List<String>) -> Unit
+    onConfirm: (List<String>) -> Unit,
+    viewModel: HomeViewModel
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
@@ -2902,33 +2933,37 @@ fun MapNewImageServiceUploadMenu(
     val storage = FirebaseStorage.getInstance()
     val storageRef = storage.reference
 
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-        uris?.let {
-            val newImages = (images + it).take(10)
-            images = newImages
-        }
-    }
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            cameraUri?.let { uri ->
-                val newImages = (images + uri).take(10)
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+            uris?.let {
+                val newImages = (images + it).take(10)
                 images = newImages
             }
         }
-    }
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            val file = File(context.cacheDir, "camera_photo_${System.currentTimeMillis()}.jpg")
-            val uri = FileProvider.getUriForFile(context, "com.vango.fileprovider", file)
-            cameraUri = uri
-            cameraLauncher.launch(uri)
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                cameraUri?.let { uri ->
+                    val newImages = (images + uri).take(10)
+                    images = newImages
+                }
+            }
         }
-    }
+    val cameraPermissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                val file = File(context.cacheDir, "camera_photo_${System.currentTimeMillis()}.jpg")
+                val uri = FileProvider.getUriForFile(context, "com.vango.fileprovider", file)
+                cameraUri = uri
+                cameraLauncher.launch(uri)
+            }
+        }
 
     suspend fun uploadImagesToFirebase(images: List<Uri>): List<String> {
         val urls = mutableListOf<String>()
         images.forEach { uri ->
-            val fileName = "point_${selectedPoint?.latitude}_${selectedPoint?.longitude}_${System.currentTimeMillis()}.jpg"
+            val fileName =
+                "point_${selectedPoint?.latitude}_${selectedPoint?.longitude}_${System.currentTimeMillis()}.jpg"
             val imageRef: StorageReference = storageRef.child("images/$fileName")
             try {
                 imageRef.putFile(uri).await()
@@ -3069,7 +3104,10 @@ fun MapNewImageServiceUploadMenu(
                                 contentDescription = "Foto de portada",
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .background(BackgroundColorImage, shape = RoundedCornerShape(20.dp))
+                                    .background(
+                                        BackgroundColorImage,
+                                        shape = RoundedCornerShape(20.dp)
+                                    )
                             )
                         }
                         Row(
@@ -3131,7 +3169,10 @@ fun MapNewImageServiceUploadMenu(
                         pair.forEach { uri ->
                             Box(
                                 modifier = Modifier
-                                    .background(BackgroundColorImage, shape = RoundedCornerShape(20.dp))
+                                    .background(
+                                        BackgroundColorImage,
+                                        shape = RoundedCornerShape(20.dp)
+                                    )
                                     .width(170.dp)
                                     .height(132.dp)
                             ) {
@@ -3142,10 +3183,13 @@ fun MapNewImageServiceUploadMenu(
                                 )
                                 Surface(
                                     color = Color.White,
-                                    modifier = Modifier.size(32.dp).align(Alignment.TopEnd).padding(top = 10.dp, end = 10.dp),
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .align(Alignment.TopEnd)
+                                        .padding(top = 10.dp, end = 10.dp),
                                     shape = RoundedCornerShape(6.dp),
 
-                                ) {
+                                    ) {
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center,
@@ -3159,7 +3203,8 @@ fun MapNewImageServiceUploadMenu(
                                                 .clickable {
                                                     val index = images.indexOf(uri)
                                                     if (index != -1) {
-                                                        images = images.toMutableList().apply { removeAt(index) }
+                                                        images = images.toMutableList()
+                                                            .apply { removeAt(index) }
                                                     }
                                                 },
                                             tint = Color.Black
@@ -3186,15 +3231,22 @@ fun MapNewImageServiceUploadMenu(
                                 modifier = Modifier
                                     .width(170.dp)
                                     .height(132.dp)
-                                    .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
+                                    .background(
+                                        Color.Transparent,
+                                        shape = RoundedCornerShape(20.dp)
+                                    )
                                     .drawBehind {
                                         val strokeWidth = 1.dp.toPx()
-                                        val pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
+                                        val pathEffect =
+                                            PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
                                         drawRoundRect(
                                             color = Color.Gray,
                                             size = size,
                                             cornerRadius = CornerRadius(20.dp.toPx()),
-                                            style = Stroke(width = strokeWidth, pathEffect = pathEffect)
+                                            style = Stroke(
+                                                width = strokeWidth,
+                                                pathEffect = pathEffect
+                                            )
                                         )
                                     },
                                 contentAlignment = Alignment.Center
@@ -3231,15 +3283,22 @@ fun MapNewImageServiceUploadMenu(
                                 modifier = Modifier
                                     .width(170.dp)
                                     .height(132.dp)
-                                    .background(Color.Transparent, shape = RoundedCornerShape(20.dp))
+                                    .background(
+                                        Color.Transparent,
+                                        shape = RoundedCornerShape(20.dp)
+                                    )
                                     .drawBehind {
                                         val strokeWidth = 1.dp.toPx()
-                                        val pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
+                                        val pathEffect =
+                                            PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
                                         drawRoundRect(
                                             color = Color.Gray,
                                             size = size,
                                             cornerRadius = CornerRadius(20.dp.toPx()),
-                                            style = Stroke(width = strokeWidth, pathEffect = pathEffect)
+                                            style = Stroke(
+                                                width = strokeWidth,
+                                                pathEffect = pathEffect
+                                            )
                                         )
                                     },
                                 contentAlignment = Alignment.Center
@@ -3318,8 +3377,16 @@ fun MapNewImageServiceUploadMenu(
                                     isUploading = true
                                     scope.launch {
                                         imageUrls = uploadImagesToFirebase(images)
+                                        viewModel.setPhotoUrls(imageUrls)
                                         offsetY.animateTo(600f, animationSpec = tween(300))
                                         onConfirm(imageUrls)
+                                        selectedPoint?.let { point ->
+                                            viewModel.saveNewPointToApi(
+                                                latitude = point.latitude,
+                                                longitude = point.longitude,
+                                                address = selectedAddress ?: "Unknown address"
+                                            )
+                                        }
                                         onDismiss()
                                         isUploading = false
                                     }
@@ -3710,15 +3777,15 @@ fun CustomDropdownHour() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MapNewPointTagMenua() {
-    var nameInput by remember { mutableStateOf("Punto de prueba") }
-    MapNewImageServiceUploadMenu(
-        selectedPoint = LatLng(111.0, 1111.0),
-        selectedAddress = "test",
-        onNameConfirmed = "test",
-        onConfirm = {},
-        onDismiss = {},
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MapNewPointTagMenua() {
+//    var nameInput by remember { mutableStateOf("Punto de prueba") }
+//    MapNewImageServiceUploadMenu(
+//        selectedPoint = LatLng(111.0, 1111.0),
+//        selectedAddress = "test",
+//        onNameConfirmed = "test",
+//        onConfirm = {},
+//        onDismiss = {},
+//    )
+//}

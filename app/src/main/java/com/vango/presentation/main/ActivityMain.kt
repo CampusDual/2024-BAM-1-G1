@@ -345,30 +345,7 @@ fun BottomNavigationBar(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
-@Preview(showBackground = true)
-@Composable
-fun HomeContentPreview() {
-    val mockViewModel = ActivityMainViewModel()
 
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(
-                currentRoute = "home",
-                onItemSelected = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .windowInsetsPadding(WindowInsets(0, 0, 0, 0))
-            )
-        }
-    ) { paddingValues ->
-        HomeScreen(
-            modifier = Modifier.padding(paddingValues),
-            navController = rememberNavController(),
-            isPreview = true
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

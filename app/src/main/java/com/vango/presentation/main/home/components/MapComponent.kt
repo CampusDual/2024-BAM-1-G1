@@ -126,6 +126,7 @@ fun MapComponent(
     onFullScreenChanged: (Boolean) -> Unit = {}
 ) {
     val context = LocalContext.current
+    Log.d("MapComponent", "NearbyPlaces recibido: $nearbyPlaces")
     val mapStyleOptions = remember {
         MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
     }
@@ -152,14 +153,36 @@ fun MapComponent(
 
     val markerStatesMap = remember { mutableStateMapOf<String, MarkerState>() }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
+
     var showFullScreen by remember { mutableStateOf(false) }
+
+//    val filteredPlaces = remember(nearbyPlaces, selectedFilterTypes) {
+//        val filtered = if (selectedFilterTypes.isEmpty()) {
+//            nearbyPlaces
+//        } else {
+//            nearbyPlaces.filter { place ->
+//                place.type in selectedFilterTypes
+//            }
+//        }
+//        Log.d(
+//            "MapComponent",
+//            "NearbyPlaces: ${nearbyPlaces.size}, FilteredPlaces: ${filtered.size}, Filters: $selectedFilterTypes"
+//        )
+//        filtered.forEach { place ->
+//            Log.d(
+//                "MapComponent",
+//                "Filtered Place: ${place.title}, Type: ${place.type}, PlaceId: ${place.placeId}"
+//            )
+//        }
+//        filtered
+//    }
 
     val filteredPlaces = remember(nearbyPlaces, selectedFilterTypes) {
         val filtered = if (selectedFilterTypes.isEmpty()) {
             nearbyPlaces
         } else {
             nearbyPlaces.filter { place ->
-                place.type in selectedFilterTypes
+                place.type in selectedFilterTypes || place.type == null
             }
         }
         Log.d(
@@ -169,10 +192,18 @@ fun MapComponent(
         filtered.forEach { place ->
             Log.d(
                 "MapComponent",
-                "Filtered Place: ${place.title}, Type: ${place.type}, PlaceId: ${place.placeId}"
+                "Filtered Place: ${place.title}, Type: ${place.type}, Location: ${place.location}"
             )
         }
         filtered
+    }
+
+    LaunchedEffect(filteredPlaces) {
+        filteredPlaces.forEach { place ->
+            place.toLatLng()?.let { latLng ->
+                Log.d("MapComponent", "Adding marker for ${place.title} at $latLng")
+            } ?: Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+        }
     }
 
     LaunchedEffect(filteredPlaces) {
@@ -225,37 +256,64 @@ fun MapComponent(
                 }
             }
 
+//            filteredPlaces.forEach { place ->
+//                place.placeId?.let { placeId ->
+//                    val markerState = remember(placeId) {
+//                        place.toLatLng()?.let { MarkerState(position = it) }
+//                            ?: run {
+//                                Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
+//                                null
+//                            }
+//                    }
+//                    markerState?.let {
+//                        Marker(
+//                            state = it,
+//                            title = place.title,
+//                            snippet = place.address,
+//                            icon = when (place.type) {
+//                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+//                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+//                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+//                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+//                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
+//                                else -> null
+//                            },
+//                            onClick = {
+//                                selectedPlace = place
+//                                onPlaceSelected(place)
+//                                true
+//                            }
+//                        )
+//                    }
+//                }
+//            }
+
             filteredPlaces.forEach { place ->
-                place.placeId?.let { placeId ->
-                    val markerState = remember(placeId) {
-                        place.toLatLng()?.let { MarkerState(position = it) }
-                            ?: run {
-                                Log.w("MapComponent", "toLatLng() returned null for ${place.title}")
-                                null
-                            }
-                    }
-                    markerState?.let {
-                        Marker(
-                            state = it,
-                            title = place.title,
-                            snippet = place.address,
-                            icon = when (place.type) {
-                                0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
-                                1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
-                                2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
-                                3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
-                                4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
-                                else -> null
-                            },
-                            onClick = {
-                                selectedPlace = place
-                                onPlaceSelected(place)
-                                true
-                            }
-                        )
-                    }
-                }
+                place.toLatLng()?.let { latLng ->
+                    Marker(
+                        state = MarkerState(position = latLng),
+                        title = place.title,
+                        snippet = place.address,
+                        icon = when (place.type) {
+                            0 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_camping)
+                            1 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_parking)
+                            2 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_hospital)
+                            3 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_gas_station)
+                            4 -> BitmapDescriptorFactory.fromResource(R.drawable.marker_laundry)
+                            else -> BitmapDescriptorFactory.defaultMarker()
+                        },
+                        onClick = {
+                            selectedPlace = place
+                            onPlaceSelected(place)
+                            true
+                        }
+                    )
+                } ?: Log.w(
+                    "MapComponent",
+                    "No se pudo crear marcador para ${place.title}, location inválido: ${place.location}"
+                )
             }
+
 
             if (isSelectingPoint) {
                 Marker(
@@ -275,6 +333,7 @@ fun MapComponent(
         }
 
         selectedPlace?.let { place ->
+            Log.d("MapComponent", "SelectedPlace antes de PlaceCard: $place")
             PlaceCard(
                 place = place,
                 modifier = Modifier
@@ -337,6 +396,7 @@ fun PlaceCard(
 
             val photoUrls = place.photoUrls ?: listOf(R.drawable.noimage)
             val pagerState = rememberPagerState(pageCount = { photoUrls.size })
+            Log.d("PlaceCard", "Photo URLs for ${place.title}: $photoUrls")
 
             Box {
                 HorizontalPager(
@@ -345,13 +405,16 @@ fun PlaceCard(
                         .fillMaxWidth()
                         .height(162.dp)
                 ) { page ->
+                    Log.d("PlaceCard", "Cargando imagen: ${photoUrls[page]}")
                     AsyncImage(
                         model = photoUrls[page],
                         contentDescription = "Imagen ${page + 1} de ${place.title}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(229.dp),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.noimage),
+                        error = painterResource(R.drawable.noimage)
                     )
                 }
 
@@ -540,13 +603,16 @@ fun PlaceCardList(
                         .height(229.dp)
                         .clip(RoundedCornerShape(15.dp))
                 ) { page ->
+                    Log.d("PlaceCard", "Cargando imagen: ${photoUrls[page]}")
                     AsyncImage(
                         model = photoUrls[page],
                         contentDescription = "Imagen ${page + 1} de ${place.title}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(229.dp),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.noimage),
+                        error = painterResource(R.drawable.noimage)
                     )
                 }
 
