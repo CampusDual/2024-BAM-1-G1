@@ -33,21 +33,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vango.R
-import com.vango.presentation.theme.BackgroundButtonColor
+import com.vango.presentation.main.menu.notification.components.notifications
 import com.vango.presentation.theme.BackgroundColorList
+import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.StyledButton
 import com.vango.presentation.theme.TextColor
 
 @Composable
 fun NotificationScreen(
-    navController: NavHostController
+    navController: NavController,
 ) {
     var selectedSection by remember { mutableStateOf("todos") }
     Scaffold(
         Modifier.padding(20.dp, 55.dp, 20.dp, 0.dp),
+        containerColor = Color.White,
 
         content = { innerPadding ->
 
@@ -101,7 +103,7 @@ fun NotificationScreen(
                         )
                     }
                     Surface(
-                        color = BackgroundButtonColor,
+                        color = MainColor,
                         modifier = Modifier.size(40.dp),
                         shape = RoundedCornerShape(14.dp),
                     ) {
@@ -126,7 +128,7 @@ fun NotificationScreen(
 
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                // Botones de navegación interna ("Mis datos", "Premium", "Aportaciones")
+                // Botones de navegación interna
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -158,9 +160,9 @@ fun NotificationScreen(
 
                 // Contenido dinámico según el botón seleccionado
                 when (selectedSection) {
-                    "todos" -> AllNotificationsScreen(navController = navController)
-                    "alertas" -> AlertsScreen(navController = navController)
-                    "mensajes" -> MessagesScreen(navController = navController)
+                    "todos" -> AllNotificationsScreen(notifications = notifications)
+                    "alertas" -> AlertsScreen(notifications = notifications)
+                    "mensajes" -> MessagesScreen(notifications = notifications)
                 }
             }
         }

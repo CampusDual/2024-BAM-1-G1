@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -150,7 +151,7 @@ fun HomeContent(viewModel: ActivityMainViewModel) {
             startDestination = "home",
             modifier = Modifier
 //                .padding(customPadding(innerPadding, systemBarsPadding))
-                .fillMaxSize()
+                .fillMaxSize().background(Color.White)
         ) {
             composable("home") {
                 HomeScreen(

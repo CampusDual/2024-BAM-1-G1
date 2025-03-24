@@ -2,6 +2,7 @@ package com.vango.presentation.main.menu.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,12 +23,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vango.R
+import com.vango.presentation.theme.BackgroundColorCard
+import com.vango.presentation.theme.BackgroundUnselected
+import com.vango.presentation.theme.MainColor
+import com.vango.presentation.theme.TextColor
 
 
 // Componente para mostrar el contenido de "Premium"
@@ -36,7 +42,8 @@ fun PremiumContent(navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(0.dp),
+            .padding(0.dp)
+            .background(Color.White),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Bloque 1: Suscripción
@@ -63,49 +70,78 @@ fun PremiumContent(navController: NavController) {
                         title = "Crear rutas infinitas",
                         description = "Crea tu ruta personalizada de forma segura"
 
-                    ){
-                        navController.navigate("support")
+                    ) {
+                        navController.navigate("routes")
                     }
                 }
                 HighlightedRow2 {
                     FeatureRow(
                         imageResId = R.drawable.ic_launcher_foreground,
-                        title = "Perfil personalizable",
-                        description = "Personaliza tu perfil con fotos y datos"
-                    ){
-                        navController.navigate("support")
+                        title = "Buscar por zona de paseo",
+                        description = "Encuentra rutas que pasen por zonas concretas que tú elijas."
+                    ) {
+                        navController.navigate("home")
                     }
                 }
                 HighlightedRow2 {
                     FeatureRow(
                         imageResId = R.drawable.ic_launcher_foreground,
-                        title = "Soporte prioritario",
-                        description = "Accede a soporte técnico prioritario"
+                        title = "Añadir puntos secretose",
+                        description = "Guarda esos puntos que sólo conoces tú para que siempre puedas volver."
                     )
                     {
-                        navController.navigate("support")
+                        navController.navigate("home")
                     }
                 }
                 HighlightedRow2 {
                     FeatureRow(
                         imageResId = R.drawable.ic_launcher_foreground,
-                        title = "Soporte prioritario",
-                        description = "Accede a soporte técnico prioritario"
+                        title = "Crear álbumes de viaje",
+                        description = "Encuentra rutas que pasen por zonas concretas que tú elijas."
                     )
                     {
-                        navController.navigate("support")
+                        navController.navigate("home")
                     }
                 }
-                HighlightedRow2 {
-                    FeatureRow(
-                        imageResId = R.drawable.ic_launcher_foreground,
-                        title = "Soporte prioritario",
-                        description = "Accede a soporte técnico prioritario"
-                    )
-                    {
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "¿Dudas con la suscripción?",
+                    fontSize = 12.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.Normal,
+                    color = BackgroundUnselected
+                )
+                Text(text = "Contáctanos",
+                    fontSize = 12.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.Bold,
+                    color = MainColor,
+                    modifier = Modifier.clickable {
                         navController.navigate("support")
                     }
-                }
+                )
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Gestionar suscripción",
+                    fontSize = 12.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.Normal,
+                    color = BackgroundUnselected,
+                    modifier = Modifier.clickable {
+                        navController.navigate("settings")
+                    }
+                )
             }
         }
     }
@@ -120,7 +156,7 @@ fun DataBlock(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
-            .background(Color.LightGray.copy(alpha = 0.3f)) // Fondo gris claro
+            .background(BackgroundColorCard)
             .padding(vertical = 12.dp, horizontal = 6.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -129,7 +165,8 @@ fun DataBlock(
             text = title,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 6.dp)
+            modifier = Modifier.padding(horizontal = 6.dp),
+            color = TextColor
         )
 
         // Contenido del bloque
@@ -166,12 +203,14 @@ fun DataRow(
         Text(
             text = label,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = TextColor
         )
         Text(
             text = value,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Normal,
+            color = TextColor
         )
     }
 }
@@ -201,12 +240,13 @@ fun FeatureRow(
             Text(
                 text = title,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = TextColor
             )
             Text(
                 text = description,
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = TextColor
             )
         }
     }

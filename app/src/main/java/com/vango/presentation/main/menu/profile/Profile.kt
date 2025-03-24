@@ -2,6 +2,7 @@ package com.vango.presentation.main.menu.profile
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import com.vango.R
 import com.vango.presentation.base.BaseActivity
 import com.vango.presentation.theme.BackgroundButtonColor
 import com.vango.presentation.theme.BackgroundColorList
+import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.StyledButton
 import com.vango.presentation.theme.TextColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,8 +61,8 @@ fun ProfileScreen(navController: NavController) {
 
 
     Scaffold(
-        Modifier.padding(20.dp, 55.dp, 20.dp, 0.dp),
-
+        Modifier.padding(20.dp, 55.dp, 20.dp, 0.dp).background(Color.White),
+        containerColor = Color.White,
         content = { innerPadding ->
 
             Column(
@@ -113,7 +115,7 @@ fun ProfileScreen(navController: NavController) {
                         )
                     }
                     Surface(
-                        color = BackgroundButtonColor,
+                        color = MainColor,
                         modifier = Modifier.size(40.dp),
                         shape = RoundedCornerShape(14.dp),
                     ) {
