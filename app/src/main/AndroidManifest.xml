@@ -41,7 +41,7 @@
             android:name=".presentation.auth.forgottenPassword.ActivityForgottenPassword"
             android:exported="false" />
         <activity
-            android:name=".presentation.onboarding.ActivityOnboarding"
+            android:name=".presentation.main.ActivityMain"
             android:exported="false">
 
         </activity>
@@ -64,8 +64,9 @@
             android:name=".presentation.auth.verifyAccount.ActivityVerifyAccount"
             android:exported="false" />
         <activity
-            android:name=".presentation.main.ActivityMain"
+            android:name=".presentation.onboarding.ActivityOnboarding"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

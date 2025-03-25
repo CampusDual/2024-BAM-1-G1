@@ -18,7 +18,7 @@
             android:id="@+id/background_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/image1"
+            android:src="@drawable/image4"
             android:scaleType="centerCrop" />
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
@@ -32,18 +32,18 @@
             android:src="@drawable/rounded_bottom"
             android:scaleType="fitXY" />
 
-        <ImageButton
-            android:id="@+id/btn_close"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/rounded_clear_button"
-            android:contentDescription="@string/next_button"
-            android:scaleType="centerInside"
-            android:src="@drawable/baseline_clear_24"
-            android:elevation="4dp"
-            app:tint="@color/white" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btn_close"-->
+<!--            android:layout_width="48dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_marginTop="48dp"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:background="@drawable/rounded_clear_button"-->
+<!--            android:contentDescription="@string/next_button"-->
+<!--            android:scaleType="centerInside"-->
+<!--            android:src="@drawable/baseline_clear_24"-->
+<!--            android:elevation="4dp"-->
+<!--            app:tint="@color/white" />-->
 
     </FrameLayout>
 

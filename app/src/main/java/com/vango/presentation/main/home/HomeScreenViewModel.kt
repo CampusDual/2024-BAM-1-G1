@@ -80,6 +80,9 @@ class HomeViewModel @Inject constructor(
 
     private var photoUrls = mutableListOf<String>()
 
+    private val _selectedServices = MutableStateFlow<Set<String>>(emptySet())
+    val selectedServices: StateFlow<Set<String>> = _selectedServices
+
     fun setPhotoUrls(urls: List<String>) {
         photoUrls.clear()
         photoUrls.addAll(urls)
@@ -151,6 +154,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun saveSelectedServices(services: Set<String>) {
+        // Guardar los servicios seleccionados en el estado del ViewModel o enviarlos a un repositorio
+        // Por ejemplo:
+        _selectedServices.value = services
+    }
 
 
     fun selectPoint(latLng: LatLng) {

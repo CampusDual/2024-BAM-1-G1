@@ -266,7 +266,8 @@ fun HomeScreen(
             onPlaceSelected = { place ->
                 selectedPlace = place
             },
-            onFullScreenChanged = { isFullScreenOpen = it }
+            onFullScreenChanged = { isFullScreenOpen = it },
+            selectedOption = selectedOption,
 
         )
         if (!isFullScreenOpen) {
@@ -299,8 +300,6 @@ fun HomeScreen(
                     selectedFilterTypes = filters
                 }
             )
-
-
 
             if (showSearchHereButton && !isSelectingPoint) {
                 TopCenterButton(
@@ -516,10 +515,10 @@ fun HomeScreen(
                     isSelectingPoint = false
                     viewModel.clearSelectedPoint()
                 },
-                onConfirm = {
+                onConfirm = { selectedServices ->
                     showMapNewPointTagServicesMenu = false
                     showMapNewImageServiceMenu = true
-
+                    viewModel.saveSelectedServices(selectedServices)
                 },
                 selectedAddress = viewModel.selectedAddress.value,
                 onNameConfirmed = viewModel.selectedAddress.value

@@ -1522,10 +1522,11 @@ fun MapNewPointTagServicesMenu(
     selectedAddress: String?,
     onNameConfirmed: String?,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: (Set<String>) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val offsetY = remember { Animatable(600f) }
+    val selectedServices = remember { mutableStateOf<Set<String>>(emptySet()) }
     var nameInput by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
@@ -1679,56 +1680,120 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.water,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Agua potable"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Agua potable")) {
+                                                current - "Agua potable"
+                                            } else {
+                                                current + "Agua potable"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Electricidad",
                                         iconRes = R.drawable.electricity,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Electricidad"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Electricidad")) {
+                                                current - "Electricidad"
+                                            } else {
+                                                current + "Electricidad"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Baños públicos",
                                         iconRes = R.drawable.public_wc,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Baños públicos"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Baños públicos")) {
+                                                current - "Baños públicos"
+                                            } else {
+                                                current + "Baños públicos"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Duchas",
                                         iconRes = R.drawable.shower,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Duchas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Duchas")) {
+                                                current - "Duchas"
+                                            } else {
+                                                current + "Duchas"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Internet",
                                         iconRes = R.drawable.internet,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Internet"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Internet")) {
+                                                current - "Internet"
+                                            } else {
+                                                current + "Internet"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Lavandería",
                                         iconRes = R.drawable.laundry_no_fill,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Lavandería"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Lavandería")) {
+                                                current - "Lavandería"
+                                            } else {
+                                                current + "Lavandería"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Buena cobertura",
                                         iconRes = R.drawable.high_coberture,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Buena cobertura"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Buena cobertura")) {
+                                                current - "Buena cobertura"
+                                            } else {
+                                                current + "Buena cobertura"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Mala Cobertura",
                                         iconRes = R.drawable.low_coberture,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Mala Cobertura"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Mala Cobertura")) {
+                                                current - "Mala Cobertura"
+                                            } else {
+                                                current + "Mala Cobertura"
+                                            }
+                                        }
                                     )
                                 }
                             }
@@ -1759,28 +1824,60 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.grey_water,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Aguas grises"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Aguas grises")) {
+                                                current - "Aguas grises"
+                                            } else {
+                                                current + "Aguas grises"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Aguas negras",
                                         iconRes = R.drawable.black_water,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Aguas negras"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Aguas negras")) {
+                                                current - "Aguas negras"
+                                            } else {
+                                                current + "Aguas negras"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Parcelas con sombra",
                                         iconRes = R.drawable.shadow_location,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Parcelas con sombra"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Parcelas con sombra")) {
+                                                current - "Parcelas con sombra"
+                                            } else {
+                                                current + "Parcelas con sombra"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Suministro de gas",
                                         iconRes = R.drawable.gas_supply,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Suministro de gas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Suministro de gas")) {
+                                                current - "Suministro de gas"
+                                            } else {
+                                                current + "Suministro de gas"
+                                            }
+                                        }
                                     )
 
                                 }
@@ -1813,14 +1910,30 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.dog,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Se admiten mascotas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Se admiten mascotas")) {
+                                                current - "Se admiten mascotas"
+                                            } else {
+                                                current + "Se admiten mascotas"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Instalacioens para perros",
                                         iconRes = R.drawable.dog_friendly,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Instalaciones para perros"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Instalaciones para perros")) {
+                                                current - "Instalaciones para perros"
+                                            } else {
+                                                current + "Instalaciones para perros"
+                                            }
+                                        }
                                     )
 
 
@@ -1858,7 +1971,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.pool,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Piscina"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Piscina")) {
+                                                current - "Piscina"
+                                            } else {
+                                                current + "Piscina"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1866,7 +1987,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.infantil_zone,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Zona Infantil"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Zona Infantil")) {
+                                                current - "Zona Infantil"
+                                            } else {
+                                                current + "Zona Infantil"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1874,7 +2003,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.bar,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Cafetería"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Cafetería")) {
+                                                current - "Cafetería"
+                                            } else {
+                                                current + "Cafetería"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1882,21 +2019,45 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.restaurant,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Restaurante"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Restaurante")) {
+                                                current - "Restaurante"
+                                            } else {
+                                                current + "Restaurante"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Zona de barbacoa",
                                         iconRes = R.drawable.barbacoa,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Zona de barbacoa"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Zona de barbacoa")) {
+                                                current - "Zona de barbacoa"
+                                            } else {
+                                                current + "Zona de barbacoa"
+                                            }
+                                        }
                                     )
                                     ButtonService(
                                         text = "Supermercado",
                                         iconRes = R.drawable.supermarket,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Supermercado"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Supermercado")) {
+                                                current - "Supermercado"
+                                            } else {
+                                                current + "Supermercado"
+                                            }
+                                        }
                                     )
                                 }
                             }
@@ -1928,7 +2089,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.long_stance,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Parcelas de larga estancia"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Parcelas de larga estancia")) {
+                                                current - "Parcelas de larga estancia"
+                                            } else {
+                                                current + "Parcelas de larga estancia"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1936,7 +2105,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.bungalow,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Bungalows"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Bungalows")) {
+                                                current - "Bungalows"
+                                            } else {
+                                                current + "Bungalows"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1944,7 +2121,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.cabain,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Cabañas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Cabañas")) {
+                                                current - "Cabañas"
+                                            } else {
+                                                current + "Cabañas"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1952,7 +2137,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.camping_zone,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Zona de acampada"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Zona de acampada")) {
+                                                current - "Zona de acampada"
+                                            } else {
+                                                current + "Zona de acampada"
+                                            }
+                                        }
                                     )
 
                                 }
@@ -1985,7 +2178,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.bike_rent,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Alquiler de bicicletas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Alquiler de bicicletas")) {
+                                                current - "Alquiler de bicicletas"
+                                            } else {
+                                                current + "Alquiler de bicicletas"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -1993,7 +2194,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.infantil_activities,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Actividades infantiles"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Actividades infantiles")) {
+                                                current - "Actividades infantiles"
+                                            } else {
+                                                current + "Actividades infantiles"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -2001,7 +2210,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.acuatic_activities,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Actividades acuáticas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Actividades acuáticas")) {
+                                                current - "Actividades acuáticas"
+                                            } else {
+                                                current + "Actividades acuáticas"
+                                            }
+                                        }
                                     )
 
                                     ButtonService(
@@ -2009,7 +2226,15 @@ fun MapNewPointTagServicesMenu(
                                         iconRes = R.drawable.guide_excursions,
                                         tint = Color.White,
                                         color = MainColor,
-                                        onClick = { /*TODO*/ },
+                                        isSelected = selectedServices.value.contains("Excursiones guiadas"),
+                                        onClick = {
+                                            val current = selectedServices.value
+                                            selectedServices.value = if (current.contains("Excursiones guiadas")) {
+                                                current - "Excursiones guiadas"
+                                            } else {
+                                                current + "Excursiones guiadas"
+                                            }
+                                        }
                                     )
 
                                 }
@@ -2075,11 +2300,8 @@ fun MapNewPointTagServicesMenu(
                         .height(51.dp)
                         .clickable {
                             scope.launch {
-                                offsetY.animateTo(
-                                    600f,
-                                    animationSpec = tween(300)
-                                )
-                                onConfirm()
+                                offsetY.animateTo(600f, animationSpec = tween(300))
+                                onConfirm(selectedServices.value)
                             }
                         },
 
@@ -3520,6 +3742,7 @@ fun ButtonService(
     iconRes: Int,
     tint: Color,
     color: Color,
+    isSelected: Boolean = false,
     onClick: () -> Unit
 ) {
     Row(
@@ -3533,7 +3756,7 @@ fun ButtonService(
                 .width(25.dp)
                 .height(25.dp),
             shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(1.dp, Color.LightGray),
+            border = if(isSelected) BorderStroke(3.dp, YellowMelow) else BorderStroke(1.dp, Color.LightGray),
             color = Color.White,
         ) {
             Row(
@@ -3545,7 +3768,7 @@ fun ButtonService(
                     painter = painterResource(id = iconRes),
                     contentDescription = text,
                     modifier = Modifier.size(25.dp),
-                    tint = BlackGray
+                    tint = if(isSelected) YellowMelow else BlackGray
                 )
             }
         }
