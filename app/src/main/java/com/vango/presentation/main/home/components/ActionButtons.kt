@@ -102,10 +102,10 @@ fun LocationActionButtons(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.heart),
+                    painter = painterResource(id = R.drawable.heart_stroke),
                     contentDescription = "tipo de mapa",
                     modifier = Modifier.size(25.dp),
-                    tint = Color.White
+                    tint = Color.Unspecified
                 )
             }
         }
@@ -179,7 +179,7 @@ fun BottomActionButtons(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = if(!isListOpen) painterResource(id = R.drawable.list) else painterResource(id = R.drawable.map),
+                    painter = if(!isListOpen) painterResource(id = R.drawable.list) else painterResource(id = R.drawable.map_fill),
                     contentDescription = if(!isListOpen)"Lista" else "Mapa",
                     modifier = Modifier.size(25.dp),
                     tint = Color.White

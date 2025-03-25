@@ -86,10 +86,8 @@ fun HomeScreen(
     var showPermissionDialog by remember { mutableStateOf(false) }
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
-
     val selectedRoutePoint by viewModel.selectedRoutePoint.collectAsState()
     var showMapCreatePointRouteMenu by remember { mutableStateOf(false) }
-
     var showBottomActionButtons by remember { mutableStateOf(true) }
     var isSelectingPoint by remember { mutableStateOf(false) }
     var showMapNewPointMenu by remember { mutableStateOf(false) }
@@ -101,15 +99,12 @@ fun HomeScreen(
     var showMapNewLastDatesMenu by remember { mutableStateOf(false) }
     var isMapLoaded by remember { mutableStateOf(false) }
     var selectedPlace by remember { mutableStateOf<PlacesResponseDto?>(null) }
-
     val nearbyPlaces by viewModel.nearbyPlaces.collectAsState()
     var selectedFilterTypes by remember { mutableStateOf<Set<Int>>(emptySet()) }
-
     var images by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var showMapNewImageServiceUploadMenu by remember { mutableStateOf(false) }
     var isFullScreenOpen by remember { mutableStateOf(false) }
     var showPlaceList by remember { mutableStateOf(false) }
-
     var lastSearchedPosition by remember { mutableStateOf(currentLocation) }
     var showSearchHereButton by remember { mutableStateOf(false) }
 
@@ -123,13 +118,10 @@ fun HomeScreen(
         }
     }
 
-
-
     LaunchedEffect(currentLocation) {
         cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentLocation, 12f), 1000)
 
     }
-
 
     LaunchedEffect(isMapLoaded, currentLocation) {
         if (isMapLoaded && currentLocation != LatLng(
@@ -144,7 +136,6 @@ fun HomeScreen(
         }
     }
 
-
     LaunchedEffect(cameraPositionState.position) {
         val currentMapCenter = cameraPositionState.position.target
         val distance = FloatArray(1)
@@ -156,7 +147,6 @@ fun HomeScreen(
         Log.d("HomeScreen", "Distancia: ${distance[0]}, NearbyPlaces: ${nearbyPlaces.size}")
         showSearchHereButton = distance[0] > 500f
     }
-
 
     LaunchedEffect(nearbyPlaces) {
         if (nearbyPlaces.isNotEmpty()) {
@@ -245,10 +235,6 @@ fun HomeScreen(
             }
         )
     }
-
-
-
-
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -409,13 +395,6 @@ fun HomeScreen(
                     .padding(bottom = 300.dp)
             )
         }
-
-
-
-
-
-
-
 
         if (showMapLayersMenu) {
 

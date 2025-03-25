@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -448,7 +449,7 @@ fun PlaceCard(
 
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
-                        tint = Color.Black,
+                        tint = BlackGray,
                         contentDescription = "favorite"
                     )
                 }
@@ -504,7 +505,7 @@ fun PlaceCard(
                         text = place.address ?: "Sin dirección",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black,
+                        color = BlackGray,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -530,7 +531,7 @@ fun PlaceCard(
                             text = "${place.rating ?: 0.0}",
                             fontSize = 16.sp,
                             textAlign = TextAlign.End,
-                            color = Color.Black
+                            color = BlackGray
                         )
                     }
 
@@ -600,7 +601,7 @@ fun PlaceCardList(
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(229.dp)
+                        .aspectRatio(1.3f)
                         .clip(RoundedCornerShape(15.dp))
                 ) { page ->
                     Log.d("PlaceCard", "Cargando imagen: ${photoUrls[page]}")
@@ -609,7 +610,7 @@ fun PlaceCardList(
                         contentDescription = "Imagen ${page + 1} de ${place.title}",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(229.dp),
+                            .aspectRatio(1.3f),
                         contentScale = ContentScale.Crop,
                         placeholder = painterResource(R.drawable.noimage),
                         error = painterResource(R.drawable.noimage)
@@ -646,8 +647,9 @@ fun PlaceCardList(
 
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
-                        tint = Color.Black,
-                        contentDescription = "favorite"
+                        tint = Color.Unspecified,
+                        contentDescription = "favorite",
+                        modifier = Modifier.width(19.65.dp).height(17.75.dp)
                     )
                 }
 
@@ -692,9 +694,10 @@ fun PlaceCardList(
                     Text(
                         text = place.title ?: "Sin título",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        color = BlackGray
                     )
                     Spacer(modifier = Modifier.height(12.dp))
 
@@ -702,7 +705,7 @@ fun PlaceCardList(
                         text = place.address ?: "Sin dirección",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black,
+                        color = BlackGray,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -717,17 +720,20 @@ fun PlaceCardList(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Icon(
+                            modifier = Modifier.size(width = 15.dp, height = 14.29.dp),
                             painter = painterResource(id = R.drawable.start),
                             contentDescription = "Rating",
                             tint = MainColor
+
                         )
-                        Spacer(modifier = Modifier.width(10.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
                             text = "${place.rating ?: 0.0}",
-                            fontSize = 19.4.sp,
+                            fontSize = 14.sp,
                             textAlign = TextAlign.End,
-                            color = Color.Black
+                            fontWeight = FontWeight.Bold,
+                            color = BlackGray
                         )
                     }
 
@@ -752,7 +758,7 @@ fun PlaceCardList(
 //            if(place.type != PlaceType.CAMPING ))
 
             Row(
-                modifier = Modifier.padding(top = 18.dp)
+                modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text(
                     text = "Entrada gratuita",
@@ -797,7 +803,7 @@ fun FullScreenPlaceCard(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f))
+            .background(BlackGray.copy(alpha = 0.5f))
     ) {
         Surface(
             modifier = Modifier
@@ -900,7 +906,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.water),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -930,7 +936,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.electricity),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -958,7 +964,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.shower),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -985,7 +991,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.public_wc),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -1012,7 +1018,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.pool),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -1039,7 +1045,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.high_coberture),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -1066,7 +1072,7 @@ fun FullScreenPlaceCard(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.long_stance),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(25.dp)
                                     .height(25.dp)
@@ -1110,7 +1116,7 @@ fun FullScreenPlaceCard(
                             text = place.address ?: "Sin dirección",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
-                            color = Color.Black,
+                            color = BlackGray,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -1122,7 +1128,7 @@ fun FullScreenPlaceCard(
                         Text(
                             text = "${place.rating ?: 0.0} ★",
                             fontSize = 21.sp,
-                            color = Color.Black
+                            color = BlackGray
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -1201,7 +1207,7 @@ fun FullScreenPlaceCard(
                         Row() {
                             Icon(
                                 painter = painterResource(id = R.drawable.location_no_fill),
-                                tint = Color.Black,
+                                tint = BlackGray,
                                 modifier = Modifier
                                     .width(18.dp)
                                     .height(18.dp)
@@ -1236,7 +1242,7 @@ fun FullScreenPlaceCard(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.clock),
-                                    tint = Color.Black,
+                                    tint = BlackGray,
                                     modifier = Modifier
                                         .width(18.dp)
                                         .height(18.dp)
@@ -1254,7 +1260,7 @@ fun FullScreenPlaceCard(
                                     text = "Lunes a Domingo\n" +
                                             "9am a 9pm",
                                     fontSize = 12.sp,
-                                    color = Color.Black,
+                                    color = BlackGray,
                                     overflow = TextOverflow.Ellipsis
 
                                 )
@@ -1268,7 +1274,7 @@ fun FullScreenPlaceCard(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.calendar),
-                                    tint = Color.Black,
+                                    tint = BlackGray,
                                     modifier = Modifier
                                         .width(18.dp)
                                         .height(18.dp),
@@ -1279,7 +1285,7 @@ fun FullScreenPlaceCard(
                                 Text(
                                     text = "Abierto todo el año",
                                     fontSize = 12.sp,
-                                    color = Color.Black,
+                                    color = BlackGray,
                                     overflow = TextOverflow.Ellipsis
 
                                 )
@@ -1301,7 +1307,7 @@ fun FullScreenPlaceCard(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.phone),
-                                    tint = Color.Black,
+                                    tint = BlackGray,
                                     modifier = Modifier
                                         .width(18.dp)
                                         .height(18.dp)
@@ -1318,7 +1324,7 @@ fun FullScreenPlaceCard(
                                 Text(
                                     text = "+34 658 587 254",
                                     fontSize = 12.sp,
-                                    color = Color.Black,
+                                    color = BlackGray,
                                     overflow = TextOverflow.Ellipsis
 
                                 )
@@ -1332,7 +1338,7 @@ fun FullScreenPlaceCard(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.arroba),
-                                    tint = Color.Black,
+                                    tint = BlackGray,
                                     modifier = Modifier
                                         .width(18.dp)
                                         .height(18.dp)
@@ -1349,7 +1355,7 @@ fun FullScreenPlaceCard(
                                 Text(
                                     text = "info@jabaliblanco.es",
                                     fontSize = 12.sp,
-                                    color = Color.Black,
+                                    color = BlackGray,
                                     overflow = TextOverflow.Ellipsis
 
                                 )
@@ -1371,7 +1377,7 @@ fun FullScreenPlaceCard(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.www),
-                                    tint = Color.Black,
+                                    tint = BlackGray,
                                     modifier = Modifier
                                         .width(18.dp)
                                         .height(18.dp)
@@ -1388,7 +1394,7 @@ fun FullScreenPlaceCard(
                                 Text(
                                     text = "www.jabaliblanco.es",
                                     fontSize = 12.sp,
-                                    color = Color.Black,
+                                    color = BlackGray,
                                     overflow = TextOverflow.Ellipsis
 
                                 )
@@ -1472,7 +1478,7 @@ fun FullScreenPlaceCard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.7f))
+                    .background(BlackGray.copy(alpha = 0.7f))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -1582,7 +1588,7 @@ fun FullScreenPlaceList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f))
+            .background(BlackGray.copy(alpha = 0.5f))
     ) {
         Surface(
             modifier = Modifier
@@ -1783,7 +1789,6 @@ fun FullScreenPlaceList(
                     }
                 }
 
-                // Lista de lugares
                 items(places) { place ->
                     PlaceCardList(
                         place = place,
@@ -1848,7 +1853,7 @@ fun SearchBarHomeList(
                         modifier = Modifier
                             .size(16.dp)
                             .clickable { performSearch(searchQuery) },
-                        tint = Color.Black
+                        tint = BlackGray
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -1876,7 +1881,7 @@ fun SearchBarHomeList(
                             onSearchQueryChange("")
                             focusManager.clearFocus()
                         },
-                    tint = Color.Black
+                    tint = BlackGray
                 )
             }
         },
@@ -1889,7 +1894,7 @@ fun SearchBarHomeList(
                         .size(24.dp)
                         .padding(end = 8.dp)
                         .clickable { },
-                    tint = Color.Black
+                    tint = BlackGray
                 )
             }
         },
@@ -1940,7 +1945,7 @@ fun SearchBarHomeList(
                             painter = painterResource(id = R.drawable.mark),
                             contentDescription = "Ícono del lugar",
                             modifier = Modifier.size(18.dp),
-                            tint = Color.Black
+                            tint = BlackGray
                         )
                         Text(
                             text = formatDistance(result.distanceMeters),
@@ -1955,7 +1960,7 @@ fun SearchBarHomeList(
                         Text(
                             text = result.name,
                             fontSize = 14.sp,
-                            color = Color.Black,
+                            color = BlackGray,
                             fontWeight = FontWeight.SemiBold
                         )
                         result.secondaryText?.let {
