@@ -38,6 +38,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -57,7 +59,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -68,6 +73,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -85,6 +91,7 @@ import com.vango.presentation.theme.BlackGray
 import com.vango.presentation.theme.MainColor
 import com.vango.presentation.theme.WhiteGray
 import com.vango.presentation.theme.YellowMelow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.File
@@ -3152,6 +3159,8 @@ fun MapNewImageServiceUploadMenu(
     var imageUrls by remember { mutableStateOf<List<String>>(emptyList()) }
     var isUploading by remember { mutableStateOf(false) }
 
+    var uploadProgress by remember { mutableStateOf<Map<Uri, Float>>(emptyMap()) }
+
     val storage = FirebaseStorage.getInstance()
     val storageRef = storage.reference
 
@@ -3188,9 +3197,17 @@ fun MapNewImageServiceUploadMenu(
                 "point_${selectedPoint?.latitude}_${selectedPoint?.longitude}_${System.currentTimeMillis()}.jpg"
             val imageRef: StorageReference = storageRef.child("images/$fileName")
             try {
-                imageRef.putFile(uri).await()
+                val uploadTask = imageRef.putFile(uri)
+                uploadTask.addOnProgressListener { snapshot ->
+                    val progress = (100.0 * snapshot.bytesTransferred / snapshot.totalByteCount).toFloat()
+                    uploadProgress = uploadProgress + (uri to progress)
+                }
+                uploadTask.await()
                 val downloadUrl = imageRef.downloadUrl.await().toString()
                 urls.add(downloadUrl)
+                uploadProgress = uploadProgress + (uri to 100f)
+                delay(500)
+                uploadProgress = uploadProgress - uri
             } catch (e: Exception) {
                 Log.e("FirebaseUpload", "Error uploading image: ${e.message}")
             }
@@ -3324,13 +3341,27 @@ fun MapNewImageServiceUploadMenu(
                             Image(
                                 painter = rememberAsyncImagePainter(images[0]),
                                 contentDescription = "Foto de portada",
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(
                                         BackgroundColorImage,
                                         shape = RoundedCornerShape(20.dp)
                                     )
+                                    .clip(RoundedCornerShape(20.dp))
                             )
+                            uploadProgress[images[0]]?.let { progress ->
+                                LinearProgressIndicator(
+                                    progress = { progress / 100f },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                                        .height(8.dp)
+                                        .align(Alignment.BottomCenter),
+                                    color = MainColor,
+                                    trackColor = Color.Gray.copy(alpha = 0.3f)
+                                )
+                            }
                         }
                         Row(
                             modifier = Modifier
@@ -3401,8 +3432,31 @@ fun MapNewImageServiceUploadMenu(
                                 Image(
                                     painter = rememberAsyncImagePainter(uri),
                                     contentDescription = "Foto adicional",
-                                    modifier = Modifier.fillMaxSize()
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            BackgroundColorImage,
+                                            shape = RoundedCornerShape(20.dp)
+                                        )
+                                        .clip(RoundedCornerShape(20.dp))
                                 )
+
+                                uploadProgress[images[0]]?.let { progress ->
+                                    LinearProgressIndicator(
+                                        progress = {
+                                            progress / 100f
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                                            .height(4.dp)
+                                            .align(Alignment.BottomCenter),
+                                        color = MainColor,
+                                        trackColor = Color.Gray.copy(alpha = 0.3f),
+                                    )
+                                }
+
                                 Surface(
                                     color = Color.White,
                                     modifier = Modifier
@@ -3636,6 +3690,18 @@ fun MapNewImageServiceUploadMenu(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LinearProgressIndicator(
+    modifier: Modifier = Modifier,
+    color: Color = ProgressIndicatorDefaults.linearColor,
+    trackColor: Color = ProgressIndicatorDefaults.linearTrackColor,
+    strokeCap: StrokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+    gapSize: Dp = ProgressIndicatorDefaults.LinearIndicatorTrackGapSize,
+){
+
 }
 
 @Composable
