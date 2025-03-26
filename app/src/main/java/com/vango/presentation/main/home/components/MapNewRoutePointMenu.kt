@@ -3164,32 +3164,6 @@ fun MapNewImageServiceUploadMenu(
     val storage = FirebaseStorage.getInstance()
     val storageRef = storage.reference
 
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-            uris?.let {
-                val newImages = (images + it).take(10)
-                images = newImages
-            }
-        }
-    val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                cameraUri?.let { uri ->
-                    val newImages = (images + uri).take(10)
-                    images = newImages
-                }
-            }
-        }
-    val cameraPermissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                val file = File(context.cacheDir, "camera_photo_${System.currentTimeMillis()}.jpg")
-                val uri = FileProvider.getUriForFile(context, "com.vango.fileprovider", file)
-                cameraUri = uri
-                cameraLauncher.launch(uri)
-            }
-        }
-
     suspend fun uploadImagesToFirebase(images: List<Uri>): List<String> {
         val urls = mutableListOf<String>()
         images.forEach { uri ->
@@ -3214,6 +3188,78 @@ fun MapNewImageServiceUploadMenu(
         }
         return urls
     }
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+            uris?.let {
+                val newImages = (images + it).take(10)
+                images = newImages
+                scope.launch {
+                    val newUris = it.filter { uri -> !imageUrls.any { url -> url.contains(uri.toString()) } }
+                    val urls = uploadImagesToFirebase(newUris)
+                    imageUrls = imageUrls + urls
+                }
+            }
+        }
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                cameraUri?.let { uri ->
+                    val newImages = (images + uri).take(10)
+                    images = newImages
+                    scope.launch {
+                        val urls = uploadImagesToFirebase(listOf(uri))
+                        imageUrls = imageUrls + urls
+                    }
+                }
+            }
+        }
+
+    val cameraPermissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                val file = File(context.cacheDir, "camera_photo_${System.currentTimeMillis()}.jpg")
+                val uri = FileProvider.getUriForFile(context, "com.vango.fileprovider", file)
+                cameraUri = uri
+                cameraLauncher.launch(uri)
+            }
+        }
+
+    LaunchedEffect(initialImages) {
+        if (initialImages.isNotEmpty() && imageUrls.isEmpty()) {
+            isUploading = true
+            val urls = uploadImagesToFirebase(initialImages)
+            imageUrls = urls
+            isUploading = false
+        }
+    }
+
+
+
+//    suspend fun uploadImagesToFirebase(images: List<Uri>): List<String> {
+//        val urls = mutableListOf<String>()
+//        images.forEach { uri ->
+//            val fileName =
+//                "point_${selectedPoint?.latitude}_${selectedPoint?.longitude}_${System.currentTimeMillis()}.jpg"
+//            val imageRef: StorageReference = storageRef.child("images/$fileName")
+//            try {
+//                val uploadTask = imageRef.putFile(uri)
+//                uploadTask.addOnProgressListener { snapshot ->
+//                    val progress = (100.0 * snapshot.bytesTransferred / snapshot.totalByteCount).toFloat()
+//                    uploadProgress = uploadProgress + (uri to progress)
+//                }
+//                uploadTask.await()
+//                val downloadUrl = imageRef.downloadUrl.await().toString()
+//                urls.add(downloadUrl)
+//                uploadProgress = uploadProgress + (uri to 100f)
+//                delay(500)
+//                uploadProgress = uploadProgress - uri
+//            } catch (e: Exception) {
+//                Log.e("FirebaseUpload", "Error uploading image: ${e.message}")
+//            }
+//        }
+//        return urls
+//    }
 
     LaunchedEffect(Unit) {
         offsetY.animateTo(0f, animationSpec = tween(300))
@@ -3358,7 +3404,7 @@ fun MapNewImageServiceUploadMenu(
                                         .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
                                         .height(8.dp)
                                         .align(Alignment.BottomCenter),
-                                    color = MainColor,
+                                    color = Color.White,
                                     trackColor = Color.Gray.copy(alpha = 0.3f)
                                 )
                             }
@@ -3442,18 +3488,16 @@ fun MapNewImageServiceUploadMenu(
                                         .clip(RoundedCornerShape(20.dp))
                                 )
 
-                                uploadProgress[images[0]]?.let { progress ->
+                                uploadProgress[uri]?.let { progress ->
                                     LinearProgressIndicator(
-                                        progress = {
-                                            progress / 100f
-                                        },
+                                        progress = { progress / 100f },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
                                             .height(4.dp)
                                             .align(Alignment.BottomCenter),
-                                        color = MainColor,
-                                        trackColor = Color.Gray.copy(alpha = 0.3f),
+                                        color = Color.White,
+                                        trackColor = Color.Gray.copy(alpha = 0.3f)
                                     )
                                 }
 
@@ -3648,35 +3692,32 @@ fun MapNewImageServiceUploadMenu(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(51.dp)
-                            .clickable {
-                                if (!isUploading) {
-                                    isUploading = true
-                                    scope.launch {
-                                        imageUrls = uploadImagesToFirebase(images)
-                                        viewModel.setPhotoUrls(imageUrls)
-                                        offsetY.animateTo(600f, animationSpec = tween(300))
-                                        onConfirm(imageUrls)
-                                        selectedPoint?.let { point ->
-                                            viewModel.saveNewPointToApi(
-                                                latitude = point.latitude,
-                                                longitude = point.longitude,
-                                                address = selectedAddress ?: "Unknown address"
-                                            )
-                                        }
-                                        onDismiss()
-                                        isUploading = false
+                            .clickable(
+                                enabled = !isUploading
+                            ) {
+                                scope.launch {
+                                    viewModel.setPhotoUrls(imageUrls)
+                                    offsetY.animateTo(600f, animationSpec = tween(300))
+                                    onConfirm(imageUrls)
+                                    selectedPoint?.let { point ->
+                                        viewModel.saveNewPointToApi(
+                                            latitude = point.latitude,
+                                            longitude = point.longitude,
+                                            address = selectedAddress ?: "Unknown address"
+                                        )
                                     }
+                                    onDismiss()
                                 }
                             },
                         shape = RoundedCornerShape(20.dp),
-                        color = MainColor
+                        color = if (isUploading) Color.Gray else MainColor
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Subir imágenes",
+                                text = "Confirmar",
                                 modifier = Modifier.padding(top = 6.dp),
                                 fontSize = 14.sp,
                                 color = Color.White,
